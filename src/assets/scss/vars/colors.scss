@@ -1,6 +1,41 @@
 $color-white: #fff;
 $color-black: #000;
 
+// text
+$color-text-base-1-700: #100f0f;
+$color-text-base-1-600: #4a5361;
+$color-text-base-1-500: #929daf;
+$color-text-base-1-400: #b7c0ce;
+$color-text-accent: #0968fa;
+$color-text-error: #ff1b1f;
+$color-text-success: #5fad05;
+
+// background
+$color-bg-base-1-500: #dee7ff;
+$color-bg-base-1-400: #e5ecff;
+$color-bg-base-1-300: #eff3ff;
+$color-bg-base-1-200: #f6f7fc;
+$color-bg-base-1-100: #fafcff;
+
+$color-bg-base-2-500: rgba(#929daf, 0.5);
+
+$color-bg-accent-300: #0968fa;
+$color-bg-accent-200: #0863ed;
+$color-bg-accent-100: #0968fa;
+
+// border
+
+$color-border-base-1-500: #d8dcf2;
+$color-border-base-1-400: #e8eaf7;
+
+$color-border-base-2-500: #929daf;
+
+$color-border-accent-2-300: #0e5dd7;
+$color-border-accent-2-200: #0863ed;
+$color-border-accent-2-100: #0968fa;
+
+$color-border-error: #ff1b1f;
+
 $colors: (
   'white': $color-white,
   'black': $color-black,

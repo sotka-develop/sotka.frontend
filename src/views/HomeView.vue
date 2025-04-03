@@ -1,5 +1,5 @@
 <template>
-  <main>Hello world!</main>
+  <main>sotka.frontend</main>
 </template>
 
 <script setup></script>
