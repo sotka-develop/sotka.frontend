@@ -1,0 +1,53 @@
+@mixin h1 {
+  font-size: rem(48);
+  line-height: 1.2;
+
+  @include media-breakpoint-up(md) {
+    font-size: rem(56);
+  }
+}
+
+@mixin h2 {
+  font-size: rem(40);
+  line-height: 1.2;
+
+  @include media-breakpoint-up(md) {
+    font-size: rem(48);
+  }
+}
+
+@mixin h3 {
+  font-size: rem(32);
+  line-height: 1.2;
+
+  @include media-breakpoint-up(md) {
+    font-size: rem(40);
+  }
+}
+
+@mixin h4 {
+  font-size: rem(24);
+  line-height: 1.2;
+
+  @include media-breakpoint-up(md) {
+    font-size: rem(32);
+  }
+}
+
+@mixin h5 {
+  font-size: rem(20);
+  line-height: 1.2;
+
+  @include media-breakpoint-up(md) {
+    font-size: rem(24);
+  }
+}
+
+@mixin h6 {
+  @include h5;
+}
+
+@mixin text-default {
+  font-size: rem(16);
+  line-height: 1.4;
+}

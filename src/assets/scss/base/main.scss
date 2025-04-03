@@ -1,0 +1,5 @@
+body {
+  color: $color-black;
+
+  @include text-default;
+}
