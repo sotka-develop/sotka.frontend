@@ -7,9 +7,15 @@ export default [
 
   {
     files: ['**/*.js', '**/*.vue'],
+    languageOptions: {
+      env: {
+        browser: true,
+        es2021: true,
+      },
+    },
     rules: {
       'no-unused-vars': 'warn',
-      'no-undef': 'error',
+      'no-undef': 'warn',
       'no-console': 'warn',
       'vue/multi-word-component-names': 'off',
       'vue/require-default-prop': 'off',

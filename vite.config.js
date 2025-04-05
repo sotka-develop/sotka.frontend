@@ -7,6 +7,15 @@ import vueDevTools from 'vite-plugin-vue-devtools';
 export default defineConfig({
   server: {
     port: 3000,
+    // proxy: {
+    //   '/api': {
+    //     target: 'http://s0tka2.tw1.ru',
+    //     changeOrigin: true,
+    //     secure: false,
+    //     // опционально: переписывать путь
+    //     // rewrite: (path) => path.replace(/^\/api/, ''),
+    //   },
+    // },
   },
   plugins: [vue(), vueDevTools()],
   resolve: {
@@ -19,7 +28,7 @@ export default defineConfig({
     preprocessorOptions: {
       scss: {
         additionalData: `
-          @import "@/assets/scss/vars/index.scss"; 
+          @import "@/assets/scss/vars/index.scss";
           @import "@/assets/scss/mixins/index.scss";
         `,
         silenceDeprecations: ['legacy-js-api', 'import', 'global-builtin'],
