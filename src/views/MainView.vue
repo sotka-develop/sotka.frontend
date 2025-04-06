@@ -2,9 +2,6 @@
   <main>
     sotka.frontend
     <div>
-      <pre v-if="userData">
-        {{ userData }}
-      </pre>
       <button type="button" @click="logout">
         <span>logout</span>
       </button>
@@ -15,6 +12,10 @@
 <script setup>
   import { ref, computed } from 'vue';
   import { useAuthStore } from '@/stores/auth';
+  import { useRoute, useRouter } from 'vue-router';
+
+  const route = useRoute();
+  const router = useRouter();
 
   const authStore = useAuthStore();
 
@@ -25,6 +26,9 @@
   async function logout() {
     try {
       await authStore.logout();
+
+      const redirect = route.query.redirect || '/login';
+      router.replace(redirect);
     } catch (error) {
       console.warn(error);
     }

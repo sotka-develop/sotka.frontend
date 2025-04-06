@@ -39,6 +39,10 @@
 <script setup>
   import { ref } from 'vue';
   import { useAuthStore } from '@/stores/auth';
+  import { useRoute, useRouter } from 'vue-router';
+
+  const route = useRoute();
+  const router = useRouter();
 
   const auth = useAuthStore();
 
@@ -68,6 +72,9 @@
         code: code.value,
       });
       console.log('Успешный вход!');
+
+      const redirect = route.query.redirect || '/main';
+      router.replace(redirect);
     } catch (err) {
       console.error('Ошибка входа:', err);
     }
