@@ -1,6 +1,8 @@
 <template>
   <div class="auth-layout">
-    <div class="auth-layout__header">auth-layout header</div>
+    <div class="auth-layout__header">
+      <Header />
+    </div>
 
     <router-view />
 
@@ -8,4 +10,6 @@
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+  import Header from '@/components/Header/Header.vue';
+</script>

@@ -1,0 +1,17 @@
+.form-auth {
+  $root: &;
+
+  &__container {
+    display: flex;
+    align-items: center;
+    min-height: 100vh;
+    padding-top: 80px;
+    padding-bottom: 80px;
+  }
+
+  &__content {
+    max-width: 400px;
+    width: 100%;
+    margin: 0 auto;
+  }
+}

@@ -3,22 +3,25 @@ import { fileURLToPath, URL } from 'node:url';
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import vueDevTools from 'vite-plugin-vue-devtools';
+import vuetify from 'vite-plugin-vuetify';
+import svgLoader from 'vite-svg-loader';
 
 export default defineConfig({
   base: '/',
   server: {
     port: 3000,
-    // proxy: {
-    //   '/api': {
-    //     target: 'http://s0tka2.tw1.ru',
-    //     changeOrigin: true,
-    //     secure: false,
-    //     // опционально: переписывать путь
-    //     // rewrite: (path) => path.replace(/^\/api/, ''),
-    //   },
-    // },
   },
-  plugins: [vue(), vueDevTools()],
+  plugins: [
+    vue(),
+    vueDevTools(),
+    vuetify({
+      autoImport: true, // Автоматический импорт компонентов
+    }),
+    svgLoader({
+      defaultImport: 'component',
+      svgo: false,
+    }),
+  ],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),

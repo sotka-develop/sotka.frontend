@@ -51,3 +51,9 @@
   font-size: rem(16);
   line-height: 1.4;
 }
+
+@mixin text-lead {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+}

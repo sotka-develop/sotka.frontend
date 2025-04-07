@@ -1,5 +1,6 @@
 body {
   color: $color-black;
+  background-color: $color-bg-base-1-200;
 
   @include text-default;
 }

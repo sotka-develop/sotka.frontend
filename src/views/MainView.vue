@@ -2,6 +2,11 @@
   <main>
     sotka.frontend
     <div>
+      <RouterLink to="/map">Поиск земельных участков</RouterLink>
+
+      <br />
+      <br />
+
       <button type="button" @click="logout">
         <span>logout</span>
       </button>
