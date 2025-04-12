@@ -4,7 +4,6 @@ import { useAuthStore } from '@/stores/auth';
 // Views
 import MainView from '../views/MainView.vue';
 import LoginView from '../views/LoginView.vue';
-import MapView from '../views/MapView.vue';
 import NotFoundView from '@/views/NotFoundView.vue';
 
 // Layouts
@@ -18,16 +17,6 @@ const routes = [
     component: MainView,
     meta: {
       title: 'Главная',
-      requiresAuth: true,
-      layout: DefaultLayout,
-    },
-  },
-  {
-    path: '/map',
-    name: 'map',
-    component: MapView,
-    meta: {
-      title: 'Карта',
       requiresAuth: true,
       layout: DefaultLayout,
     },

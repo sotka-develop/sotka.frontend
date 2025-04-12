@@ -30,6 +30,10 @@
             </li>
           </ul>
         </nav>
+
+        <div class="header__action">
+          <Button text="logout" @click="logout" />
+        </div>
       </div>
     </div>
   </header>
@@ -37,10 +41,15 @@
 
 <script setup>
   import { ref } from 'vue';
-  import { useRoute } from 'vue-router';
+  import { useAuthStore } from '@/stores/auth';
+  import { useRoute, useRouter } from 'vue-router';
   import Icon from '@/components/Icon/Icon.vue';
+  import Button from '@/components/Button/Button.vue';
 
   const route = useRoute();
+  const router = useRouter();
+
+  const authStore = useAuthStore();
 
   const navigation = ref([
     {
@@ -72,6 +81,17 @@
       href: '',
     },
   ]);
+
+  async function logout() {
+    try {
+      await authStore.logout();
+
+      const redirect = route.query.redirect || '/login';
+      router.replace(redirect);
+    } catch (error) {
+      console.warn(error);
+    }
+  }
 </script>
 
 <style lang="scss" scoped>

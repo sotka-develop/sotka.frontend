@@ -2,6 +2,8 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
 export const useAuthStore = defineStore('auth', () => {
   const token = ref(localStorage.getItem('token') || null);
   const user = ref(null);
@@ -35,7 +37,7 @@ export const useAuthStore = defineStore('auth', () => {
     if (!token.value) throw new Error('Нет токена');
     isLoading.value = true;
 
-    const res = await fetch('http://s0tka2.tw1.ru/api/users/me', {
+    const res = await fetch(`${baseUrl}/users/me`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -55,7 +57,7 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function sendCode(emailAddress) {
-    const res = await fetch('http://s0tka2.tw1.ru/api/users/send_code', {
+    const res = await fetch(`${baseUrl}/users/send_code`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: emailAddress }),
@@ -69,7 +71,7 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function loginWithCode({ login, password, code }) {
-    const res = await fetch('http://s0tka2.tw1.ru/api/users/login/', {
+    const res = await fetch(`${baseUrl}/users/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: login, password, code }),

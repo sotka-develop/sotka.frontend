@@ -4,9 +4,11 @@
       <Header />
     </div>
 
-    <router-view />
+    <div class="auth-layout__content">
+      <router-view />
+    </div>
 
-    <div class="auth-layout__footer">auth-layout footer</div>
+    <div class="auth-layout__footer"></div>
   </div>
 </template>
 

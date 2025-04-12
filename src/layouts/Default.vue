@@ -1,11 +1,17 @@
 <template>
   <div class="default-layout">
-    <div class="default-layout__header">default-layout header</div>
-    <router-view />
-    <div class="default-layout__footer">default-layout footer</div>
+    <div class="default-layout__header">
+      <Header />
+    </div>
+
+    <div class="default-layout__content">
+      <router-view />
+    </div>
+
+    <div class="default-layout__footer"></div>
   </div>
 </template>
 
 <script setup>
-  import { computed, onMounted, ref, watch } from 'vue';
+  import Header from '@/components/Header/Header.vue';
 </script>
