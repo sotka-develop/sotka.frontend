@@ -1,1 +1,107 @@
-//
+.button {
+  $root: &;
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  min-width: 80px;
+  padding: 0 16px;
+  background-color: $color-white;
+  color: $color-black;
+  border: 0;
+  border-radius: 8px;
+  text-align: center;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  outline: none;
+  box-shadow: 0 0 0 2px transparent;
+
+  @include defaultTransition(background-color, color, box-shadow);
+
+  &--primary {
+    background-color: $color-bg-accent-100;
+    color: $color-white;
+
+    @include hover {
+      background-color: $color-bg-accent-200;
+    }
+
+    &:focus {
+      background-color: $color-bg-accent-300;
+      box-shadow: 0 0 0 2px rgba($color-border-accent-2-100, 0.4);
+    }
+
+    &:active {
+      background-color: $color-bg-accent-300;
+    }
+  }
+
+  &--disabled#{$root}--primary,
+  &:disabled#{$root}--primary {
+    background-color: $color-bg-base-1-200;
+    color: $color-text-base-1-400;
+  }
+
+  &--secondary {
+    background-color: $color-bg-base-1-300;
+    color: $color-text-accent;
+
+    @include hover {
+      background-color: $color-bg-base-1-400;
+    }
+
+    &:focus {
+      background-color: $color-bg-base-1-500;
+      box-shadow: 0 0 0 2px rgba($color-border-accent-2-100, 0.4);
+    }
+
+    &:active {
+      background-color: $color-bg-base-1-500;
+    }
+  }
+
+  &--disabled#{$root}--secondary,
+  &:disabled#{$root}--secondary {
+    background-color: $color-bg-base-1-200;
+    color: $color-text-base-1-400;
+  }
+
+  &--fit {
+    width: 100%;
+  }
+
+  &__icon {
+    display: block;
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+
+    @include defaultTransition(opacity);
+
+    &--prepend {
+      margin-right: 8px;
+    }
+
+    &--append {
+      margin-left: 8px;
+    }
+
+    #{$root}--loading & {
+      opacity: 0;
+    }
+  }
+
+  &__text {
+    position: relative;
+    display: block;
+
+    @include defaultTransition(opacity);
+
+    #{$root}--loading & {
+      opacity: 0;
+    }
+  }
+}

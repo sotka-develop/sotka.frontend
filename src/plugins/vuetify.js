@@ -18,7 +18,18 @@ export const vuetify = createVuetify({
     },
   },
   theme: {
-    defaultTheme: 'light',
+    defaultTheme: 'default',
+    themes: {
+      default: {
+        dark: false,
+        colors: {
+          primary: '#0968fa',
+          surface: '#ffffff',
+          background: '#fafcff',
+        },
+        variables: {},
+      },
+    },
   },
   locale: {
     locale: 'ru',
