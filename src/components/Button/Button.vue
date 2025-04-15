@@ -26,8 +26,8 @@
 
 <script setup>
   import { computed } from 'vue';
-  import Link from '@/components/Link/Link.vue';
-  import Icon from '@/components/Icon/Icon.vue';
+  import Link from '@/components/link/Link.vue';
+  import Icon from '@/components/icon/Icon.vue';
 
   const props = defineProps({
     href: {

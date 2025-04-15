@@ -14,7 +14,7 @@
   import { ref, computed } from 'vue';
   import { useAuthStore } from '@/stores/auth';
   import { useRoute, useRouter } from 'vue-router';
-  import FormAuth from '@/components/FormAuth/FormAuth.vue';
+  import FormAuth from '@/components/formAuth/FormAuth.vue';
 
   const route = useRoute();
   const router = useRouter();

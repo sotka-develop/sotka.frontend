@@ -6,7 +6,7 @@
 </template>
 
 <script setup>
-  import Preloader from '@/components/Preloader/Preloader.vue';
+  import Preloader from '@/components/preloader/Preloader.vue';
   import { useAuthStore } from '@/stores/auth';
 
   const auth = useAuthStore();

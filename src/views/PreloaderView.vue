@@ -7,7 +7,7 @@
   import { onMounted } from 'vue';
   import { useRouter, useRoute } from 'vue-router';
 
-  import Preloader from '@/components/Preloader/Preloader.vue';
+  import Preloader from '@/components/preloader/Preloader.vue';
 
   const authStore = useAuthStore();
   const router = useRouter();

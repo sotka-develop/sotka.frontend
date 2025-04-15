@@ -23,8 +23,8 @@
 <script setup>
   import { reactive, watch } from 'vue';
 
-  import Input from '@/components/Fields/Input/Input.vue';
-  import Button from '@/components/Button/Button.vue';
+  import Input from '@/components/fields/input/Input.vue';
+  import Button from '@/components/button/Button.vue';
 
   const props = defineProps({
     title: {

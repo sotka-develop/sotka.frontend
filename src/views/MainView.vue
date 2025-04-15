@@ -252,7 +252,7 @@
   import { computed, onMounted, ref } from 'vue';
   import { useFiltersStore } from '@/stores/filters';
   import { useLotsStore } from '@/stores/lots';
-  import Button from '@/components/Button/Button.vue';
+  import Button from '@/components/button/Button.vue';
 
   // store
   const filtersStore = useFiltersStore();

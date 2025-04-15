@@ -13,5 +13,5 @@
 </template>
 
 <script setup>
-  import Header from '@/components/Header/Header.vue';
+  import Header from '@/components/header/Header.vue';
 </script>

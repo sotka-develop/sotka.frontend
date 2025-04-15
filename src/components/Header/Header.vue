@@ -31,9 +31,7 @@
           </ul>
         </nav>
 
-        <div class="header__action">
-          <Button text="logout" @click="logout" />
-        </div>
+        <div class="header__actions"></div>
       </div>
     </div>
   </header>
@@ -43,8 +41,8 @@
   import { ref } from 'vue';
   import { useAuthStore } from '@/stores/auth';
   import { useRoute, useRouter } from 'vue-router';
-  import Icon from '@/components/Icon/Icon.vue';
-  import Button from '@/components/Button/Button.vue';
+  import Icon from '@/components/icon/Icon.vue';
+  import Button from '@/components/button/Button.vue';
 
   const route = useRoute();
   const router = useRouter();
