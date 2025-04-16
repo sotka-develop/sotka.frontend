@@ -9,6 +9,7 @@ export default {
     title: { control: 'text' },
     text: { control: 'text' },
     type: { control: 'text' },
+    loading: { control: 'boolean' },
     theme: { options: ['primary', 'secondary'], control: 'select' },
     onClick: { action: 'clicked' },
     hasPrependIcon: {
@@ -27,6 +28,7 @@ export default {
     text: 'Кнопка',
     type: 'button',
     theme: 'primary',
+    loading: false,
   },
 };
 
@@ -57,6 +59,7 @@ Primary.args = {
   theme: 'primary',
   hasPrependIcon: false,
   hasAppendIcon: false,
+  loading: false,
 };
 
 export const Secondary = Template.bind({});
@@ -68,6 +71,7 @@ Secondary.args = {
   theme: 'secondary',
   hasPrependIcon: false,
   hasAppendIcon: false,
+  loading: false,
 };
 
 // export const Primary = {

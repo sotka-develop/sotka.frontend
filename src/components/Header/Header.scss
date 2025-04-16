@@ -18,7 +18,19 @@
     display: block;
     width: 78px;
     height: 40px;
-    margin-right: 312px;
+
+    @include media-breakpoint-up(xl) {
+      margin-right: 22.75%;
+    }
+    @include media-breakpoint-only(lg) {
+      margin-right: 17.5%;
+    }
+  }
+
+  &__navigation {
+    @include media-breakpoint-down(md) {
+      display: none;
+    }
   }
 
   &__list {
@@ -50,7 +62,7 @@
     }
   }
 
-  &__action {
+  &__actions {
     margin-left: auto;
   }
 }

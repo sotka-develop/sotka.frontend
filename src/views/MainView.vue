@@ -382,7 +382,7 @@
   }
 
   onMounted(async () => {
-    await filtersStore.loadFilters();
+    // await filtersStore.loadFilters();
   });
 </script>
 

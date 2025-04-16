@@ -42,6 +42,10 @@
     type: {
       type: String,
     },
+    fit: {
+      type: Boolean,
+      default: false,
+    },
     theme: {
       type: String,
       default: 'primary',
@@ -55,6 +59,10 @@
     appendIcon: {
       type: String,
     },
+    loading: {
+      type: Boolean,
+      default: false,
+    },
   });
 
   const emit = defineEmits(['click']);
@@ -62,7 +70,9 @@
   const classList = computed(() => {
     return {
       [`button--${props.theme}`]: props.theme,
-      ['disabled']: props.disabled,
+      ['button--fit']: props.fit,
+      ['button--disabled']: props.disabled,
+      ['button--loading']: props.loading,
     };
   });
 

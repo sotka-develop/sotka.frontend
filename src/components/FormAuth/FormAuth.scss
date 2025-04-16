@@ -2,16 +2,69 @@
   $root: &;
 
   &__container {
-    display: flex;
-    align-items: center;
-    min-height: 100vh;
-    padding-top: 80px;
-    padding-bottom: 80px;
+    @include media-breakpoint-up(lg) {
+      display: flex;
+    }
+  }
+
+  &__base {
+    padding-top: 24px;
+    padding-bottom: 48px;
+
+    @include media-breakpoint-up(lg) {
+      width: 50%;
+      padding-top: 200px;
+      padding-bottom: 80px;
+    }
+  }
+
+  &__logo {
+    width: 78px;
+    height: 40px;
+    margin-bottom: 48px;
+  }
+
+  &__title {
+    margin-bottom: 48px;
   }
 
   &__content {
-    max-width: 400px;
+    padding: 0 16px;
+    max-width: 480px;
     width: 100%;
-    margin: 0 auto;
+    margin-left: auto;
+    margin-right: auto;
+
+    @include media-breakpoint-up(lg) {
+      padding: 0 24px;
+    }
+  }
+
+  &__side {
+    @include media-breakpoint-up(lg) {
+      width: 50%;
+      height: 100vh;
+      min-height: 800px;
+    }
+    @include media-breakpoint-down(md) {
+      display: none;
+    }
+  }
+
+  &__field {
+    &:not(:last-child) {
+      margin-bottom: 8px;
+    }
+  }
+
+  &__actions {
+    width: 100%;
+    margin-top: 24px;
+  }
+
+  &__action {
+    &:not(:last-child) {
+      margin-bottom: 16px;
+    }
   }
 }

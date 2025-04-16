@@ -5,7 +5,10 @@
       :label="label"
       :placeholder="placeholder"
       :type="type"
+      :readonly="readonly"
       :model-value="modelValue"
+      :rules="rules"
+      :error-messages="errorMessages"
       @update:modelValue="emitUpdate"
     ></v-text-field>
   </div>
@@ -28,6 +31,14 @@
       default: false,
     },
     modelValue: [String, Number],
+    rules: {
+      type: Array,
+      default: () => [],
+    },
+    errorMessages: {
+      type: Array,
+      default: () => [],
+    },
   });
 
   const emit = defineEmits(['update:modelValue']);

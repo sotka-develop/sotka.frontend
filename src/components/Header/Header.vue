@@ -12,7 +12,7 @@
 
         <nav class="header__navigation">
           <ul class="header__list">
-            <li v-for="(item, idx) in navigation" :key="idx" class="header__item">
+            <li v-for="(item, idx) in navigationData" :key="idx" class="header__item">
               <!-- нет ссылки (disabled) -->
               <span v-if="!item.href" class="header__link text-lead header__link--disabled">
                 {{ item.text }}
@@ -31,14 +31,17 @@
           </ul>
         </nav>
 
-        <div class="header__actions"></div>
+        <!-- <div class="header__actions">
+          <div class="header__action">
+            <Button v-bind="buttonData" @click="logout" />
+          </div>
+        </div> -->
       </div>
     </div>
   </header>
 </template>
 
 <script setup>
-  import { ref } from 'vue';
   import { useAuthStore } from '@/stores/auth';
   import { useRoute, useRouter } from 'vue-router';
   import Icon from '@/components/icon/Icon.vue';
@@ -49,7 +52,7 @@
 
   const authStore = useAuthStore();
 
-  const navigation = ref([
+  const navigationData = [
     {
       text: 'Главная',
       href: '/main',
@@ -78,7 +81,13 @@
       text: 'FAQ',
       href: '',
     },
-  ]);
+  ];
+
+  const buttonData = {
+    text: 'Войти',
+    title: 'Войти',
+    theme: 'secondary',
+  };
 
   async function logout() {
     try {
