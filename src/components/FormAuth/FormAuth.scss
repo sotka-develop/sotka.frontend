@@ -53,13 +53,13 @@
 
   &__field {
     &:not(:last-child) {
-      margin-bottom: 8px;
+      margin-bottom: 24px;
     }
   }
 
   &__actions {
     width: 100%;
-    margin-top: 24px;
+    margin-top: 32px;
   }
 
   &__action {

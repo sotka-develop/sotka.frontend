@@ -11,7 +11,7 @@
 
           <div class="form-auth__fields">
             <div v-for="field in fields" :key="field.name" class="form-auth__field">
-              <Input v-bind="field" v-model="formData[field.name]" />
+              <Field v-bind="field" v-model="formData[field.name]" />
             </div>
           </div>
 
@@ -33,7 +33,7 @@
 <script setup>
   import { reactive, ref, watch } from 'vue';
 
-  import Input from '@/components/fields/input/Input.vue';
+  import Field from '@/components/fields/field/Field.vue';
   import Button from '@/components/button/Button.vue';
   import Image from '@/components/image/Image.vue';
   import Icon from '@/components/icon/Icon.vue';

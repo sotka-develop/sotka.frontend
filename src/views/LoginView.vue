@@ -29,17 +29,17 @@
   const formFields = computed(() =>
     isCodeSent.value
       ? [
-          { name: 'email', placeholder: 'Email', readonly: true, rules: [required, emailRule] },
-          { name: 'password', placeholder: 'Пароль', type: 'password', rules: [required] },
-          { name: 'code', placeholder: 'Код', rules: [required] },
+          { name: 'email', type: 'text', placeholder: 'Email', readonly: true, rules: [required, emailRule] },
+          { name: 'password', type: 'text', placeholder: 'Пароль', type: 'password', rules: [required] },
+          { name: 'code', type: 'text', placeholder: 'Код', rules: [required] },
         ]
-      : [{ name: 'email', placeholder: 'Email', rules: [required, emailRule] }]
+      : [{ name: 'email', type: 'text', placeholder: 'Email', rules: [required, emailRule] }]
   );
 
   const formActions = computed(() =>
     isCodeSent.value
-      ? [{ name: 'login', text: 'Войти', type: 'submit', loading: isPending.value }]
-      : [{ name: 'send_code', text: 'Отправить код', type: 'submit', loading: isPending.value }]
+      ? [{ name: 'login', type: 'text', text: 'Войти', type: 'submit', loading: isPending.value }]
+      : [{ name: 'send_code', type: 'text', text: 'Отправить код', type: 'submit', loading: isPending.value }]
   );
 
   async function handleSubmit(formData) {

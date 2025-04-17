@@ -1,3 +1,17 @@
 .input {
   $root: &;
+
+  position: relative;
+
+  &:deep(.v-field__input) {
+    min-height: 40px;
+    height: 40px;
+  }
+
+  &:deep(.v-input__details) {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+  }
 }
