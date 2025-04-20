@@ -122,15 +122,17 @@
         <div class="form-filters__items form-filters__items--1">
           <!-- ВРИ / Разрешенные использования -->
           <div class="form-filters__item">
-            <v-select
+            <v-combobox
               label="ВРИ"
               placeholder="Выбрать значение"
               item-title="text"
               item-value="value"
+              :return-object="false"
               multiple
               v-model="usesModel"
               :items="usesData"
-            ></v-select>
+              @input="onSearchPermittedUses"
+            ></v-combobox>
           </div>
         </div>
 
@@ -243,25 +245,121 @@
         <div class="form-filters__action">
           <Button text="Поиск" @click="onSearch" />
         </div>
+
+        <div class="map">
+          <yandex-map v-model="map" :settings="mapSettins" width="100%" height="100%">
+            <yandex-map-default-scheme-layer />
+            <yandex-map-default-features-layer />
+
+            <yandex-map-marker v-for="(marker, index) in markers" :key="index" :settings="marker">
+              <div class="marker"></div>
+            </yandex-map-marker>
+          </yandex-map>
+        </div>
+
+        <v-data-table-server
+          v-model:page="page"
+          v-model:items-per-page="pageSize"
+          v-model:items="tableItems"
+          :items-length="totalCount"
+          :headers="tableHeaders"
+          :loading="isLoading"
+          loading-text="Загрузка"
+          no-results-text="Ничего не найдено"
+          no-data-text="Данных нет"
+          @update:options="onOptionsUpdate"
+        >
+          <template #item.link="{ item }">
+            <a :href="item.link" target="_blank">{{ item.link }}</a>
+          </template>
+        </v-data-table-server>
       </div>
     </div>
   </main>
 </template>
 
 <script setup>
-  import { computed, onMounted, ref } from 'vue';
+  import { computed, onMounted, ref, shallowRef } from 'vue';
+  import Button from '@/components/button/Button.vue';
+
+  import { storeToRefs } from 'pinia';
   import { useFiltersStore } from '@/stores/filters';
   import { useLotsStore } from '@/stores/lots';
-  import Button from '@/components/button/Button.vue';
+
+  import debounce from 'lodash.debounce';
+
+  import {
+    YandexMap,
+    YandexMapClusterer,
+    YandexMapControl,
+    YandexMapControlButton,
+    YandexMapControls,
+    YandexMapListener,
+    YandexMapDefaultFeaturesLayer,
+    YandexMapDefaultSchemeLayer,
+    YandexMapMarker,
+    YandexMapZoomControl,
+  } from 'vue-yandex-maps';
+
+  import useSearchFilters from '@/composables/useSearchFilters';
+
+  const map = shallowRef(null);
+  const mapZoom = ref(10);
+  const enabledBehaviors = ref(['drag', 'pinchZoom', 'dblClick']);
+
+  const mapSettins = {
+    location: {
+      center: [37.617644, 55.755819],
+      zoom: mapZoom.value,
+    },
+    // behaviors: enabledBehaviors.value,
+  };
+
+  const handleClick = (event) => {
+    console.log(event);
+  };
+
+  const markers = [
+    {
+      coordinates: [51.789682128109, 55.140428698122],
+      onClick: handleClick,
+    },
+    {
+      coordinates: [54.76778893634, 57.108481458691],
+      onClick: handleClick,
+    },
+  ];
 
   // store
   const filtersStore = useFiltersStore();
   const lotsStore = useLotsStore();
 
+  const { isLoading } = storeToRefs(lotsStore);
+
+  const page = ref(1);
+  const pageSize = ref(10);
+  const totalCount = ref(0);
+
+  const data = ref([]);
+  const tableItems = ref([]);
+
+  //#region данные для фильтров
+
   // Окончательная подача заявок от
   const biddEndTimeFromModel = ref(null);
+  const biddEndTimeFromModelFormatted = computed(() => {
+    if (!biddEndTimeFromModel.value) return null;
+
+    return new Date(biddEndTimeFromModel.value).toISOString().slice(0, 10);
+  });
+
   // Окончательная подача заявок до
   const biddEndTimeToModel = ref(null);
+  const biddEndTimeToModelFormatted = computed(() => {
+    if (!biddEndTimeToModel.value) return null;
+
+    return new Date(biddEndTimeToModel.value).toISOString().slice(0, 10);
+  });
 
   // Форма торгов
   const biddModel = ref(null);
@@ -310,6 +408,11 @@
 
   // Дата добавления
   const addedAtModel = ref(null);
+  const addedAtModelFormatted = computed(() => {
+    if (!addedAtModel.value) return null;
+
+    return new Date(addedAtModel.value).toISOString().slice(0, 10);
+  });
 
   // Рубрики
   const rubricsModel = ref(null);
@@ -325,9 +428,7 @@
 
   // ВРИ / Разрешенные использования
   const usesModel = ref(null);
-  const usesData = computed(() => {
-    return filtersStore.permitted_uses;
-  });
+  const usesData = ref([]);
 
   // Начальная цена, ₽ (более) / Минимальная цена от
   const priceMinFromModel = ref(null);
@@ -352,37 +453,132 @@
   // Площадь до
   const areaToModel = ref(null);
 
-  async function onSearch() {
-    const filters = {
-      bidd_end_time_from: biddEndTimeFromModel.value,
-      bidd_end_time_to: biddEndTimeToModel.value,
-      bidd_form: biddModel.value,
-      region_ids: regionsModel.value,
-      etp_codes: codesModel.value,
-      cadaster_number: cadasterNumberModel.value || null,
-      lot: lotModel.value || null,
-      compositions: compositionModel.value,
-      added_at: addedAtModel.value || null,
-      rubric_ids: rubricsModel.value,
-      categories: categoryModel.value,
-      permitted_uses_id: usesModel.value,
-      price_min_from: priceMinFromModel.value || null,
-      price_min_to: priceMaxFromModel.value || null,
-      cadastral_cost_from: cadastralCostFromModel.value || null,
-      cadastral_cost_to: cadastralCostToModel.value || null,
-      price_min_cadastral_cost_ratio_percent_from: priceMinCadastralCostRatioPercentFromModel.value || null,
-      price_min_cadastral_cost_ratio_percent_to: priceMinCadastralCostRatioPercentToModel.value || null,
-      area_from: areaFromModel.value || null,
-      area_to: areaToModel.value || null,
-      page: 0,
-      page_size: '10',
-    };
+  const models = {
+    biddEndTimeFromModel,
+    biddEndTimeToModel,
+    biddModel,
+    regionsModel,
+    codesModel,
+    cadasterNumberModel,
+    lotModel,
+    compositionModel,
+    addedAtModel,
+    rubricsModel,
+    categoryModel,
+    usesModel,
+    priceMinFromModel,
+    priceMaxFromModel,
+    cadastralCostFromModel,
+    cadastralCostToModel,
+    priceMinCadastralCostRatioPercentFromModel,
+    priceMinCadastralCostRatioPercentToModel,
+    areaFromModel,
+    areaToModel,
+    page,
+    pageSize,
+  };
 
-    await lotsStore.fetchLots(filters);
+  const filters = useSearchFilters(models);
+
+  //#endregion
+
+  //#region данные таблицы
+  const tableHeaders = [
+    { title: 'Ссылка', key: 'link' },
+    { title: 'Кадастровый номер', key: 'cadaster_number' },
+    { title: 'Площадь', key: 'area' },
+    { title: 'Площадь (по НСПД)', key: 'area_from_nspd' },
+    { title: 'Минимальная цена', key: 'price_min' },
+    { title: 'Кадастровая стоимость (по НСПД)', key: 'cadastral_cost_from_nspd' },
+    { title: '% соотношение начальной цены и кадастровой стоимости', key: 'price_min_cadastral_cost_ratio_percent' },
+    { title: 'Код ЭТП', key: 'etp_code' },
+    { title: 'Категория', key: 'category' },
+    { title: 'Категория (по НСПД)', key: 'category_from_nspd' },
+    { title: 'Разрешенное использование', key: 'permitted_use' },
+    { title: 'Разрешенное использование (по документу НСПД)', key: 'permitted_use_from_nspd' },
+    { title: 'Регион', key: 'region' },
+    { title: 'Федеральный округ', key: 'federal_district' },
+    { title: 'Композиция', key: 'composition' },
+  ];
+
+  function transformLotsToTable(lots) {
+    return lots.map((lot) => ({
+      link: lot.link || '',
+      cadaster_number: lot.cadaster_number || '',
+      area: lot.area || '',
+      area_from_nspd: lot.area_from_nspd || '',
+      price_min: lot.price_min || '',
+      cadastral_cost_from_nspd: lot.cadastral_cost_from_nspd || '',
+      price_min_cadastral_cost_ratio_percent: lot.price_min_cadastral_cost_ratio_percent || '',
+      etp_code: lot.etp_code?.entity_name || '',
+      category: lot.category || '',
+      category_from_nspd: lot.category_from_nspd || '',
+      permitted_use: lot.permitted_use || '',
+      permitted_use_from_nspd: lot.permitted_use_established_by_document_from_nspd || '',
+      region: lot.region?.region || '',
+      federal_district: lot.federal_district?.federal_district || '',
+      composition: lot.composition || '',
+    }));
+  }
+  //#endregion
+
+  // async function onSearch() {
+  //   const filters = {
+  //     bidd_end_time_from: biddEndTimeFromModelFormatted.value || null,
+  //     bidd_end_time_to: biddEndTimeToModelFormatted.value || null,
+  //     bidd_form: biddModel.value || null,
+  //     region_ids: regionsModel.value || null,
+  //     etp_codes: codesModel.value || null,
+  //     cadaster_number: cadasterNumberModel.value?.toString() || null,
+  //     lot: lotModel.value || null,
+  //     compositions: compositionModel.value || null,
+  //     added_at: addedAtModelFormatted.value || null,
+  //     rubric_ids: rubricsModel.value || null,
+  //     categories: categoryModel.value || null,
+  //     permitted_uses_id: usesModel.value || null,
+  //     price_min_from: priceMinFromModel.value || null,
+  //     price_min_to: priceMaxFromModel.value || null,
+  //     cadastral_cost_from: cadastralCostFromModel.value || null,
+  //     cadastral_cost_to: cadastralCostToModel.value || null,
+  //     price_min_cadastral_cost_ratio_percent_from: priceMinCadastralCostRatioPercentFromModel.value || null,
+  //     price_min_cadastral_cost_ratio_percent_to: priceMinCadastralCostRatioPercentToModel.value || null,
+  //     area_from: areaFromModel.value || null,
+  //     area_to: areaToModel.value || null,
+  //     page: page.value - 1,
+  //     page_size: pageSize.value,
+  //   };
+
+  //   const result = await lotsStore.fetchLots(filters);
+  //   data.value = result?.land_areas || [];
+  //   totalCount.value = result?.total_count || 0;
+
+  //   tableItems.value = transformLotsToTable(data.value);
+  // }
+
+  async function onSearch() {
+    const result = await lotsStore.fetchLots(filters.value);
+
+    data.value = result?.land_areas || [];
+    totalCount.value = result?.total_count || 0;
+    tableItems.value = transformLotsToTable(data.value);
+  }
+
+  const onSearchPermittedUses = debounce(async (data) => {
+    const value = data?.target?.value || '';
+
+    const result = await filtersStore.searchPermittedUses(value, 50, 0);
+    usesData.value = result.value;
+  }, 800);
+
+  function onOptionsUpdate(options) {
+    page.value = options.page;
+    pageSize.value = options.itemsPerPage;
+
+    onSearch();
   }
 
   onMounted(async () => {
-    // await filtersStore.loadFilters();
+    await filtersStore.loadFilters();
   });
 </script>
 
@@ -410,5 +606,10 @@
         margin-bottom: 28px;
       }
     }
+  }
+
+  .map {
+    width: 100%;
+    height: 400px;
   }
 </style>

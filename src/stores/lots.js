@@ -21,7 +21,7 @@ export const useLotsStore = defineStore('lots', () => {
     error.value = null;
 
     try {
-      const res = await fetch(`${baseUrl}/filters/land_areas`, {
+      const res = await fetch(`${baseUrl}/client/land_areas_by_filter`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -35,7 +35,8 @@ export const useLotsStore = defineStore('lots', () => {
       }
 
       const data = await res.json();
-      console.log(data);
+
+      return data.payload || null;
     } catch (err) {
       error.value = err.message;
       console.error(err);
