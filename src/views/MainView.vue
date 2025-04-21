@@ -288,6 +288,14 @@
 
   import debounce from 'lodash.debounce';
 
+  // store
+  const filtersStore = useFiltersStore();
+  const lotsStore = useLotsStore();
+
+  const { isLoading } = storeToRefs(lotsStore);
+
+  import useSearchFilters from '@/composables/useSearchFilters';
+
   import {
     YandexMap,
     YandexMapClusterer,
@@ -301,15 +309,74 @@
     YandexMapZoomControl,
   } from 'vue-yandex-maps';
 
-  import useSearchFilters from '@/composables/useSearchFilters';
+  // список id сущностей таблицы
+  const landIdsFromTable = ref([]);
 
+  const lotsForMap = ref([]);
+
+  const mapBounds = ref({
+    lat_lu: 0,
+    lon_lu: 0,
+    lat_rd: 0,
+    lon_rd: 0,
+  });
+
+  //#region данные таблицы
+  const page = ref(1);
+  const pageSize = ref(10);
+  const totalCount = ref(0);
+
+  const data = ref([]);
+  const tableItems = ref([]);
+
+  const tableHeaders = [
+    { title: 'Ссылка', key: 'link' },
+    { title: 'Кадастровый номер', key: 'cadaster_number' },
+    { title: 'Площадь', key: 'area' },
+    { title: 'Площадь (по НСПД)', key: 'area_from_nspd' },
+    { title: 'Минимальная цена', key: 'price_min' },
+    { title: 'Кадастровая стоимость (по НСПД)', key: 'cadastral_cost_from_nspd' },
+    { title: '% соотношение начальной цены и кадастровой стоимости', key: 'price_min_cadastral_cost_ratio_percent' },
+    { title: 'Код ЭТП', key: 'etp_code' },
+    { title: 'Категория', key: 'category' },
+    { title: 'Категория (по НСПД)', key: 'category_from_nspd' },
+    { title: 'Разрешенное использование', key: 'permitted_use' },
+    { title: 'Разрешенное использование (по документу НСПД)', key: 'permitted_use_from_nspd' },
+    { title: 'Регион', key: 'region' },
+    { title: 'Федеральный округ', key: 'federal_district' },
+    { title: 'Композиция', key: 'composition' },
+  ];
+
+  function transformLotsToTable(lots) {
+    return lots.map((lot) => ({
+      link: lot.link || '',
+      cadaster_number: lot.cadaster_number || '',
+      area: lot.area || '',
+      area_from_nspd: lot.area_from_nspd || '',
+      price_min: lot.price_min || '',
+      cadastral_cost_from_nspd: lot.cadastral_cost_from_nspd || '',
+      price_min_cadastral_cost_ratio_percent: lot.price_min_cadastral_cost_ratio_percent || '',
+      etp_code: lot.etp_code?.entity_name || '',
+      category: lot.category || '',
+      category_from_nspd: lot.category_from_nspd || '',
+      permitted_use: lot.permitted_use || '',
+      permitted_use_from_nspd: lot.permitted_use_established_by_document_from_nspd || '',
+      region: lot.region?.region || '',
+      federal_district: lot.federal_district?.federal_district || '',
+      composition: lot.composition || '',
+    }));
+  }
+  //#endregion
+
+  //#region данные карты
   const map = shallowRef(null);
-  const mapZoom = ref(10);
+  const mapZoom = ref(4);
   const enabledBehaviors = ref(['drag', 'pinchZoom', 'dblClick']);
+  const dots = ref([]);
 
   const mapSettins = {
     location: {
-      center: [37.617644, 55.755819],
+      center: [57.63299032783368, 40.178383991270444],
       zoom: mapZoom.value,
     },
     // behaviors: enabledBehaviors.value,
@@ -319,29 +386,27 @@
     console.log(event);
   };
 
-  const markers = [
-    {
-      coordinates: [51.789682128109, 55.140428698122],
-      onClick: handleClick,
-    },
-    {
-      coordinates: [54.76778893634, 57.108481458691],
-      onClick: handleClick,
-    },
-  ];
+  // const markers = [
+  //   {
+  //     coordinates: [51.789682128109, 55.140428698122],
+  //     onClick: handleClick,
+  //   },
+  //   {
+  //     coordinates: [54.76778893634, 57.108481458691],
+  //     onClick: handleClick,
+  //   },
+  // ];
 
-  // store
-  const filtersStore = useFiltersStore();
-  const lotsStore = useLotsStore();
+  const markers = computed(() => {
+    return dots.value.map((dot) => {
+      return {
+        coordinates: [dot.center_latitude, dot.center_longitude],
+        onClick: handleClick,
+      };
+    });
+  });
 
-  const { isLoading } = storeToRefs(lotsStore);
-
-  const page = ref(1);
-  const pageSize = ref(10);
-  const totalCount = ref(0);
-
-  const data = ref([]);
-  const tableItems = ref([]);
+  //#endregion
 
   //#region данные для фильтров
 
@@ -482,87 +547,7 @@
 
   //#endregion
 
-  //#region данные таблицы
-  const tableHeaders = [
-    { title: 'Ссылка', key: 'link' },
-    { title: 'Кадастровый номер', key: 'cadaster_number' },
-    { title: 'Площадь', key: 'area' },
-    { title: 'Площадь (по НСПД)', key: 'area_from_nspd' },
-    { title: 'Минимальная цена', key: 'price_min' },
-    { title: 'Кадастровая стоимость (по НСПД)', key: 'cadastral_cost_from_nspd' },
-    { title: '% соотношение начальной цены и кадастровой стоимости', key: 'price_min_cadastral_cost_ratio_percent' },
-    { title: 'Код ЭТП', key: 'etp_code' },
-    { title: 'Категория', key: 'category' },
-    { title: 'Категория (по НСПД)', key: 'category_from_nspd' },
-    { title: 'Разрешенное использование', key: 'permitted_use' },
-    { title: 'Разрешенное использование (по документу НСПД)', key: 'permitted_use_from_nspd' },
-    { title: 'Регион', key: 'region' },
-    { title: 'Федеральный округ', key: 'federal_district' },
-    { title: 'Композиция', key: 'composition' },
-  ];
-
-  function transformLotsToTable(lots) {
-    return lots.map((lot) => ({
-      link: lot.link || '',
-      cadaster_number: lot.cadaster_number || '',
-      area: lot.area || '',
-      area_from_nspd: lot.area_from_nspd || '',
-      price_min: lot.price_min || '',
-      cadastral_cost_from_nspd: lot.cadastral_cost_from_nspd || '',
-      price_min_cadastral_cost_ratio_percent: lot.price_min_cadastral_cost_ratio_percent || '',
-      etp_code: lot.etp_code?.entity_name || '',
-      category: lot.category || '',
-      category_from_nspd: lot.category_from_nspd || '',
-      permitted_use: lot.permitted_use || '',
-      permitted_use_from_nspd: lot.permitted_use_established_by_document_from_nspd || '',
-      region: lot.region?.region || '',
-      federal_district: lot.federal_district?.federal_district || '',
-      composition: lot.composition || '',
-    }));
-  }
-  //#endregion
-
-  // async function onSearch() {
-  //   const filters = {
-  //     bidd_end_time_from: biddEndTimeFromModelFormatted.value || null,
-  //     bidd_end_time_to: biddEndTimeToModelFormatted.value || null,
-  //     bidd_form: biddModel.value || null,
-  //     region_ids: regionsModel.value || null,
-  //     etp_codes: codesModel.value || null,
-  //     cadaster_number: cadasterNumberModel.value?.toString() || null,
-  //     lot: lotModel.value || null,
-  //     compositions: compositionModel.value || null,
-  //     added_at: addedAtModelFormatted.value || null,
-  //     rubric_ids: rubricsModel.value || null,
-  //     categories: categoryModel.value || null,
-  //     permitted_uses_id: usesModel.value || null,
-  //     price_min_from: priceMinFromModel.value || null,
-  //     price_min_to: priceMaxFromModel.value || null,
-  //     cadastral_cost_from: cadastralCostFromModel.value || null,
-  //     cadastral_cost_to: cadastralCostToModel.value || null,
-  //     price_min_cadastral_cost_ratio_percent_from: priceMinCadastralCostRatioPercentFromModel.value || null,
-  //     price_min_cadastral_cost_ratio_percent_to: priceMinCadastralCostRatioPercentToModel.value || null,
-  //     area_from: areaFromModel.value || null,
-  //     area_to: areaToModel.value || null,
-  //     page: page.value - 1,
-  //     page_size: pageSize.value,
-  //   };
-
-  //   const result = await lotsStore.fetchLots(filters);
-  //   data.value = result?.land_areas || [];
-  //   totalCount.value = result?.total_count || 0;
-
-  //   tableItems.value = transformLotsToTable(data.value);
-  // }
-
-  async function onSearch() {
-    const result = await lotsStore.fetchLots(filters.value);
-
-    data.value = result?.land_areas || [];
-    totalCount.value = result?.total_count || 0;
-    tableItems.value = transformLotsToTable(data.value);
-  }
-
+  // поиск по ВРИ
   const onSearchPermittedUses = debounce(async (data) => {
     const value = data?.target?.value || '';
 
@@ -570,6 +555,53 @@
     usesData.value = result.value;
   }, 800);
 
+  // фильтрация
+  async function onSearch() {
+    const result = await lotsStore.fetchLots(filters.value);
+
+    if (!result) {
+      console.error('Ошибка при получении лотов!');
+
+      return;
+    }
+
+    data.value = result?.land_areas || [];
+    totalCount.value = result?.total_count || 0;
+    tableItems.value = transformLotsToTable(data.value);
+
+    // извлечение id
+    landIdsFromTable.value = data.value.map((lot) => lot.id).filter(Boolean);
+
+    const mapPayload = {
+      lat_lu: 46.593939604177926,
+      lon_lu: 11.049821462434878,
+      lat_rd: 65.96012495630457,
+      lon_rd: 64.7046557389222,
+      // lat_lu: 0,
+      // lat_rd: 0,
+      // lon_lu: 0,
+      // lon_rd: 0,
+      zoom: 0,
+      dots_to_cluster: 64,
+
+      search_filters: { ...filters.value, land_ids: landIdsFromTable.value },
+      land_ids: landIdsFromTable.value,
+    };
+
+    const mapResult = await lotsStore.fetchMapData(mapPayload);
+    console.log(mapResult);
+
+    // Обработка ошибки
+    if (!mapResult) {
+      console.error('Ошибка при получении лотов для карты!');
+
+      return;
+    }
+
+    dots.value = mapResult.dots || [];
+  }
+
+  // контролы таблицы
   function onOptionsUpdate(options) {
     page.value = options.page;
     pageSize.value = options.itemsPerPage;
@@ -578,6 +610,7 @@
   }
 
   onMounted(async () => {
+    // получаем данные фильтров
     await filtersStore.loadFilters();
   });
 </script>
@@ -611,5 +644,14 @@
   .map {
     width: 100%;
     height: 400px;
+  }
+
+  .marker {
+    width: 32px;
+    height: 32px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-image: url("data:image/svg+xml,%3Csvg width='32' height='32' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12.9091 13.4288C12.9091 11.7719 14.293 10.4287 16.0001 10.4287C17.7071 10.4287 19.091 11.7719 19.091 13.4288C19.091 15.0857 17.7071 16.4289 16.0001 16.4289C14.293 16.4289 12.9091 15.0857 12.9091 13.4288Z' fill='%23262AF1'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M6.28577 13.4288C6.28577 8.22142 10.635 4 16.0001 4C21.3651 4 25.7143 8.22142 25.7143 13.4288C25.7143 18.0589 23.2095 21.7714 20.5719 24.3926C19.2614 25.6949 17.9472 26.6976 16.9606 27.3741C16.5849 27.6317 16.2584 27.8408 16.0001 28C15.7417 27.8408 15.4152 27.6317 15.0395 27.3741C14.0529 26.6976 12.7387 25.6949 11.4282 24.3926C8.7906 21.7714 6.28577 18.0589 6.28577 13.4288ZM16.0001 7.85724C12.8298 7.85724 10.2598 10.3517 10.2598 13.4288C10.2598 16.5059 12.8298 19.0004 16.0001 19.0004C19.1703 19.0004 21.7403 16.5059 21.7403 13.4288C21.7403 10.3517 19.1703 7.85724 16.0001 7.85724Z' fill='%23262AF1'/%3E%3Cpath d='M12.9091 13.4288C12.9091 11.7719 14.293 10.4287 16.0001 10.4287C17.7071 10.4287 19.091 11.7719 19.091 13.4288C19.091 15.0857 17.7071 16.4289 16.0001 16.4289C14.293 16.4289 12.9091 15.0857 12.9091 13.4288Z' fill='%23262AF1'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M6.28577 13.4288C6.28577 8.22142 10.635 4 16.0001 4C21.3651 4 25.7143 8.22142 25.7143 13.4288C25.7143 18.0589 23.2095 21.7714 20.5719 24.3926C19.2614 25.6949 17.9472 26.6976 16.9606 27.3741C16.5849 27.6317 16.2584 27.8408 16.0001 28C15.7417 27.8408 15.4152 27.6317 15.0395 27.3741C14.0529 26.6976 12.7387 25.6949 11.4282 24.3926C8.7906 21.7714 6.28577 18.0589 6.28577 13.4288ZM16.0001 7.85724C12.8298 7.85724 10.2598 10.3517 10.2598 13.4288C10.2598 16.5059 12.8298 19.0004 16.0001 19.0004C19.1703 19.0004 21.7403 16.5059 21.7403 13.4288C21.7403 10.3517 19.1703 7.85724 16.0001 7.85724Z' fill='%23262AF1'/%3E%3Cpath d='M16.0001 4C10.635 4 6.28577 8.22142 6.28577 13.4288C6.28577 18.0589 8.7906 21.7714 11.4282 24.3926C12.7387 25.6949 14.0529 26.6976 15.0395 27.3741C15.4152 27.6317 15.7417 27.8408 16.0001 28C16.2584 27.8408 16.5849 27.6317 16.9606 27.3741C17.9472 26.6976 19.2614 25.6949 20.5719 24.3926C23.2095 21.7714 25.7143 18.0589 25.7143 13.4288C25.7143 8.22142 21.3651 4 16.0001 4ZM16.0001 10.4287C14.293 10.4287 12.9091 11.7719 12.9091 13.4288C12.9091 15.0857 14.293 16.4289 16.0001 16.4289C17.7071 16.4289 19.091 15.0857 19.091 13.4288C19.091 11.7719 17.7071 10.4287 16.0001 10.4287ZM10.2598 13.4288C10.2598 10.3517 12.8298 7.85724 16.0001 7.85724C19.1703 7.85724 21.7403 10.3517 21.7403 13.4288C21.7403 16.5059 19.1703 19.0004 16.0001 19.0004C12.8298 19.0004 10.2598 16.5059 10.2598 13.4288Z' stroke='white' stroke-width='2'/%3E%3C/svg%3E%0A");
   }
 </style>

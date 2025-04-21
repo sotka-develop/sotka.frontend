@@ -45,9 +45,46 @@ export const useLotsStore = defineStore('lots', () => {
     }
   }
 
+  async function fetchMapData(payload) {
+    const auth = useAuthStore();
+
+    if (!auth.token) {
+      error.value = 'Нет токена';
+      return;
+    }
+
+    isLoading.value = true;
+    error.value = null;
+
+    try {
+      const res = await fetch(`${baseUrl}/client/map/rectangle`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `${auth.token}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        throw new Error('Ошибка при получении лотов для карты');
+      }
+
+      const data = await res.json();
+
+      return data.payload || null;
+    } catch (err) {
+      error.value = err.message;
+      console.error(err);
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
   return {
-    lots,
     fetchLots,
+    fetchMapData,
+    lots,
     isLoading,
     error,
   };
