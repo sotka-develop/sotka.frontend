@@ -1,0 +1,44 @@
+.not-found {
+  $root: &;
+
+  min-height: 100vh;
+  padding: 152px 0 64px;
+
+  &__image {
+    max-width: 672px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  &__frame {
+    position: relative;
+    padding-bottom: 74.5%;
+
+    .image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      user-select: none;
+      pointer-events: none;
+    }
+  }
+
+  &__info {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 36px;
+  }
+
+  &__title {
+    margin-bottom: 8px;
+  }
+
+  &__text {
+    color: $color-text-base-1-500;
+  }
+
+  &__action {
+    margin-top: 24px;
+  }
+}

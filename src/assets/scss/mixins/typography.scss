@@ -1,55 +1,37 @@
 @mixin h1 {
-  font-size: 28px;
+  font-size: 32px;
   line-height: 1.25;
-
-  @include media-breakpoint-up(md) {
-    font-size: 32px;
-  }
+  font-weight: 600;
 }
 
 @mixin h2 {
-  font-size: 24px;
+  font-size: 28px;
   line-height: 1.25;
-
-  @include media-breakpoint-up(md) {
-    font-size: 28px;
-  }
+  font-weight: 600;
 }
 
 @mixin h3 {
-  font-size: 20px;
+  font-size: 24px;
   line-height: 1.25;
-
-  @include media-breakpoint-up(md) {
-    font-size: 24px;
-  }
+  font-weight: 600;
 }
 
 @mixin h4 {
-  font-size: 18px;
+  font-size: 20px;
   line-height: 1.44;
-
-  @include media-breakpoint-up(md) {
-    font-size: 20px;
-  }
+  font-weight: 600;
 }
 
 @mixin h5 {
-  font-size: 16px;
+  font-size: 18px;
   line-height: 1.44;
-
-  @include media-breakpoint-up(md) {
-    font-size: 18px;
-  }
+  font-weight: 600;
 }
 
 @mixin h6 {
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.375;
-
-  @include media-breakpoint-up(md) {
-    font-size: 16px;
-  }
+  font-weight: 600;
 }
 
 @mixin text-default {

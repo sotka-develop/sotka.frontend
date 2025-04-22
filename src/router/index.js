@@ -9,6 +9,7 @@ import NotFoundView from '@/views/NotFoundView.vue';
 // Layouts
 import DefaultLayout from '@/layouts/Default.vue';
 import AuthLayout from '@/layouts/Auth.vue';
+import ErrorLayout from '@/layouts/Error.vue';
 
 const routes = [
   {
@@ -36,8 +37,8 @@ const routes = [
     name: 'not-found',
     component: NotFoundView,
     meta: {
-      layout: null,
-      title: '404',
+      layout: ErrorLayout,
+      title: 'Страница не найдена',
     },
   },
 ];
