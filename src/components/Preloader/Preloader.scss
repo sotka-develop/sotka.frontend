@@ -7,27 +7,30 @@
   height: 100%;
   background-color: $color-white;
 
-  &__spinner {
-    // TODO временно
+  &__frame {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 100px;
-    height: 100px;
-    border: 20px dashed green;
-    border-top-color: green;
+  }
+
+  &__spinner {
+    width: 80px;
+    padding: 8px;
+    aspect-ratio: 1;
     border-radius: 50%;
-    animation: preloaderSpin 1s linear infinite;
-    transform-origin: 0 0;
+    background: $color-bg-accent-100;
+    --_m: conic-gradient(#0000 10%, #000), linear-gradient(#000 0 0) content-box;
+    -webkit-mask: var(--_m);
+    mask: var(--_m);
+    -webkit-mask-composite: source-out;
+    mask-composite: subtract;
+    animation: preloaderSpinner 1s infinite linear;
   }
 }
 
-@keyframes preloaderSpin {
-  0% {
-    transform: rotate(0deg) translate(-50%, -50%);
-  }
-  100% {
-    transform: rotate(360deg) translate(-50%, -50%);
+@keyframes preloaderSpinner {
+  to {
+    transform: rotate(1turn);
   }
 }
