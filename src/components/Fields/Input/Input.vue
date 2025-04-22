@@ -5,8 +5,8 @@
       :label="label"
       :placeholder="placeholder"
       :type="type"
-      :readonly="readonly"
       :model-value="modelValue"
+      :readonly="readonly"
       :rules="rules"
       :error-messages="errorMessages"
       @update:modelValue="emitUpdate"
@@ -26,11 +26,13 @@
       type: String,
       default: 'text',
     },
+    modelValue: {
+      type: [String, Number],
+    },
     readonly: {
       type: Boolean,
       default: false,
     },
-    modelValue: [String, Number],
     rules: {
       type: Array,
       default: () => [],

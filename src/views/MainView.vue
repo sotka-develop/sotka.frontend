@@ -7,17 +7,19 @@
         <div class="form-filters__items form-filters__items--4">
           <!-- Окончательная подача заявок от -->
           <div class="form-filters__item">
-            <VDateInput label="Окончательная подача заявок от" v-model="biddEndTimeFromModel" placeholder="Выбрать значение" />
+            <Field type="date" label="Окончательная подача заявок от" v-model="biddEndTimeFromModel" placeholder="Выбрать значение" />
           </div>
 
           <!-- Окончательная подача заявок до -->
           <div class="form-filters__item">
-            <VDateInput label="Окончательная подача заявок до" v-model="biddEndTimeToModel" placeholder="Выбрать значение" />
+            <Field type="date" label="Окончательная подача заявок до" v-model="biddEndTimeToModel" placeholder="Выбрать значение" />
           </div>
 
           <!-- Процедура / Форма торгов -->
+
           <div class="form-filters__item">
-            <v-select
+            <Field
+              type="select"
               label="Процедура"
               placeholder="Выбрать значение"
               v-model="biddModel"
@@ -25,12 +27,13 @@
               multiple
               item-title="text"
               item-value="value"
-            ></v-select>
+            />
           </div>
 
           <!-- Локация / Регион -->
           <div class="form-filters__item">
-            <v-select
+            <Field
+              type="select"
               label="Локация"
               placeholder="Регион, область, город"
               v-model="regionsModel"
@@ -43,8 +46,8 @@
 
           <!-- Электронная площадка / Код ЭТП -->
           <div class="form-filters__item">
-            {{ codesModel }}
-            <v-select
+            <Field
+              type="select"
               label="Электронная площадка"
               placeholder="Выбрать значение"
               item-title="text"
@@ -52,31 +55,29 @@
               v-model="codesModel"
               :items="codesData"
               multiple
-            ></v-select>
+            />
           </div>
 
           <!-- Кадастровый номер -->
           <div class="form-filters__item">
-            <v-number-input
+            <Field
+              type="number"
               v-model="cadasterNumberModel"
-              :reverse="false"
-              controlVariant="default"
               label="Кадастровый номер"
-              :hideInput="false"
-              :inset="false"
-              multiple
+              control-variant="hidden"
               placeholder="Например, 1111"
-            ></v-number-input>
+            />
           </div>
 
           <!-- Извещение, лот -->
           <div class="form-filters__item">
-            <v-text-field label="Извещение, лот" v-model="lotModel" placeholder="Например, 1111"></v-text-field>
+            <Field type="text" label="Извещение, лот" v-model="lotModel" placeholder="Например, 1111" />
           </div>
 
           <!-- Составность / Композиция -->
           <div class="form-filters__item">
-            <v-select
+            <Field
+              type="select"
               label="Составность"
               placeholder="Выбрать значение"
               v-model="compositionModel"
@@ -84,17 +85,18 @@
               item-title="text"
               item-value="value"
               multiple
-            ></v-select>
+            />
           </div>
 
           <!-- Добавлено / Дата добавления -->
           <div class="form-filters__item">
-            <VDateInput label="Добавлено" v-model="addedAtModel" placeholder="Выбрать значение" />
+            <Field type="date" label="Добавлено" v-model="addedAtModel" placeholder="Выбрать значение" />
           </div>
 
           <!-- Рубрики -->
           <div class="form-filters__item">
-            <v-select
+            <Field
+              type="select"
               label="Рубрики"
               placeholder="Выбрать значение"
               item-title="text"
@@ -102,12 +104,13 @@
               multiple
               v-model="rubricsModel"
               :items="rubricsData"
-            ></v-select>
+            />
           </div>
 
           <!-- Категория ЗУ -->
           <div class="form-filters__item">
-            <v-select
+            <Field
+              type="select"
               label="Категория ЗУ"
               placeholder="Выбрать значение"
               v-model="categoryModel"
@@ -115,130 +118,77 @@
               item-value="value"
               multiple
               :items="categoryData"
-            ></v-select>
+            />
           </div>
         </div>
 
         <div class="form-filters__items form-filters__items--1">
           <!-- ВРИ / Разрешенные использования -->
           <div class="form-filters__item">
-            <v-combobox
+            <Field
+              type="autocomplete"
+              v-model="usesModel"
+              :items="usesData"
               label="ВРИ"
               placeholder="Выбрать значение"
+              multiple
               item-title="text"
               item-value="value"
               :return-object="false"
-              multiple
-              v-model="usesModel"
-              :items="usesData"
-              @input="onSearchPermittedUses"
-            ></v-combobox>
+              :onInput="onSearchPermittedUses"
+            />
           </div>
         </div>
 
         <div class="form-filters__items form-filters__items--4">
           <!-- Начальная цена, ₽ (более) / Минимальная цена от -->
           <div class="form-filters__item">
-            <v-number-input
-              :reverse="false"
-              controlVariant="default"
-              label="Начальная цена, ₽ (более)"
-              :hideInput="false"
-              :inset="false"
-              placeholder=""
-              v-model="priceMinFromModel"
-            ></v-number-input>
+            <Field type="number" v-model="priceMinFromModel" label="Начальная цена, ₽ (более)" placeholder="Например, 1111" />
           </div>
 
           <!-- Начальная цена, ₽ (менее) / Минимальная цена до -->
           <div class="form-filters__item">
-            <v-number-input
-              :reverse="false"
-              controlVariant="default"
-              label="Начальная цена, ₽ (менее)"
-              :hideInput="false"
-              :inset="false"
-              placeholder=""
-              v-model="priceMaxFromModel"
-            ></v-number-input>
+            <Field type="number" v-model="priceMaxFromModel" label="Начальная цена, ₽ (менее)" placeholder="Например, 1111" />
           </div>
 
           <!-- Кадастровая стоимость от -->
           <div class="form-filters__item">
-            <v-number-input
-              :reverse="false"
-              controlVariant="default"
-              label="Кадастровая стоимость от"
-              :hideInput="false"
-              :inset="false"
-              placeholder=""
-              v-model="cadastralCostFromModel"
-            ></v-number-input>
+            <Field type="number" v-model="cadastralCostFromModel" label="Кадастровая стоимость от" placeholder="Например, 1111" />
           </div>
 
           <!-- Кадастровая стоимость до -->
           <div class="form-filters__item">
-            <v-number-input
-              :reverse="false"
-              controlVariant="default"
-              label="Кадастровая стоимость до"
-              :hideInput="false"
-              :inset="false"
-              placeholder=""
-              v-model="cadastralCostToModel"
-            ></v-number-input>
+            <Field type="number" v-model="cadastralCostToModel" label="Кадастровая стоимость до" placeholder="Например, 1111" />
           </div>
 
           <!-- % соотн. нач.ц. и кад.ст от -->
           <div class="form-filters__item">
-            <v-number-input
-              :reverse="false"
-              controlVariant="default"
-              label="% соотн. нач.ц. и кад.ст от"
-              :hideInput="false"
-              :inset="false"
-              placeholder=""
+            <Field
+              type="number"
               v-model="priceMinCadastralCostRatioPercentFromModel"
-            ></v-number-input>
+              label="% соотн. нач.ц. и кад.ст от"
+              placeholder="Например, 1111"
+            />
           </div>
 
           <!-- % соотн. нач.ц. и кад.ст до -->
           <div class="form-filters__item">
-            <v-number-input
-              :reverse="false"
-              controlVariant="default"
-              label="% соотн. нач.ц. и кад.ст до"
-              :hideInput="false"
-              :inset="false"
-              placeholder=""
+            <Field
+              type="number"
               v-model="priceMinCadastralCostRatioPercentToModel"
-            ></v-number-input>
+              label="% соотн. нач.ц. и кад.ст до"
+              placeholder="Например, 1111"
+            />
           </div>
 
           <!-- Площадь от -->
           <div class="form-filters__item">
-            <v-number-input
-              :reverse="false"
-              controlVariant="default"
-              label="Площадь от"
-              :hideInput="false"
-              :inset="false"
-              placeholder=""
-              v-model="areaFromModel"
-            ></v-number-input>
+            <Field type="number" v-model="areaFromModel" label="Площадь от" placeholder="Например, 1111" />
           </div>
 
           <!-- Площадь до -->
           <div class="form-filters__item">
-            <v-number-input
-              :reverse="false"
-              controlVariant="default"
-              label="Площадь до"
-              :hideInput="false"
-              :inset="false"
-              placeholder=""
-              v-model="areaToModel"
-            ></v-number-input>
+            <Field type="number" v-model="areaToModel" label="Площадь до" placeholder="Например, 1111" />
           </div>
         </div>
 
@@ -280,6 +230,8 @@
 
 <script setup>
   import { computed, onMounted, ref, shallowRef } from 'vue';
+
+  import Field from '@/components/fields/field/Field.vue';
   import Button from '@/components/button/Button.vue';
 
   import { storeToRefs } from 'pinia';

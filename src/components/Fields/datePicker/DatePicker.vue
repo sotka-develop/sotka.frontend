@@ -1,0 +1,69 @@
+<template>
+  <div class="date-picker">
+    <v-date-input variant="outlined" v-bind="inputProps" :model-value="modelValue" @update:modelValue="emitUpdate" />
+  </div>
+</template>
+
+<script setup>
+  import { computed } from 'vue';
+
+  const props = defineProps({
+    label: {
+      type: String,
+    },
+    placeholder: {
+      type: String,
+    },
+    modelValue: {
+      type: [String, Date],
+    },
+    readonly: {
+      type: Boolean,
+      default: false,
+    },
+    rules: {
+      type: Array,
+      default: () => [],
+    },
+    errorMessages: {
+      type: Array,
+      default: () => [],
+    },
+    clearable: {
+      type: Boolean,
+      default: true,
+    },
+    min: {
+      type: String,
+    },
+    max: {
+      type: String,
+    },
+    textFieldProps: {
+      type: Object,
+      default: () => ({}),
+    },
+  });
+
+  const emit = defineEmits(['update:modelValue']);
+
+  function emitUpdate(val) {
+    emit('update:modelValue', val);
+  }
+
+  const inputProps = computed(() => ({
+    label: props.label,
+    placeholder: props.placeholder,
+    readonly: props.readonly,
+    rules: props.rules,
+    errorMessages: props.errorMessages,
+    clearable: props.clearable,
+    min: props.min,
+    max: props.max,
+    ...props.textFieldProps,
+  }));
+</script>
+
+<style lang="scss" scoped>
+  @import 'DatePicker';
+</style>

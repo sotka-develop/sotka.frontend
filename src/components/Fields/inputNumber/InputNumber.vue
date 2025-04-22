@@ -1,0 +1,79 @@
+<template>
+  <div class="input-number">
+    <v-number-input variant="outlined" v-bind="inputProps" :model-value="modelValue" @update:modelValue="emitUpdate" />
+  </div>
+</template>
+
+<script setup>
+  import { computed } from 'vue';
+
+  const props = defineProps({
+    label: {
+      type: String,
+    },
+    placeholder: {
+      type: String,
+    },
+    modelValue: {
+      type: [String, Number],
+    },
+    readonly: {
+      type: Boolean,
+      default: false,
+    },
+    rules: {
+      type: Array,
+      default: () => [],
+    },
+    errorMessages: {
+      type: Array,
+      default: () => [],
+    },
+    min: {
+      type: String,
+    },
+    max: {
+      type: String,
+    },
+    step: {
+      type: Number,
+      default: 1,
+    },
+    clearable: {
+      type: Boolean,
+      default: false,
+    },
+    controlVariant: {
+      type: String,
+      default: 'hidden',
+    },
+    textFieldProps: {
+      type: Object,
+      default: () => ({}),
+    },
+  });
+
+  const emit = defineEmits(['update:modelValue']);
+
+  function emitUpdate(val) {
+    emit('update:modelValue', val);
+  }
+
+  const inputProps = computed(() => ({
+    label: props.label,
+    placeholder: props.placeholder,
+    readonly: props.readonly,
+    rules: props.rules,
+    errorMessages: props.errorMessages,
+    clearable: props.clearable,
+    min: props.min,
+    max: props.max,
+    step: props.step,
+    'control-variant': props.controlVariant,
+    ...props.textFieldProps,
+  }));
+</script>
+
+<style lang="scss" scoped>
+  @import 'InputNumber';
+</style>

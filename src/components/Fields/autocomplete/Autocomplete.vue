@@ -1,24 +1,19 @@
 <template>
-  <div class="select">
-    <v-select
+  <div class="autocomplete">
+    <v-combobox
       variant="outlined"
-      :label="label"
-      :placeholder="placeholder"
-      :items="items"
+      v-bind="inputProps"
       :model-value="modelValue"
-      :multiple="multiple"
-      :readonly="readonly"
-      :item-title="itemTitle"
-      :item-value="itemValue"
-      :rules="rules"
-      :return-object="returnObject"
-      :error-messages="errorMessages"
+      :items="items"
       @update:modelValue="emitUpdate"
-    ></v-select>
+      @input="handleInput"
+    />
   </div>
 </template>
 
 <script setup>
+  import { computed } from 'vue';
+
   const props = defineProps({
     label: {
       type: String,
@@ -28,6 +23,7 @@
     },
     items: {
       type: Array,
+      default: () => [],
     },
     modelValue: {
       type: [String, Number, Object, Array],
@@ -40,6 +36,10 @@
       type: Boolean,
       default: false,
     },
+    returnObject: {
+      type: Boolean,
+      default: false,
+    },
     itemTitle: {
       type: String,
       default: 'text',
@@ -47,10 +47,6 @@
     itemValue: {
       type: String,
       default: 'value',
-    },
-    returnObject: {
-      type: Boolean,
-      default: false,
     },
     rules: {
       type: Array,
@@ -60,6 +56,7 @@
       type: Array,
       default: () => [],
     },
+    onInput: Function,
   });
 
   const emit = defineEmits(['update:modelValue']);
@@ -67,8 +64,26 @@
   function emitUpdate(val) {
     emit('update:modelValue', val);
   }
+
+  function handleInput(val) {
+    if (props.onInput) {
+      props.onInput(val);
+    }
+  }
+
+  const inputProps = computed(() => ({
+    label: props.label,
+    placeholder: props.placeholder,
+    readonly: props.readonly,
+    multiple: props.multiple,
+    returnObject: props.returnObject,
+    itemTitle: props.itemTitle,
+    itemValue: props.itemValue,
+    rules: props.rules,
+    errorMessages: props.errorMessages,
+  }));
 </script>
 
 <style lang="scss" scoped>
-  @import 'Select';
+  @import 'Autocomplete';
 </style>
