@@ -36,6 +36,9 @@
       type: Boolean,
       default: false,
     },
+    hideDetails: {
+      type: Boolean,
+    },
     returnObject: {
       type: Boolean,
       default: false,
@@ -80,6 +83,7 @@
     itemTitle: props.itemTitle,
     itemValue: props.itemValue,
     rules: props.rules,
+    hideDetails: props.hideDetails,
     errorMessages: props.errorMessages,
   }));
 </script>

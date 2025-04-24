@@ -34,13 +34,18 @@
   font-weight: 600;
 }
 
-@mixin text-default {
-  font-size: 16px;
-  line-height: 1.4;
-}
-
 @mixin text-lead {
   font-size: 14px;
   line-height: 20px;
   font-weight: 600;
+}
+
+@mixin text-body {
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+@mixin text-small {
+  font-size: 12px;
+  line-height: 1.33;
 }

@@ -1,6 +1,13 @@
 <template>
   <div class="date-picker">
-    <v-date-input variant="outlined" v-bind="inputProps" :model-value="modelValue" @update:modelValue="emitUpdate" />
+    <v-date-input
+      variant="outlined"
+      prepend-icon=""
+      append-inner-icon="mdi-calendar"
+      v-bind="inputProps"
+      :model-value="modelValue"
+      @update:modelValue="emitUpdate"
+    />
   </div>
 </template>
 
@@ -33,6 +40,9 @@
       type: Boolean,
       default: true,
     },
+    hideDetails: {
+      type: Boolean,
+    },
     min: {
       type: String,
     },
@@ -60,6 +70,7 @@
     clearable: props.clearable,
     min: props.min,
     max: props.max,
+    hideDetails: props.hideDetails,
     ...props.textFieldProps,
   }));
 </script>

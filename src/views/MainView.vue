@@ -1,199 +1,253 @@
 <template>
-  <main>
+  <main class="main">
     <div class="container">
-      <h2>Лоты</h2>
+      <div class="section">
+        <div class="section__title">
+          <h2>Лоты</h2>
+        </div>
 
-      <div class="form-filters">
-        <div class="form-filters__items form-filters__items--4">
-          <!-- Окончательная подача заявок от -->
-          <div class="form-filters__item">
-            <Field type="date" label="Окончательная подача заявок от" v-model="biddEndTimeFromModel" placeholder="Выбрать значение" />
+        <div class="form-filters">
+          <div class="form-filters__items form-filters__items--4">
+            <!-- Окончательная подача заявок от -->
+            <div class="form-filters__item">
+              <Field
+                type="date"
+                label="Окончательная подача заявок от"
+                hide-details
+                v-model="biddEndTimeFromModel"
+                placeholder="Выбрать значение"
+              />
+            </div>
+
+            <!-- Окончательная подача заявок до -->
+            <div class="form-filters__item">
+              <Field
+                type="date"
+                label="Окончательная подача заявок до"
+                hide-details
+                v-model="biddEndTimeToModel"
+                placeholder="Выбрать значение"
+              />
+            </div>
+
+            <!-- Процедура / Форма торгов -->
+
+            <div class="form-filters__item">
+              <Field
+                type="select"
+                label="Процедура"
+                placeholder="Выбрать значение"
+                v-model="biddModel"
+                :items="biddData"
+                multiple
+                hide-details
+                item-title="text"
+                item-value="value"
+              />
+            </div>
+
+            <!-- Локация / Регион -->
+            <div class="form-filters__item">
+              <Field
+                type="select"
+                label="Локация"
+                placeholder="Регион, область, город"
+                v-model="regionsModel"
+                multiple
+                hide-details
+                item-title="text"
+                item-value="value"
+                :items="regionsData"
+              />
+            </div>
+
+            <!-- Электронная площадка / Код ЭТП -->
+            <div class="form-filters__item">
+              <Field
+                type="select"
+                label="Электронная площадка"
+                placeholder="Выбрать значение"
+                item-title="text"
+                item-value="value"
+                v-model="codesModel"
+                :items="codesData"
+                multiple
+                hide-details
+              />
+            </div>
+
+            <!-- Кадастровый номер -->
+            <div class="form-filters__item">
+              <Field
+                type="number"
+                v-model="cadasterNumberModel"
+                label="Кадастровый номер"
+                control-variant="hidden"
+                placeholder="Например, 1111"
+                hide-details
+              />
+            </div>
+
+            <!-- Извещение, лот -->
+            <div class="form-filters__item">
+              <Field type="text" label="Извещение, лот" v-model="lotModel" placeholder="Например, 1111" hide-details />
+            </div>
+
+            <!-- Составность / Композиция -->
+            <div class="form-filters__item">
+              <Field
+                type="select"
+                label="Составность"
+                placeholder="Выбрать значение"
+                v-model="compositionModel"
+                :items="compositionData"
+                multiple
+                hide-details
+              />
+            </div>
+
+            <!-- Добавлено / Дата добавления -->
+            <div class="form-filters__item">
+              <Field type="date" label="Добавлено" v-model="addedAtModel" placeholder="Выбрать значение" hide-details />
+            </div>
+
+            <!-- Рубрики -->
+            <div class="form-filters__item">
+              <Field
+                type="select"
+                label="Рубрики"
+                placeholder="Выбрать значение"
+                item-title="text"
+                item-value="value"
+                multiple
+                v-model="rubricsModel"
+                :items="rubricsData"
+                hide-details
+              />
+            </div>
+
+            <!-- Категория ЗУ -->
+            <div class="form-filters__item">
+              <Field
+                type="select"
+                label="Категория ЗУ"
+                placeholder="Выбрать значение"
+                v-model="categoryModel"
+                item-title="text"
+                item-value="value"
+                multiple
+                :items="categoryData"
+                hide-details
+              />
+            </div>
           </div>
 
-          <!-- Окончательная подача заявок до -->
-          <div class="form-filters__item">
-            <Field type="date" label="Окончательная подача заявок до" v-model="biddEndTimeToModel" placeholder="Выбрать значение" />
+          <div class="form-filters__items form-filters__items--1">
+            <!-- ВРИ / Разрешенные использования -->
+            <div class="form-filters__item">
+              <Field
+                type="autocomplete"
+                v-model="usesModel"
+                :items="usesData"
+                label="ВРИ"
+                placeholder="Выбрать значение"
+                multiple
+                item-title="text"
+                item-value="value"
+                :return-object="false"
+                :onInput="onSearchPermittedUses"
+                hide-details
+              />
+            </div>
           </div>
 
-          <!-- Процедура / Форма торгов -->
+          <div class="form-filters__items form-filters__items--4">
+            <!-- Начальная цена, ₽ (более) / Минимальная цена от -->
+            <div class="form-filters__item">
+              <Field
+                type="number"
+                v-model="priceMinFromModel"
+                label="Начальная цена, ₽ (более)"
+                placeholder="Например, 1111"
+                hide-details
+              />
+            </div>
 
-          <div class="form-filters__item">
-            <Field
-              type="select"
-              label="Процедура"
-              placeholder="Выбрать значение"
-              v-model="biddModel"
-              :items="biddData"
-              multiple
-              item-title="text"
-              item-value="value"
-            />
-          </div>
+            <!-- Начальная цена, ₽ (менее) / Минимальная цена до -->
+            <div class="form-filters__item">
+              <Field
+                type="number"
+                v-model="priceMaxFromModel"
+                label="Начальная цена, ₽ (менее)"
+                placeholder="Например, 1111"
+                hide-details
+              />
+            </div>
 
-          <!-- Локация / Регион -->
-          <div class="form-filters__item">
-            <Field
-              type="select"
-              label="Локация"
-              placeholder="Регион, область, город"
-              v-model="regionsModel"
-              multiple
-              item-title="text"
-              item-value="value"
-              :items="regionsData"
-            />
-          </div>
+            <!-- Кадастровая стоимость от -->
+            <div class="form-filters__item">
+              <Field
+                type="number"
+                v-model="cadastralCostFromModel"
+                label="Кадастровая стоимость от"
+                placeholder="Например, 1111"
+                hide-details
+              />
+            </div>
 
-          <!-- Электронная площадка / Код ЭТП -->
-          <div class="form-filters__item">
-            <Field
-              type="select"
-              label="Электронная площадка"
-              placeholder="Выбрать значение"
-              item-title="text"
-              item-value="value"
-              v-model="codesModel"
-              :items="codesData"
-              multiple
-            />
-          </div>
+            <!-- Кадастровая стоимость до -->
+            <div class="form-filters__item">
+              <Field
+                type="number"
+                v-model="cadastralCostToModel"
+                label="Кадастровая стоимость до"
+                placeholder="Например, 1111"
+                hide-details
+              />
+            </div>
 
-          <!-- Кадастровый номер -->
-          <div class="form-filters__item">
-            <Field
-              type="number"
-              v-model="cadasterNumberModel"
-              label="Кадастровый номер"
-              control-variant="hidden"
-              placeholder="Например, 1111"
-            />
-          </div>
+            <!-- % соотн. нач.ц. и кад.ст от -->
+            <div class="form-filters__item">
+              <Field
+                type="number"
+                v-model="priceMinCadastralCostRatioPercentFromModel"
+                label="% соотн. нач.ц. и кад.ст от"
+                placeholder="Например, 1111"
+                hide-details
+              />
+            </div>
 
-          <!-- Извещение, лот -->
-          <div class="form-filters__item">
-            <Field type="text" label="Извещение, лот" v-model="lotModel" placeholder="Например, 1111" />
-          </div>
+            <!-- % соотн. нач.ц. и кад.ст до -->
+            <div class="form-filters__item">
+              <Field
+                type="number"
+                v-model="priceMinCadastralCostRatioPercentToModel"
+                label="% соотн. нач.ц. и кад.ст до"
+                placeholder="Например, 1111"
+                hide-details
+              />
+            </div>
 
-          <!-- Составность / Композиция -->
-          <div class="form-filters__item">
-            <Field
-              type="select"
-              label="Составность"
-              placeholder="Выбрать значение"
-              v-model="compositionModel"
-              :items="compositionData"
-              item-title="text"
-              item-value="value"
-              multiple
-            />
-          </div>
+            <!-- Площадь от -->
+            <div class="form-filters__item">
+              <Field type="number" v-model="areaFromModel" label="Площадь от" placeholder="Например, 1111" hide-details />
+            </div>
 
-          <!-- Добавлено / Дата добавления -->
-          <div class="form-filters__item">
-            <Field type="date" label="Добавлено" v-model="addedAtModel" placeholder="Выбрать значение" />
-          </div>
-
-          <!-- Рубрики -->
-          <div class="form-filters__item">
-            <Field
-              type="select"
-              label="Рубрики"
-              placeholder="Выбрать значение"
-              item-title="text"
-              item-value="value"
-              multiple
-              v-model="rubricsModel"
-              :items="rubricsData"
-            />
-          </div>
-
-          <!-- Категория ЗУ -->
-          <div class="form-filters__item">
-            <Field
-              type="select"
-              label="Категория ЗУ"
-              placeholder="Выбрать значение"
-              v-model="categoryModel"
-              item-title="text"
-              item-value="value"
-              multiple
-              :items="categoryData"
-            />
+            <!-- Площадь до -->
+            <div class="form-filters__item">
+              <Field type="number" v-model="areaToModel" label="Площадь до" placeholder="Например, 1111" hide-details />
+            </div>
           </div>
         </div>
 
-        <div class="form-filters__items form-filters__items--1">
-          <!-- ВРИ / Разрешенные использования -->
-          <div class="form-filters__item">
-            <Field
-              type="autocomplete"
-              v-model="usesModel"
-              :items="usesData"
-              label="ВРИ"
-              placeholder="Выбрать значение"
-              multiple
-              item-title="text"
-              item-value="value"
-              :return-object="false"
-              :onInput="onSearchPermittedUses"
-            />
-          </div>
+        <div class="section__actions">
+          <Button text="Применить" @click="onSearch" />
         </div>
+      </div>
 
-        <div class="form-filters__items form-filters__items--4">
-          <!-- Начальная цена, ₽ (более) / Минимальная цена от -->
-          <div class="form-filters__item">
-            <Field type="number" v-model="priceMinFromModel" label="Начальная цена, ₽ (более)" placeholder="Например, 1111" />
-          </div>
-
-          <!-- Начальная цена, ₽ (менее) / Минимальная цена до -->
-          <div class="form-filters__item">
-            <Field type="number" v-model="priceMaxFromModel" label="Начальная цена, ₽ (менее)" placeholder="Например, 1111" />
-          </div>
-
-          <!-- Кадастровая стоимость от -->
-          <div class="form-filters__item">
-            <Field type="number" v-model="cadastralCostFromModel" label="Кадастровая стоимость от" placeholder="Например, 1111" />
-          </div>
-
-          <!-- Кадастровая стоимость до -->
-          <div class="form-filters__item">
-            <Field type="number" v-model="cadastralCostToModel" label="Кадастровая стоимость до" placeholder="Например, 1111" />
-          </div>
-
-          <!-- % соотн. нач.ц. и кад.ст от -->
-          <div class="form-filters__item">
-            <Field
-              type="number"
-              v-model="priceMinCadastralCostRatioPercentFromModel"
-              label="% соотн. нач.ц. и кад.ст от"
-              placeholder="Например, 1111"
-            />
-          </div>
-
-          <!-- % соотн. нач.ц. и кад.ст до -->
-          <div class="form-filters__item">
-            <Field
-              type="number"
-              v-model="priceMinCadastralCostRatioPercentToModel"
-              label="% соотн. нач.ц. и кад.ст до"
-              placeholder="Например, 1111"
-            />
-          </div>
-
-          <!-- Площадь от -->
-          <div class="form-filters__item">
-            <Field type="number" v-model="areaFromModel" label="Площадь от" placeholder="Например, 1111" />
-          </div>
-
-          <!-- Площадь до -->
-          <div class="form-filters__item">
-            <Field type="number" v-model="areaToModel" label="Площадь до" placeholder="Например, 1111" />
-          </div>
-        </div>
-
-        <div class="form-filters__action">
-          <Button text="Поиск" @click="onSearch" />
+      <div class="section">
+        <div class="section__title">
+          <h2>Карта</h2>
         </div>
 
         <div class="map">
@@ -205,6 +259,12 @@
               <div class="marker"></div>
             </yandex-map-marker>
           </yandex-map>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section__title">
+          <h2>Таблицы</h2>
         </div>
 
         <v-data-table-server
@@ -404,24 +464,7 @@
 
   // Композиция
   const compositionModel = ref(null);
-  const compositionData = ref([
-    {
-      text: 'Кадастровый номер',
-      value: 1,
-    },
-    {
-      text: 'Кадастровый квартал',
-      value: 2,
-    },
-    {
-      text: 'Кадастровый район',
-      value: 3,
-    },
-    {
-      text: 'Координаты не определены',
-      value: 4,
-    },
-  ]);
+  const compositionData = ref(['Кад. номер', 'Кад. квартал', 'Кад. район', 'Коорд. не определены']);
 
   // Дата добавления
   const addedAtModel = ref(null);
@@ -521,18 +564,19 @@
     totalCount.value = result?.total_count || 0;
     tableItems.value = transformLotsToTable(data.value);
 
-    // извлечение id
-    landIdsFromTable.value = data.value.map((lot) => lot.id).filter(Boolean);
-
-    const mapPayload = {
+    const coords = result?.coords_rect || {
       lat_lu: 46.593939604177926,
       lon_lu: 11.049821462434878,
       lat_rd: 65.96012495630457,
       lon_rd: 64.7046557389222,
-      // lat_lu: 0,
-      // lat_rd: 0,
-      // lon_lu: 0,
-      // lon_rd: 0,
+    };
+
+    // извлечение id
+    landIdsFromTable.value = data.value.map((lot) => lot.id).filter(Boolean);
+
+    const mapPayload = {
+      ...coords,
+
       zoom: 0,
       dots_to_cluster: 64,
 
@@ -553,8 +597,16 @@
     dots.value = mapResult.dots || [];
   }
 
+  const isFirstOptionsUpdate = ref(true);
+
   // контролы таблицы
   function onOptionsUpdate(options) {
+    if (isFirstOptionsUpdate.value) {
+      isFirstOptionsUpdate.value = false;
+
+      return;
+    }
+
     page.value = options.page;
     pageSize.value = options.itemsPerPage;
 
@@ -564,11 +616,17 @@
   onMounted(async () => {
     // получаем данные фильтров
     await filtersStore.loadFilters();
+
+    onSearch();
   });
 </script>
 
 <style lang="scss" scoped>
   // TODO временно
+
+  .main {
+    padding: 36px 0 36px;
+  }
 
   .form-filters {
     &__items {
@@ -605,5 +663,29 @@
     background-repeat: no-repeat;
     background-size: contain;
     background-image: url("data:image/svg+xml,%3Csvg width='32' height='32' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12.9091 13.4288C12.9091 11.7719 14.293 10.4287 16.0001 10.4287C17.7071 10.4287 19.091 11.7719 19.091 13.4288C19.091 15.0857 17.7071 16.4289 16.0001 16.4289C14.293 16.4289 12.9091 15.0857 12.9091 13.4288Z' fill='%23262AF1'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M6.28577 13.4288C6.28577 8.22142 10.635 4 16.0001 4C21.3651 4 25.7143 8.22142 25.7143 13.4288C25.7143 18.0589 23.2095 21.7714 20.5719 24.3926C19.2614 25.6949 17.9472 26.6976 16.9606 27.3741C16.5849 27.6317 16.2584 27.8408 16.0001 28C15.7417 27.8408 15.4152 27.6317 15.0395 27.3741C14.0529 26.6976 12.7387 25.6949 11.4282 24.3926C8.7906 21.7714 6.28577 18.0589 6.28577 13.4288ZM16.0001 7.85724C12.8298 7.85724 10.2598 10.3517 10.2598 13.4288C10.2598 16.5059 12.8298 19.0004 16.0001 19.0004C19.1703 19.0004 21.7403 16.5059 21.7403 13.4288C21.7403 10.3517 19.1703 7.85724 16.0001 7.85724Z' fill='%23262AF1'/%3E%3Cpath d='M12.9091 13.4288C12.9091 11.7719 14.293 10.4287 16.0001 10.4287C17.7071 10.4287 19.091 11.7719 19.091 13.4288C19.091 15.0857 17.7071 16.4289 16.0001 16.4289C14.293 16.4289 12.9091 15.0857 12.9091 13.4288Z' fill='%23262AF1'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M6.28577 13.4288C6.28577 8.22142 10.635 4 16.0001 4C21.3651 4 25.7143 8.22142 25.7143 13.4288C25.7143 18.0589 23.2095 21.7714 20.5719 24.3926C19.2614 25.6949 17.9472 26.6976 16.9606 27.3741C16.5849 27.6317 16.2584 27.8408 16.0001 28C15.7417 27.8408 15.4152 27.6317 15.0395 27.3741C14.0529 26.6976 12.7387 25.6949 11.4282 24.3926C8.7906 21.7714 6.28577 18.0589 6.28577 13.4288ZM16.0001 7.85724C12.8298 7.85724 10.2598 10.3517 10.2598 13.4288C10.2598 16.5059 12.8298 19.0004 16.0001 19.0004C19.1703 19.0004 21.7403 16.5059 21.7403 13.4288C21.7403 10.3517 19.1703 7.85724 16.0001 7.85724Z' fill='%23262AF1'/%3E%3Cpath d='M16.0001 4C10.635 4 6.28577 8.22142 6.28577 13.4288C6.28577 18.0589 8.7906 21.7714 11.4282 24.3926C12.7387 25.6949 14.0529 26.6976 15.0395 27.3741C15.4152 27.6317 15.7417 27.8408 16.0001 28C16.2584 27.8408 16.5849 27.6317 16.9606 27.3741C17.9472 26.6976 19.2614 25.6949 20.5719 24.3926C23.2095 21.7714 25.7143 18.0589 25.7143 13.4288C25.7143 8.22142 21.3651 4 16.0001 4ZM16.0001 10.4287C14.293 10.4287 12.9091 11.7719 12.9091 13.4288C12.9091 15.0857 14.293 16.4289 16.0001 16.4289C17.7071 16.4289 19.091 15.0857 19.091 13.4288C19.091 11.7719 17.7071 10.4287 16.0001 10.4287ZM10.2598 13.4288C10.2598 10.3517 12.8298 7.85724 16.0001 7.85724C19.1703 7.85724 21.7403 10.3517 21.7403 13.4288C21.7403 16.5059 19.1703 19.0004 16.0001 19.0004C12.8298 19.0004 10.2598 16.5059 10.2598 13.4288Z' stroke='white' stroke-width='2'/%3E%3C/svg%3E%0A");
+  }
+
+  .section {
+    background-color: $color-white;
+    border-radius: 24px;
+    padding: 24px;
+    box-shadow: 0px 0px 12px 0px #76a3c01f;
+
+    &:not(:last-child) {
+      margin-bottom: 24px;
+    }
+
+    &__title {
+      margin-bottom: 28px;
+    }
+
+    &__actions {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      border-top: 1px solid $color-border-base-1-400;
+      padding-top: 24px;
+      margin-top: 44px;
+    }
   }
 </style>

@@ -11,6 +11,7 @@
       :item-title="itemTitle"
       :item-value="itemValue"
       :rules="rules"
+      :hide-details="hideDetails"
       :return-object="returnObject"
       :error-messages="errorMessages"
       @update:modelValue="emitUpdate"
@@ -35,6 +36,9 @@
     readonly: {
       type: Boolean,
       default: false,
+    },
+    hideDetails: {
+      type: Boolean,
     },
     multiple: {
       type: Boolean,

@@ -47,6 +47,9 @@
       type: String,
       default: 'hidden',
     },
+    hideDetails: {
+      type: Boolean,
+    },
     textFieldProps: {
       type: Object,
       default: () => ({}),
@@ -70,6 +73,7 @@
     max: props.max,
     step: props.step,
     'control-variant': props.controlVariant,
+    hideDetails: props.hideDetails,
     ...props.textFieldProps,
   }));
 </script>

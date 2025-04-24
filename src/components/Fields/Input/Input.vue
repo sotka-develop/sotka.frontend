@@ -8,6 +8,7 @@
       :model-value="modelValue"
       :readonly="readonly"
       :rules="rules"
+      :hide-details="hideDetails"
       :error-messages="errorMessages"
       @update:modelValue="emitUpdate"
     ></v-text-field>
@@ -32,6 +33,9 @@
     readonly: {
       type: Boolean,
       default: false,
+    },
+    hideDetails: {
+      type: Boolean,
     },
     rules: {
       type: Array,

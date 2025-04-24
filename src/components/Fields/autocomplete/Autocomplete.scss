@@ -1,3 +1,13 @@
 .autocomplete {
   $root: &;
+
+  position: relative;
+
+  &:deep(.v-field__input) {
+    display: flex;
+    align-items: center;
+    min-height: 40px;
+    // height: 40px;
+    padding: 0 12px;
+  }
 }

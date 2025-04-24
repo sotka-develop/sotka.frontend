@@ -4,7 +4,7 @@ html {
 }
 
 body {
-  @include text-default;
+  @include text-body;
 }
 
 h1,
@@ -52,8 +52,8 @@ h6,
   @include h5;
 }
 
-.text-default {
-  @include text-default;
+.text-body {
+  @include text-body;
 }
 
 .text-lead {

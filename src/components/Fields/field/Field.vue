@@ -1,5 +1,7 @@
 <template>
   <div class="field">
+    <label v-if="label" class="field__label text-lead">{{ label }}</label>
+
     <component :is="componentType" v-bind="passProps" v-model="modelValue" />
   </div>
 </template>
@@ -45,6 +47,10 @@
     itemValue: {
       type: String,
       default: 'value',
+    },
+    hideDetails: {
+      type: Boolean,
+      default: false,
     },
     returnObject: {
       type: Boolean,
@@ -102,12 +108,13 @@
 
   const passProps = computed(() => {
     const baseProps = {
-      label: props.label,
+      // label: props.label,
       placeholder: props.placeholder,
       type: props.type,
       readonly: props.readonly,
       rules: props.rules,
       errorMessages: props.errorMessages,
+      hideDetails: props.hideDetails,
     };
 
     if (props.type === 'select') {
@@ -123,7 +130,7 @@
 
     if (props.type === 'date') {
       return {
-        label: props.label,
+        // label: props.label,
         placeholder: props.placeholder,
         readonly: props.readonly,
         rules: props.rules,
@@ -132,12 +139,13 @@
         min: props.min,
         max: props.max,
         textFieldProps: props.textFieldProps,
+        hideDetails: props.hideDetails,
       };
     }
 
     if (props.type === 'number') {
       return {
-        label: props.label,
+        // label: props.label,
         placeholder: props.placeholder,
         readonly: props.readonly,
         rules: props.rules,
@@ -148,12 +156,13 @@
         clearable: props.clearable,
         controlVariant: props.controlVariant,
         textFieldProps: props.textFieldProps,
+        hideDetails: props.hideDetails,
       };
     }
 
     if (props.type === 'autocomplete') {
       return {
-        label: props.label,
+        // label: props.label,
         placeholder: props.placeholder,
         readonly: props.readonly,
         items: props.items,
@@ -163,6 +172,7 @@
         returnObject: props.returnObject,
         itemTitle: props.itemTitle,
         itemValue: props.itemValue,
+        hideDetails: props.hideDetails,
         onInput: props.onInput,
       };
     }
