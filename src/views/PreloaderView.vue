@@ -1,5 +1,5 @@
 <template>
-  <Preloader />
+  <Loader />
 </template>
 
 <script setup>
@@ -7,7 +7,7 @@
   import { onMounted } from 'vue';
   import { useRouter, useRoute } from 'vue-router';
 
-  import Preloader from '@/components/preloader/Preloader.vue';
+  import Loader from '@/components/loader/Loader.vue';
 
   const authStore = useAuthStore();
   const router = useRouter();

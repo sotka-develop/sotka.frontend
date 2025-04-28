@@ -22,7 +22,7 @@ export default function useSearchFilters(models) {
     price_min_cadastral_cost_ratio_percent_to: models.priceMinCadastralCostRatioPercentToModel.value || null,
     area_from: models.areaFromModel.value || null,
     area_to: models.areaToModel.value || null,
-    page: models.page.value - 1, // TODO возможно, стоит убарть -1
+    page: models.page.value,
     page_size: models.pageSize.value,
   }));
 }

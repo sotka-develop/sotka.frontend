@@ -249,6 +249,19 @@
         <div class="section__title">
           <h2>Карта</h2>
         </div>
+        <!--
+        <pre> zoom: {{ zoom }}</pre>
+
+        <span>lat_lu: {{ lat_lu }}</span
+        ><br />
+        <span>lat_rd: {{ lat_rd }}</span
+        ><br />
+        <span>lon_lu: {{ lon_lu }}</span
+        ><br />
+        <span>lon_rd: {{ lon_rd }}</span
+        ><br />
+
+        <pre> center: {{ center }}</pre> -->
 
         <div class="map">
           <yandex-map v-model="map" :settings="mapSettins" width="100%" height="100%">
@@ -256,8 +269,13 @@
             <yandex-map-default-features-layer />
 
             <yandex-map-marker v-for="(marker, index) in markers" :key="index" :settings="marker">
-              <div class="marker"></div>
+              <div class="marker" @click="onMarkerClick(marker)"></div>
             </yandex-map-marker>
+            <YandexMapListener
+              :settings="{
+                onUpdate: onCoordsUpdate,
+              }"
+            />
           </yandex-map>
         </div>
       </div>
@@ -289,7 +307,7 @@
 </template>
 
 <script setup>
-  import { computed, onMounted, ref, shallowRef } from 'vue';
+  import { computed, onMounted, onUpdated, ref, shallowRef } from 'vue';
 
   import Field from '@/components/fields/field/Field.vue';
   import Button from '@/components/button/Button.vue';
@@ -320,18 +338,6 @@
     YandexMapMarker,
     YandexMapZoomControl,
   } from 'vue-yandex-maps';
-
-  // список id сущностей таблицы
-  const landIdsFromTable = ref([]);
-
-  const lotsForMap = ref([]);
-
-  const mapBounds = ref({
-    lat_lu: 0,
-    lon_lu: 0,
-    lat_rd: 0,
-    lon_rd: 0,
-  });
 
   //#region данные таблицы
   const page = ref(1);
@@ -382,41 +388,66 @@
 
   //#region данные карты
   const map = shallowRef(null);
-  const mapZoom = ref(4);
+  const mapDefaultZoom = ref(3);
+  const mapZoom = ref(mapDefaultZoom.value);
+  const mapDotsToClusterDefault = ref(64);
+  const mapDotsToCluster = ref(mapDotsToClusterDefault.value);
   const enabledBehaviors = ref(['drag', 'pinchZoom', 'dblClick']);
-  const dots = ref([]);
 
   const mapSettins = {
     location: {
-      center: [57.63299032783368, 40.178383991270444],
+      center: [101, 62],
       zoom: mapZoom.value,
     },
+    zoomRange: { min: 3, max: 12 },
     // behaviors: enabledBehaviors.value,
   };
 
+  // клик по метке
   const handleClick = (event) => {
-    console.log(event);
+    // console.log(event);
   };
 
-  // const markers = [
-  //   {
-  //     coordinates: [51.789682128109, 55.140428698122],
-  //     onClick: handleClick,
-  //   },
-  //   {
-  //     coordinates: [54.76778893634, 57.108481458691],
-  //     onClick: handleClick,
-  //   },
-  // ];
+  // клик по маркеру
+  const onMarkerClick = (marker) => {
+    console.log(marker);
+    alert(marker.data.land_ids);
+  };
 
+  // обновление карты
+  const onCoordsUpdate = debounce((event) => {
+    // console.log(event);
+
+    mapZoom.value = Math.floor(event?.location?.zoom || mapDefaultZoom.value);
+  }, 1000);
+
+  // отображаемые точки на карте
+  const dots = ref([]);
+
+  // метки на основе dots
   const markers = computed(() => {
     return dots.value.map((dot) => {
       return {
         coordinates: [dot.center_latitude, dot.center_longitude],
         onClick: handleClick,
+        data: dot,
       };
     });
   });
+
+  // true - отображаются все точки на карте
+  const showAllDots = ref(true);
+
+  // список id сущностей таблицы
+  const landIdsFromTable = ref([]);
+
+  // координаты по умолчанию - РФ целиком
+  const defaultCoords = {
+    lat_lu: 14, // [1][1]
+    lon_lu: -11, // [0][0]
+    lat_rd: 82, // [0][1]
+    lon_rd: 180, // [1][0]
+  };
 
   //#endregion
 
@@ -564,24 +595,28 @@
     totalCount.value = result?.total_count || 0;
     tableItems.value = transformLotsToTable(data.value);
 
-    const coords = result?.coords_rect || {
-      lat_lu: 46.593939604177926,
-      lon_lu: 11.049821462434878,
-      lat_rd: 65.96012495630457,
-      lon_rd: 64.7046557389222,
-    };
+    const coords = showAllDots.value ? defaultCoords : result?.coords_rect || defaultCoords;
+    const zoom = showAllDots.value ? mapDefaultZoom.value : mapZoom.value;
+    const dotsToCluster = mapDotsToCluster.value;
 
     // извлечение id
     landIdsFromTable.value = data.value.map((lot) => lot.id).filter(Boolean);
 
+    const search_filters = { ...filters.value };
+
+    if (showAllDots.value) {
+      search_filters.page = null;
+      search_filters.page_size = null;
+    }
+
+    const land_ids = showAllDots ? null : [...landIdsFromTable];
+
     const mapPayload = {
       ...coords,
-
-      zoom: 0,
-      dots_to_cluster: 64,
-
-      search_filters: { ...filters.value, land_ids: landIdsFromTable.value },
-      land_ids: landIdsFromTable.value,
+      zoom,
+      dots_to_cluster: dotsToCluster,
+      search_filters,
+      land_ids,
     };
 
     const mapResult = await lotsStore.fetchMapData(mapPayload);
@@ -612,6 +647,9 @@
 
     onSearch();
   }
+
+  // получение данных точки
+  async function getPointData() {}
 
   onMounted(async () => {
     // получаем данные фильтров
@@ -653,7 +691,7 @@
 
   .map {
     width: 100%;
-    height: 400px;
+    height: 720px;
   }
 
   .marker {

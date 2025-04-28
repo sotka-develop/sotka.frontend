@@ -2,11 +2,11 @@
   <component :is="$route.meta.layout || 'div'">
     <RouterView />
   </component>
-  <Preloader v-if="auth.isLoading" />
+  <Loader v-if="auth.isLoading" />
 </template>
 
 <script setup>
-  import Preloader from '@/components/preloader/Preloader.vue';
+  import Loader from '@/components/loader/Loader.vue';
   import { useAuthStore } from '@/stores/auth';
 
   const auth = useAuthStore();
