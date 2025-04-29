@@ -6,7 +6,8 @@ const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
 export const useLotsStore = defineStore('lots', () => {
   const lots = ref([]);
-  const isLoading = ref(false);
+  const lotsPending = ref(false);
+  const mapPending = ref(false);
   const error = ref(null);
 
   async function fetchLots(filters) {
@@ -17,7 +18,7 @@ export const useLotsStore = defineStore('lots', () => {
       return;
     }
 
-    isLoading.value = true;
+    lotsPending.value = true;
     error.value = null;
 
     try {
@@ -41,7 +42,7 @@ export const useLotsStore = defineStore('lots', () => {
       error.value = err.message;
       console.error(err);
     } finally {
-      isLoading.value = false;
+      lotsPending.value = false;
     }
   }
 
@@ -53,7 +54,7 @@ export const useLotsStore = defineStore('lots', () => {
       return;
     }
 
-    isLoading.value = true;
+    mapPending.value = true;
     error.value = null;
 
     try {
@@ -77,7 +78,7 @@ export const useLotsStore = defineStore('lots', () => {
       error.value = err.message;
       console.error(err);
     } finally {
-      isLoading.value = false;
+      mapPending.value = false;
     }
   }
 
@@ -85,7 +86,8 @@ export const useLotsStore = defineStore('lots', () => {
     fetchLots,
     fetchMapData,
     lots,
-    isLoading,
+    lotsPending,
+    mapPending,
     error,
   };
 });

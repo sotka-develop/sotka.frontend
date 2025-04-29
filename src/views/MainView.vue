@@ -249,35 +249,14 @@
         <div class="section__title">
           <h2>Карта</h2>
         </div>
-        <!--
-        <pre> zoom: {{ zoom }}</pre>
 
-        <span>lat_lu: {{ lat_lu }}</span
-        ><br />
-        <span>lat_rd: {{ lat_rd }}</span
-        ><br />
-        <span>lon_lu: {{ lon_lu }}</span
-        ><br />
-        <span>lon_rd: {{ lon_rd }}</span
-        ><br />
-
-        <pre> center: {{ center }}</pre> -->
-
-        <div class="map">
-          <yandex-map v-model="map" :settings="mapSettins" width="100%" height="100%">
-            <yandex-map-default-scheme-layer />
-            <yandex-map-default-features-layer />
-
-            <yandex-map-marker v-for="(marker, index) in markers" :key="index" :settings="marker">
-              <div class="marker" @click="onMarkerClick(marker)"></div>
-            </yandex-map-marker>
-            <YandexMapListener
-              :settings="{
-                onUpdate: onCoordsUpdate,
-              }"
-            />
-          </yandex-map>
-        </div>
+        <Map
+          :dots="dots"
+          :onCoordsUpdate="onCoordsUpdate"
+          :onClusterClick="onClusterClick"
+          :onPointClick="onPointClick"
+          :loading="mapPending"
+        />
       </div>
 
       <div class="section">
@@ -291,7 +270,7 @@
           v-model:items="tableItems"
           :items-length="totalCount"
           :headers="tableHeaders"
-          :loading="isLoading"
+          :loading="lotsPending"
           loading-text="Загрузка"
           no-results-text="Ничего не найдено"
           no-data-text="Данных нет"
@@ -311,6 +290,7 @@
 
   import Field from '@/components/fields/field/Field.vue';
   import Button from '@/components/button/Button.vue';
+  import Map from '@/components/map/Map.vue';
 
   import { storeToRefs } from 'pinia';
   import { useFiltersStore } from '@/stores/filters';
@@ -322,22 +302,9 @@
   const filtersStore = useFiltersStore();
   const lotsStore = useLotsStore();
 
-  const { isLoading } = storeToRefs(lotsStore);
+  const { mapPending, lotsPending } = storeToRefs(lotsStore);
 
   import useSearchFilters from '@/composables/useSearchFilters';
-
-  import {
-    YandexMap,
-    YandexMapClusterer,
-    YandexMapControl,
-    YandexMapControlButton,
-    YandexMapControls,
-    YandexMapListener,
-    YandexMapDefaultFeaturesLayer,
-    YandexMapDefaultSchemeLayer,
-    YandexMapMarker,
-    YandexMapZoomControl,
-  } from 'vue-yandex-maps';
 
   //#region данные таблицы
   const page = ref(1);
@@ -387,66 +354,62 @@
   //#endregion
 
   //#region данные карты
-  const map = shallowRef(null);
-  const mapDefaultZoom = ref(3);
-  const mapZoom = ref(mapDefaultZoom.value);
-  const mapDotsToClusterDefault = ref(64);
-  const mapDotsToCluster = ref(mapDotsToClusterDefault.value);
-  const enabledBehaviors = ref(['drag', 'pinchZoom', 'dblClick']);
+  const mapZoom = ref(3);
+  const mapDotsToCluster = ref(64);
 
-  const mapSettins = {
-    location: {
-      center: [101, 62],
-      zoom: mapZoom.value,
-    },
-    zoomRange: { min: 3, max: 12 },
-    // behaviors: enabledBehaviors.value,
-  };
+  // клик по кластеру
+  const onClusterClick = (data) => {};
 
-  // клик по метке
-  const handleClick = (event) => {
-    // console.log(event);
-  };
+  // клик по точке
+  const onPointClick = (data) => {};
 
   // клик по маркеру
   const onMarkerClick = (marker) => {
-    console.log(marker);
-    alert(marker.data.land_ids);
+    // console.log(marker);
   };
 
   // обновление карты
-  const onCoordsUpdate = debounce((event) => {
-    // console.log(event);
-
+  const onCoordsUpdate = debounce(async (event) => {
     mapZoom.value = Math.floor(event?.location?.zoom || mapDefaultZoom.value);
+
+    const bounds = event?.location?.bounds;
+    const search_filters = { ...filters.value, page: null, page_size: null };
+
+    if (bounds && Array.isArray(bounds)) {
+      const coords = {
+        lon_lu: bounds[0][0],
+        lat_rd: bounds[0][1],
+        lon_rd: bounds[1][0],
+        lat_lu: bounds[1][1],
+      };
+
+      const mapPayload = {
+        ...coords,
+        search_filters,
+        zoom: mapZoom.value,
+        dots_to_cluster: mapDotsToCluster.value,
+        land_ids: null, // все точки, входящие в границы карты
+      };
+
+      await fetchMapData(mapPayload);
+    }
   }, 1000);
 
   // отображаемые точки на карте
   const dots = ref([]);
 
-  // метки на основе dots
-  const markers = computed(() => {
-    return dots.value.map((dot) => {
-      return {
-        coordinates: [dot.center_latitude, dot.center_longitude],
-        onClick: handleClick,
-        data: dot,
-      };
-    });
-  });
-
   // true - отображаются все точки на карте
-  const showAllDots = ref(true);
+  // const showAllDots = ref(true);
 
   // список id сущностей таблицы
   const landIdsFromTable = ref([]);
 
   // координаты по умолчанию - РФ целиком
   const defaultCoords = {
-    lat_lu: 14, // [1][1]
-    lon_lu: -11, // [0][0]
-    lat_rd: 82, // [0][1]
-    lon_rd: 180, // [1][0]
+    lat_lu: 14,
+    lon_lu: -11,
+    lat_rd: 82,
+    lon_rd: 180,
   };
 
   //#endregion
@@ -581,6 +544,18 @@
     usesData.value = result.value;
   }, 800);
 
+  // получение данных для карты
+  async function fetchMapData(payload) {
+    const mapResult = await lotsStore.fetchMapData(payload);
+
+    if (!mapResult) {
+      console.error('Ошибка при получении лотов для карты!');
+      return;
+    }
+
+    dots.value = mapResult.dots || [];
+  }
+
   // фильтрация
   async function onSearch() {
     const result = await lotsStore.fetchLots(filters.value);
@@ -595,21 +570,26 @@
     totalCount.value = result?.total_count || 0;
     tableItems.value = transformLotsToTable(data.value);
 
-    const coords = showAllDots.value ? defaultCoords : result?.coords_rect || defaultCoords;
-    const zoom = showAllDots.value ? mapDefaultZoom.value : mapZoom.value;
+    // const coords = showAllDots.value ? defaultCoords : result?.coords_rect || defaultCoords;
+    // const zoom = showAllDots.value ? mapDefaultZoom.value : mapZoom.value;
+    // const dotsToCluster = mapDotsToCluster.value;
+
+    const coords = defaultCoords;
+    const zoom = mapZoom.value;
     const dotsToCluster = mapDotsToCluster.value;
+
+    const search_filters = { ...filters.value, page: null, page_size: null };
 
     // извлечение id
     landIdsFromTable.value = data.value.map((lot) => lot.id).filter(Boolean);
 
-    const search_filters = { ...filters.value };
+    // if (showAllDots.value) {
+    //   search_filters.page = null;
+    //   search_filters.page_size = null;
+    // }
 
-    if (showAllDots.value) {
-      search_filters.page = null;
-      search_filters.page_size = null;
-    }
-
-    const land_ids = showAllDots ? null : [...landIdsFromTable];
+    // const land_ids = showAllDots ? null : [...landIdsFromTable];
+    const land_ids = null;
 
     const mapPayload = {
       ...coords,
@@ -619,17 +599,7 @@
       land_ids,
     };
 
-    const mapResult = await lotsStore.fetchMapData(mapPayload);
-    console.log(mapResult);
-
-    // Обработка ошибки
-    if (!mapResult) {
-      console.error('Ошибка при получении лотов для карты!');
-
-      return;
-    }
-
-    dots.value = mapResult.dots || [];
+    await fetchMapData(mapPayload);
   }
 
   const isFirstOptionsUpdate = ref(true);
@@ -661,7 +631,6 @@
 
 <style lang="scss" scoped>
   // TODO временно
-
   .main {
     padding: 36px 0 36px;
   }
@@ -687,20 +656,6 @@
         margin-bottom: 28px;
       }
     }
-  }
-
-  .map {
-    width: 100%;
-    height: 720px;
-  }
-
-  .marker {
-    width: 32px;
-    height: 32px;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-image: url("data:image/svg+xml,%3Csvg width='32' height='32' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12.9091 13.4288C12.9091 11.7719 14.293 10.4287 16.0001 10.4287C17.7071 10.4287 19.091 11.7719 19.091 13.4288C19.091 15.0857 17.7071 16.4289 16.0001 16.4289C14.293 16.4289 12.9091 15.0857 12.9091 13.4288Z' fill='%23262AF1'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M6.28577 13.4288C6.28577 8.22142 10.635 4 16.0001 4C21.3651 4 25.7143 8.22142 25.7143 13.4288C25.7143 18.0589 23.2095 21.7714 20.5719 24.3926C19.2614 25.6949 17.9472 26.6976 16.9606 27.3741C16.5849 27.6317 16.2584 27.8408 16.0001 28C15.7417 27.8408 15.4152 27.6317 15.0395 27.3741C14.0529 26.6976 12.7387 25.6949 11.4282 24.3926C8.7906 21.7714 6.28577 18.0589 6.28577 13.4288ZM16.0001 7.85724C12.8298 7.85724 10.2598 10.3517 10.2598 13.4288C10.2598 16.5059 12.8298 19.0004 16.0001 19.0004C19.1703 19.0004 21.7403 16.5059 21.7403 13.4288C21.7403 10.3517 19.1703 7.85724 16.0001 7.85724Z' fill='%23262AF1'/%3E%3Cpath d='M12.9091 13.4288C12.9091 11.7719 14.293 10.4287 16.0001 10.4287C17.7071 10.4287 19.091 11.7719 19.091 13.4288C19.091 15.0857 17.7071 16.4289 16.0001 16.4289C14.293 16.4289 12.9091 15.0857 12.9091 13.4288Z' fill='%23262AF1'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M6.28577 13.4288C6.28577 8.22142 10.635 4 16.0001 4C21.3651 4 25.7143 8.22142 25.7143 13.4288C25.7143 18.0589 23.2095 21.7714 20.5719 24.3926C19.2614 25.6949 17.9472 26.6976 16.9606 27.3741C16.5849 27.6317 16.2584 27.8408 16.0001 28C15.7417 27.8408 15.4152 27.6317 15.0395 27.3741C14.0529 26.6976 12.7387 25.6949 11.4282 24.3926C8.7906 21.7714 6.28577 18.0589 6.28577 13.4288ZM16.0001 7.85724C12.8298 7.85724 10.2598 10.3517 10.2598 13.4288C10.2598 16.5059 12.8298 19.0004 16.0001 19.0004C19.1703 19.0004 21.7403 16.5059 21.7403 13.4288C21.7403 10.3517 19.1703 7.85724 16.0001 7.85724Z' fill='%23262AF1'/%3E%3Cpath d='M16.0001 4C10.635 4 6.28577 8.22142 6.28577 13.4288C6.28577 18.0589 8.7906 21.7714 11.4282 24.3926C12.7387 25.6949 14.0529 26.6976 15.0395 27.3741C15.4152 27.6317 15.7417 27.8408 16.0001 28C16.2584 27.8408 16.5849 27.6317 16.9606 27.3741C17.9472 26.6976 19.2614 25.6949 20.5719 24.3926C23.2095 21.7714 25.7143 18.0589 25.7143 13.4288C25.7143 8.22142 21.3651 4 16.0001 4ZM16.0001 10.4287C14.293 10.4287 12.9091 11.7719 12.9091 13.4288C12.9091 15.0857 14.293 16.4289 16.0001 16.4289C17.7071 16.4289 19.091 15.0857 19.091 13.4288C19.091 11.7719 17.7071 10.4287 16.0001 10.4287ZM10.2598 13.4288C10.2598 10.3517 12.8298 7.85724 16.0001 7.85724C19.1703 7.85724 21.7403 10.3517 21.7403 13.4288C21.7403 16.5059 19.1703 19.0004 16.0001 19.0004C12.8298 19.0004 10.2598 16.5059 10.2598 13.4288Z' stroke='white' stroke-width='2'/%3E%3C/svg%3E%0A");
   }
 
   .section {
