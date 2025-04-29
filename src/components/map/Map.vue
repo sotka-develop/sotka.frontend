@@ -21,6 +21,12 @@
       />
     </yandex-map>
 
+    <div class="map__sidebar">
+      <pre>
+        {{ sidebar }}
+      </pre>
+    </div>
+
     <div class="map__loading">
       <Loader child />
     </div>
@@ -62,6 +68,9 @@
     loading: {
       type: Boolean,
       default: false,
+    },
+    sidebar: {
+      type: Object,
     },
   });
 

@@ -8,6 +8,7 @@ export const useLotsStore = defineStore('lots', () => {
   const lots = ref([]);
   const lotsPending = ref(false);
   const mapPending = ref(false);
+  const landAreaPending = ref(false);
   const error = ref(null);
 
   async function fetchLots(filters) {
@@ -82,12 +83,53 @@ export const useLotsStore = defineStore('lots', () => {
     }
   }
 
+  async function fetchLandArea(payload) {
+    console.log('test');
+
+    const auth = useAuthStore();
+
+    if (!auth.token) {
+      error.value = 'Нет токена';
+      return;
+    }
+
+    landAreaPending.value = true;
+    error.value = null;
+
+    try {
+      const params = new URLSearchParams({ land_area_id: payload });
+
+      const res = await fetch(`${baseUrl}/client/land_area/by_id?${params.toString()}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `${auth.token}`,
+        },
+      });
+
+      if (!res.ok) {
+        throw new Error('Ошибка при получении данных точки');
+      }
+
+      const data = await res.json();
+
+      return data.payload || null;
+    } catch (err) {
+      error.value = err.message;
+      console.error(err);
+    } finally {
+      landAreaPending.value = false;
+    }
+  }
+
   return {
     fetchLots,
     fetchMapData,
+    fetchLandArea,
     lots,
     lotsPending,
     mapPending,
+    landAreaPending,
     error,
   };
 });

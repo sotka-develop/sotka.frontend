@@ -256,6 +256,7 @@
           :onClusterClick="onClusterClick"
           :onPointClick="onPointClick"
           :loading="mapPending"
+          :sidebar="mapSidebarData"
         />
       </div>
 
@@ -302,7 +303,7 @@
   const filtersStore = useFiltersStore();
   const lotsStore = useLotsStore();
 
-  const { mapPending, lotsPending } = storeToRefs(lotsStore);
+  const { mapPending, lotsPending, landAreaPending } = storeToRefs(lotsStore);
 
   import useSearchFilters from '@/composables/useSearchFilters';
 
@@ -356,12 +357,29 @@
   //#region данные карты
   const mapZoom = ref(3);
   const mapDotsToCluster = ref(64);
+  const mapSidebarData = ref(null);
 
   // клик по кластеру
   const onClusterClick = (data) => {};
 
   // клик по точке
-  const onPointClick = (data) => {};
+  const onPointClick = async (data) => {
+    if (landAreaPending.value) return;
+
+    const id = data?.data?.land_ids[0];
+
+    if (id) {
+      console.log(id);
+
+      const landAreaResult = await lotsStore.fetchLandArea(id);
+      mapSidebarData.value = landAreaResult;
+
+      if (!landAreaResult) {
+        console.error('Ошибка при получении данных точки!');
+        return;
+      }
+    }
+  };
 
   // клик по маркеру
   const onMarkerClick = (marker) => {
