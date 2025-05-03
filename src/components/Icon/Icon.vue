@@ -5,6 +5,10 @@
 
     <!-- 20 -->
     <Eye v-if="name === '20/eye'" />
+
+    <!-- 24 -->
+    <Close v-if="name === '24/close'" />
+    <Sync v-if="name === '24/sync'" />
   </div>
 </template>
 
@@ -16,6 +20,10 @@
 
   // 20
   import Eye from '@/assets/icons/20/eye.svg';
+
+  // 24
+  import Close from '@/assets/icons/24/close.svg';
+  import Sync from '@/assets/icons/24/sync.svg';
 
   defineProps({
     name: {
@@ -29,6 +37,10 @@
 
     // 20
     Eye,
+
+    //24
+    Close,
+    Sync,
   });
 </script>
 

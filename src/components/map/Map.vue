@@ -21,7 +21,9 @@
       />
     </yandex-map>
 
-    <div class="map__sidebar">
+    <div class="map__sidebar" v-if="sidebarStatus">
+      <button type="button" @click="closeSidebar">закрыть</button>
+
       <pre>
         {{ sidebar }}
       </pre>
@@ -29,6 +31,18 @@
 
     <div class="map__loading">
       <Loader child />
+    </div>
+
+    <div v-if="syncStatus" class="map__bar">
+      <button type="button" class="map__bar-action" @click="sync">
+        <Icon name="24/sync" />
+
+        {{ actionText }}
+      </button>
+
+      <button type="button" class="map__bar-close" @click="closeBar">
+        <Icon name="24/close" />
+      </button>
     </div>
   </div>
 </template>
@@ -49,6 +63,7 @@
 
   import { computed, shallowRef, ref } from 'vue';
   import Loader from '@/components/loader/Loader.vue';
+  import Icon from '@/components/icon/Icon.vue';
 
   // Props
   const props = defineProps({
@@ -71,6 +86,12 @@
     },
     sidebar: {
       type: Object,
+    },
+    sidebarStatus: {
+      type: Boolean,
+    },
+    syncStatus: {
+      type: Boolean,
     },
   });
 
@@ -97,6 +118,22 @@
       ['map--loading']: props.loading,
     };
   });
+
+  const actionText = 'Обновить таблицу';
+
+  const emit = defineEmits(['update:sidebarStatus', 'update:syncStatus', 'sync']);
+
+  function closeSidebar() {
+    emit('update:sidebarStatus', false);
+  }
+
+  function closeBar() {
+    emit('update:syncStatus', false);
+  }
+
+  function sync() {
+    emit('sync');
+  }
 </script>
 
 <style lang="scss" scoped>

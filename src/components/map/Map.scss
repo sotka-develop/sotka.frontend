@@ -57,4 +57,69 @@
     border-radius: 16px;
     overflow: auto;
   }
+
+  &__bar {
+    position: absolute;
+    z-index: 1;
+    left: 50%;
+    bottom: 24px;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: $color-bg-accent-100;
+    border-radius: 12px;
+  }
+
+  &__bar-action {
+    display: flex;
+    align-items: center;
+    background-color: transparent;
+    color: $color-white;
+    padding: 0;
+    border: 0;
+    padding: 0 72px 0 24px;
+    font-weight: 600;
+    height: 48px;
+
+    @include defaultTransition(color);
+
+    @include hover {
+      color: rgba($color-white, 0.8);
+    }
+
+    .icon {
+      width: 24px;
+      height: 24px;
+      margin-right: 8px;
+    }
+  }
+
+  &__bar-close {
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background-color: transparent;
+    color: $color-white;
+    padding: 0;
+    border: 0;
+
+    @include defaultTransition(color);
+
+    @include hover {
+      color: rgba($color-white, 0.8);
+    }
+
+    .icon {
+      width: 24px;
+      height: 24px;
+    }
+  }
 }

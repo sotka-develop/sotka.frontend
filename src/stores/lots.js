@@ -84,8 +84,6 @@ export const useLotsStore = defineStore('lots', () => {
   }
 
   async function fetchLandArea(payload) {
-    console.log('test');
-
     const auth = useAuthStore();
 
     if (!auth.token) {
