@@ -28,7 +28,7 @@
       </yandex-map-marker>
       <YandexMapListener
         :settings="{
-          onUpdate: onCoordsUpdate,
+          onUpdate: handleCoordsUpdate,
         }"
       />
     </yandex-map>
@@ -120,14 +120,14 @@
   const mapZoom = ref(3);
   const mapZoomMin = 3;
   const mapZoomMax = 12;
-  const center = [101, 62];
+  const center = ref([101, 62]);
   const zoomRange = { min: 3, max: 12 };
 
   const enabledBehaviors = ref(['drag', 'pinchZoom', 'dblClick']);
 
   const markers = computed(() =>
     props.dots.map((dot) => ({
-      coordinates: [dot.center_latitude, dot.center_longitude],
+      coordinates: [dot.center_longitude, dot.center_latitude],
       data: dot,
     }))
   );
@@ -152,6 +152,15 @@
 
   function sync() {
     emit('sync');
+  }
+
+  function handleCoordsUpdate(data) {
+    const location = data.location;
+    center.value = location.center;
+
+    if (props.onCoordsUpdate) {
+      props.onCoordsUpdate(data);
+    }
   }
 
   const zoomOutDisabled = computed(() => {
