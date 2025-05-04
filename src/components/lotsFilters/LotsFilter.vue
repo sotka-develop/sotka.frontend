@@ -14,7 +14,7 @@
 
 <script setup>
   import Field from '@/components/fields/field/Field.vue';
-  import Button from '@/components/button/Button.vue';
+  import Button from '@/components/Appbutton/Button.vue';
 
   const props = defineProps({
     filtersConfig: {

@@ -56,7 +56,7 @@
   import { onMounted, ref } from 'vue';
 
   import Table from '@/components/table/Table.vue';
-  import Button from '@/components/button/Button.vue';
+  import Button from '@/components/Appbutton/Button.vue';
   import FiltersForm from '@/components/filtersForm/FiltersForm.vue';
   import Map from '@/components/map/Map.vue';
 

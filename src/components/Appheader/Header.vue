@@ -45,7 +45,7 @@
   import { useAuthStore } from '@/stores/auth';
   import { useRoute, useRouter } from 'vue-router';
   import Icon from '@/components/icon/Icon.vue';
-  import Button from '@/components/button/Button.vue';
+  import Button from '@/components/Appbutton/Button.vue';
 
   const route = useRoute();
   const router = useRouter();
