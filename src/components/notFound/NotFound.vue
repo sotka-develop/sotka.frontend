@@ -28,7 +28,7 @@
 
 <script setup>
   import Image from '@/components/image/Image.vue';
-  import Button from '@/components/Appbutton/Button.vue';
+  import Button from '@/components/button/Button.vue';
 
   const title = 'Страница не найдена';
   const text = 'Проверьте запрос и попробуйте еще раз';
