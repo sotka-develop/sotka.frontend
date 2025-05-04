@@ -122,4 +122,44 @@
       height: 24px;
     }
   }
+
+  &__controls {
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+    background-color: $color-white;
+    box-shadow: 0px 0px 12px 0px rgba($color-black, 0.12);
+    border-radius: 8px;
+  }
+
+  &__zoom {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $color-black;
+    border: 0;
+    padding: 0;
+    width: 40px;
+    height: 36px;
+
+    @include defaultTransition(color);
+
+    &:not(#{$root}__zoom--disabled) {
+      @include hover {
+        color: $color-bg-accent-100;
+      }
+    }
+
+    .icon {
+      width: 24px;
+      height: 24px;
+    }
+
+    &--disabled {
+      cursor: not-allowed;
+      color: rgba($color-black, 0.5);
+    }
+  }
 }

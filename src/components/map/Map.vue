@@ -1,6 +1,18 @@
 <template>
   <div class="map" :class="classList">
-    <yandex-map v-model="map" :settings="mapSettins" width="100%" height="100%">
+    <yandex-map
+      v-model="map"
+      :settings="{
+        location: {
+          center: center,
+          zoom: mapZoom,
+        },
+        zoomRange: zoomRange,
+        behaviors: enabledBehaviors,
+      }"
+      width="100%"
+      height="100%"
+    >
       <yandex-map-default-scheme-layer />
       <yandex-map-default-features-layer />
 
@@ -20,6 +32,15 @@
         }"
       />
     </yandex-map>
+
+    <div class="map__controls">
+      <button type="button" class="map__zoom map__zoom--in" :class="{ 'map__zoom--disabled': zoomInDisabled }" @click="zoomIn">
+        <Icon name="24/plus" />
+      </button>
+      <button type="button" class="map__zoom map__zoom--out" :class="{ 'map__zoom--disabled': zoomOutDisabled }" @click="zoomOut">
+        <Icon name="24/minus" />
+      </button>
+    </div>
 
     <div class="map__sidebar" v-if="sidebarStatus">
       <button type="button" @click="closeSidebar">закрыть</button>
@@ -97,14 +118,12 @@
 
   const map = shallowRef(null);
   const mapZoom = ref(3);
+  const mapZoomMin = 3;
+  const mapZoomMax = 12;
+  const center = [101, 62];
+  const zoomRange = { min: 3, max: 12 };
 
-  const mapSettins = {
-    location: {
-      center: [101, 62],
-      zoom: mapZoom.value,
-    },
-    zoomRange: { min: 3, max: 12 },
-  };
+  const enabledBehaviors = ref(['drag', 'pinchZoom', 'dblClick']);
 
   const markers = computed(() =>
     props.dots.map((dot) => ({
@@ -133,6 +152,26 @@
 
   function sync() {
     emit('sync');
+  }
+
+  const zoomOutDisabled = computed(() => {
+    return mapZoom.value === 3;
+  });
+
+  const zoomInDisabled = computed(() => {
+    return mapZoom.value === 12;
+  });
+
+  function zoomIn() {
+    if (mapZoom.value < mapZoomMax) {
+      mapZoom.value += 1;
+    }
+  }
+
+  function zoomOut() {
+    if (mapZoom.value > mapZoomMin) {
+      mapZoom.value -= 1;
+    }
   }
 </script>
 

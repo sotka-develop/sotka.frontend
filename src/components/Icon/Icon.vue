@@ -9,6 +9,8 @@
     <!-- 24 -->
     <Close v-if="name === '24/close'" />
     <Sync v-if="name === '24/sync'" />
+    <Plus v-if="name === '24/plus'" />
+    <Minus v-if="name === '24/minus'" />
   </div>
 </template>
 
@@ -24,6 +26,8 @@
   // 24
   import Close from '@/assets/icons/24/close.svg';
   import Sync from '@/assets/icons/24/sync.svg';
+  import Plus from '@/assets/icons/24/plus.svg';
+  import Minus from '@/assets/icons/24/minus.svg';
 
   defineProps({
     name: {
@@ -41,6 +45,8 @@
     //24
     Close,
     Sync,
+    Plus,
+    Minus,
   });
 </script>
 

@@ -9,7 +9,7 @@
         <FiltersForm />
 
         <div class="section__actions">
-          <Button text="Применить" @click="onSearch" />
+          <Button v-if="isFiltered" text="Применить" @click="search" />
         </div>
       </div>
 
@@ -53,7 +53,7 @@
 </template>
 
 <script setup>
-  import { computed, onMounted, onUpdated, ref, shallowRef } from 'vue';
+  import { onMounted, ref } from 'vue';
 
   import Table from '@/components/table/Table.vue';
   import Button from '@/components/button/Button.vue';
@@ -72,12 +72,14 @@
 
   const { mapPending, lotsPending, landAreaPending } = storeToRefs(lotsStore);
 
+  const isFirstOptionsUpdate = ref(true);
+  const isFiltered = ref(false); // фильтры применены, кнопка Применить не отображается
+
   //#region данные таблицы
   const page = ref(1);
   const pageSize = ref(10);
   const totalCount = ref(0);
 
-  const data = ref([]);
   const tableItems = ref([]);
 
   const tableHeaders = [
@@ -119,12 +121,27 @@
   }
   //#endregion
 
-  //#region данные карты
+  //#region карта
   const mapZoom = ref(3);
+  const mapZoomDefault = 3;
   const mapDotsToCluster = ref(64);
   const mapSidebarData = ref(null);
   const mapSidebarStatus = ref(false);
   const mapSyncStatus = ref(false);
+
+  // координаты по умолчанию - РФ целиком
+  const defaultCoords = {
+    lat_lu: 14,
+    lon_lu: -11,
+    lat_rd: 82,
+    lon_rd: 180,
+  };
+
+  // отображаемые точки на карте
+  const dots = ref([]);
+
+  // список точек после обновления карты
+  const landAreasIds = ref(null);
 
   // клик по кластеру
   const onClusterClick = (data) => {};
@@ -150,23 +167,21 @@
     }
   };
 
-  // клик по маркеру
-  const onMarkerClick = (marker) => {
-    // console.log(marker);
-  };
-
+  // синхронизация таблицы с картой
   const tableSync = async () => {
-    onSearch(true);
+    await fetchLotsData(true);
 
     mapSyncStatus.value = false;
   };
 
   // обновление карты
   const onCoordsUpdate = debounce(async (event) => {
+    const filtersModel = filtersStore.getFormattedFilters(); // данные всех фильтров
+
     mapZoom.value = Math.floor(event?.location?.zoom || mapDefaultZoom.value);
 
     const bounds = event?.location?.bounds;
-    const search_filters = { ...filters.value, page: null, page_size: null };
+    const search_filters = { ...filtersModel, page: null, page_size: null };
 
     if (bounds && Array.isArray(bounds)) {
       const coords = {
@@ -184,37 +199,70 @@
         land_ids: null, // все точки, входящие в границы карты
       };
 
-      await fetchMapData(mapPayload);
+      await loadMapData(mapPayload);
 
       mapSyncStatus.value = true;
     }
   }, 1000);
-
-  // отображаемые точки на карте
-  const dots = ref([]);
-
-  // список точек после обновления карты
-  const landAreasIds = ref(null);
-
-  // true - отображаются все точки на карте
-  // const showAllDots = ref(true);
-
-  // список id сущностей таблицы
-  const landIdsFromTable = ref([]);
-
-  // координаты по умолчанию - РФ целиком
-  const defaultCoords = {
-    lat_lu: 14,
-    lon_lu: -11,
-    lat_rd: 82,
-    lon_rd: 180,
-  };
-
   //#endregion
 
-  // получение данных для карты
-  async function fetchMapData(payload) {
-    const mapResult = await lotsStore.fetchMapData(payload);
+  // контролы таблицы
+  async function onUpdateOptions(options) {
+    if (isFirstOptionsUpdate.value) {
+      isFirstOptionsUpdate.value = false;
+
+      return;
+    }
+
+    page.value = options.page;
+    pageSize.value = options.itemsPerPage;
+
+    await fetchLotsData();
+  }
+
+  // получение лотов в таблице
+  async function fetchLotsData(sync = false) {
+    const filtersModel = filtersStore.getFormattedFilters(); // данные всех фильтров
+    const pagination = {
+      page: page.value, // текущая страница
+      page_size: pageSize.value, // всего элементов на странице
+    };
+
+    const land_ids = sync ? landAreasIds.value : null; // null для получения всех точек
+    const result = await lotsStore.fetchLots({ ...filtersModel, ...pagination, land_ids });
+
+    if (!result) {
+      console.error('Ошибка при получении лотов!');
+
+      return;
+    }
+
+    const landAreas = result?.land_areas || []; // список сущностей
+    tableItems.value = transformLotsToTable(landAreas); // преобразование к табличному виду
+    totalCount.value = result?.total_count || 0; // всего сущностей
+  }
+
+  // получение точек на карте
+  async function loadMapData(payload = null) {
+    const filtersModel = filtersStore.getFormattedFilters(); // данные всех фильтров
+
+    const coords = defaultCoords; // координаты
+    const zoom = mapZoomDefault; // масштаб
+    const dotsToCluster = mapDotsToCluster.value; // точек в кластере
+    const search_filters = { ...filtersModel, page: null, page_size: null }; // все точки сразу
+    const land_ids = null; // null для получения всех точек
+
+    const defaultPayload = {
+      ...coords,
+      zoom,
+      dots_to_cluster: dotsToCluster,
+      search_filters,
+      land_ids,
+    };
+
+    const mapPayload = payload ? payload : defaultPayload;
+
+    const mapResult = await lotsStore.fetchMapData(mapPayload);
 
     if (!mapResult) {
       console.error('Ошибка при получении лотов для карты!');
@@ -225,71 +273,17 @@
     landAreasIds.value = (mapResult?.land_areas_ids || []).filter((item) => item);
   }
 
-  // фильтрация
-  async function onSearch(tableUpdate = false) {
-    const filtersModel = filtersStore.getFormattedFilters();
-    // const land_ids = landAreasIds.value ? landAreasIds.value : null;
-    const land_ids = null; // TODO временно
-    const result = await lotsStore.fetchLots({ ...filtersModel, page: page.value, page_size: pageSize.value, land_ids });
-
-    if (!result) {
-      console.error('Ошибка при получении лотов!');
-
-      return;
-    }
-
-    data.value = result?.land_areas || [];
-    totalCount.value = result?.total_count || 0;
-    tableItems.value = transformLotsToTable(data.value);
-
-    const coords = defaultCoords;
-    const zoom = mapZoom.value;
-    const dotsToCluster = mapDotsToCluster.value;
-
-    const search_filters = { ...filtersModel, page: null, page_size: null };
-
-    // извлечение id
-    // TODO пока не используется
-    landIdsFromTable.value = data.value.map((lot) => lot.id).filter(Boolean);
-
-    // TODO ?
-    const landMapIds = null;
-
-    const mapPayload = {
-      ...coords,
-      zoom,
-      dots_to_cluster: dotsToCluster,
-      search_filters,
-      land_ids: landMapIds,
-    };
-
-    if (!tableUpdate) {
-      await fetchMapData(mapPayload);
-    }
-  }
-
-  const isFirstOptionsUpdate = ref(true);
-
-  // контролы таблицы
-  function onUpdateOptions(options) {
-    console.log(options);
-    if (isFirstOptionsUpdate.value) {
-      isFirstOptionsUpdate.value = false;
-
-      return;
-    }
-
-    page.value = options.page;
-    pageSize.value = options.itemsPerPage;
-
-    onSearch();
+  // стартовый запрос лотов и точек
+  async function initialSearch() {
+    await fetchLotsData();
+    await loadMapData();
   }
 
   onMounted(async () => {
     // получаем данные фильтров
     await filtersStore.loadFilters();
 
-    onSearch();
+    await initialSearch();
   });
 </script>
 
