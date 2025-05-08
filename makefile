@@ -15,7 +15,7 @@ run_via_pm2:
 
 upgrade_and_run_dev: upgrade install_deps run_dev
 
-upgrade_and_run_pm2: upgrade install_deps build
+upgrade_and_build: upgrade install_deps build
 
-upgrade_and_restart_pm2: upgrade install_deps 
+upgrade_and_restart_pm2: upgrade_and_build
 	pm2 restart frontend
