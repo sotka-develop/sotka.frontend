@@ -47,8 +47,8 @@ async function init() {
   app.use(vuetify);
   app.use(
     createYmaps({
-      // apikey: yamapKey,
-      apikey: '22ffd1cb-9ace-4d1e-8697-70b846752a13',
+      apikey: yamapKey,
+      // apikey: '22ffd1cb-9ace-4d1e-8697-70b846752a13',
     })
   );
   app.mount('#app');
