@@ -1,4 +1,6 @@
 .preloader {
+  $root: &;
+
   position: fixed;
   z-index: 9999;
   top: 0;
@@ -32,6 +34,16 @@
     -webkit-mask-composite: source-out;
     mask-composite: subtract;
     animation: preloaderSpinner 1s infinite linear;
+
+    #{$root}--medium & {
+      width: 60px;
+      padding: 6px;
+    }
+
+    #{$root}--small & {
+      width: 40px;
+      padding: 4px;
+    }
   }
 }
 

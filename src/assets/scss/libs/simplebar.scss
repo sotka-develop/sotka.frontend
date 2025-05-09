@@ -1,0 +1,18 @@
+[data-simplebar] {
+  &.simplebar-scrollable-y {
+    padding-right: 16px;
+  }
+  .simplebar-scrollbar {
+    &::before {
+      left: 0;
+      right: 0;
+      background-color: rgba($color-bg-base-2-500, 0.5);
+    }
+  }
+
+  .simplebar-track.simplebar-vertical {
+    width: 4px;
+    border-radius: 4px;
+    background-color: transparent;
+  }
+}

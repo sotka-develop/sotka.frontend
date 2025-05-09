@@ -25,6 +25,7 @@
           :onPointClick="onPointClick"
           :loading="mapPending"
           :sidebar="mapSidebarData"
+          :sidebar-pending="landAreaPending"
           v-model:sidebarStatus="mapSidebarStatus"
           v-model:syncStatus="mapSyncStatus"
           @sync="tableSync"
@@ -53,7 +54,7 @@
 </template>
 
 <script setup>
-  import { onMounted, ref } from 'vue';
+  import { onMounted, ref, watch } from 'vue';
 
   import Table from '@/components/table/Table.vue';
   import Button from '@/components/button/Button.vue';
@@ -72,16 +73,17 @@
 
   const { mapPending, lotsPending, landAreaPending } = storeToRefs(lotsStore);
 
-  const isFirstOptionsUpdate = ref(true);
   const isFiltered = ref(false); // фильтры применены, кнопка Применить не отображается
 
   //#region данные таблицы
-  const page = ref(1);
-  const pageSize = ref(10);
-  const totalCount = ref(0);
+  const page = ref(1); // текущая страница таблицы
+  const pageSize = ref(10); // количество элементов на странице таблицы
+  const totalCount = ref(0); // общее количество лотов
 
+  // список лотов для текущей страницы таблицы
   const tableItems = ref([]);
 
+  // заголовки в таблице
   const tableHeaders = [
     { title: 'Ссылка', key: 'link' },
     { title: 'Кадастровый номер', key: 'cadaster_number' },
@@ -100,6 +102,7 @@
     { title: 'Композиция', key: 'composition' },
   ];
 
+  // преобоазование данных лотов для таблицы
   function transformLotsToTable(lots) {
     return lots.map((lot) => ({
       link: lot.link || '',
@@ -124,10 +127,17 @@
   //#region карта
   const mapZoom = ref(3);
   const mapZoomDefault = 3;
-  const mapDotsToCluster = ref(64);
+  const mapDotsToCluster = ref(10);
   const mapSidebarData = ref(null);
   const mapSidebarStatus = ref(false);
   const mapSyncStatus = ref(false);
+
+  // очистка данных точки после закрытия сайдбара
+  watch(mapSidebarStatus, (val) => {
+    if (!val) {
+      mapSidebarData.value = {};
+    }
+  });
 
   // координаты по умолчанию - РФ целиком
   const defaultCoords = {
@@ -153,15 +163,42 @@
     const id = data?.data?.land_ids[0];
 
     if (id) {
-      console.log(id);
+      const result = await lotsStore.fetchLandArea(id);
 
-      const landAreaResult = await lotsStore.fetchLandArea(id);
-      mapSidebarData.value = landAreaResult;
-
-      if (!landAreaResult) {
+      if (!result) {
         console.error('Ошибка при получении данных точки!');
         return;
       }
+
+      mapSidebarData.value = {
+        id: result?.id || '',
+        area: result?.area || '',
+        areaFromNspd: result?.area_from_nspd || '',
+        auctionStartDate: result?.auction_start_date || '',
+        biddEndTime: result?.bidd_end_time || '',
+        biddStartTime: result?.bidd_start_time || '',
+        cadasterNumber: result?.cadaster_number || '',
+        cadastralCostFromNspd: result?.cadastral_cost_from_nspd || '',
+        category: result?.category || '',
+        categoryFromNspd: result?.category_from_nspd || '',
+        composition: result?.composition || '',
+        entityName: result?.entity_name || '',
+        etpCode: result?.etp_code?.etp_code || '',
+        federalDistrict: result?.federal_district?.federal_district || '',
+        link: result?.link || '',
+        lot: result?.lot || '',
+        lotStatusRus: result?.lot_status_rus || '',
+        permittedUse: result?.permitted_use || '',
+        permittedUseEstablishedByDocumentFromNspd: result?.permitted_use_established_by_document_from_nspd || '',
+        priceMin: result?.price_min || '',
+        priceMinCadastralCostRatioPercent: result?.price_min_cadastral_cost_ratio_percent | '',
+        region: result?.region?.region || '',
+        rubricNspd: result?.rubric_nspd || '',
+        rubricTorgiGov: result?.rubric_torgi_gov || '',
+        typeTransactionRus: result?.type_transaction_rus || '',
+        latitude: result?.latitude || '',
+        longitude: result?.longitude || '',
+      };
 
       mapSidebarStatus.value = true;
     }
@@ -205,6 +242,9 @@
     }
   }, 1000);
   //#endregion
+
+  // для пропуска onUpdateOptions после инициализации
+  const isFirstOptionsUpdate = ref(true);
 
   // контролы таблицы
   async function onUpdateOptions(options) {

@@ -15,7 +15,7 @@ export default defineConfig({
     vue(),
     vueDevTools(),
     vuetify({
-      autoImport: true, // Автоматический импорт компонентов
+      autoImport: true,
     }),
     svgLoader({
       defaultImport: 'component',
@@ -34,7 +34,7 @@ export default defineConfig({
           @import "@/assets/scss/vars/index.scss";
           @import "@/assets/scss/mixins/index.scss";
         `,
-        silenceDeprecations: ['legacy-js-api', 'import', 'global-builtin'],
+        silenceDeprecations: ['legacy-js-api', 'import', 'global-builtin', 'mixed-decls'],
       },
     },
   },

@@ -14,11 +14,15 @@
       type: Boolean,
       default: false,
     },
+    size: {
+      type: String,
+    },
   });
 
   const classList = computed(() => {
     return {
       ['preloader--child']: props.child,
+      [`preloader--${props.size}`]: props.size,
     };
   });
 </script>

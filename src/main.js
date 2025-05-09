@@ -2,7 +2,7 @@ const yamapKey = import.meta.env.VITE_YAMAP_KEY;
 
 import 'vuetify/styles';
 import '@mdi/font/css/materialdesignicons.css';
-
+import 'simplebar-vue/dist/simplebar.min.css';
 import '@/assets/scss/main.scss';
 
 import { createApp } from 'vue';
@@ -12,6 +12,7 @@ import { createYmaps } from 'vue-yandex-maps';
 import App from './App.vue';
 import router from './router';
 import { vuetify } from './plugins/vuetify';
+import SimpleBar from 'simplebar-vue';
 
 const app = createApp(App);
 const pinia = createPinia();
@@ -48,9 +49,11 @@ async function init() {
   app.use(
     createYmaps({
       apikey: yamapKey,
-      // apikey: '22ffd1cb-9ace-4d1e-8697-70b846752a13',
     })
   );
+
+  app.component('SimpleBar', SimpleBar);
+
   app.mount('#app');
 }
 

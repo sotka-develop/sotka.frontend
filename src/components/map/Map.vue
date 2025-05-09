@@ -23,7 +23,9 @@
           </div>
         </template>
         <template v-else-if="marker?.data?.points_count === 1">
-          <div class="map__point" @click="onPointClick(marker)"></div>
+          <div class="map__point" @click="onPointClick(marker)">
+            <Icon />
+          </div>
         </template>
       </yandex-map-marker>
       <YandexMapListener
@@ -42,16 +44,22 @@
       </button>
     </div>
 
-    <div class="map__sidebar" v-if="sidebarStatus">
-      <button type="button" @click="closeSidebar">закрыть</button>
+    <div class="map__sidebar">
+      <button type="button" class="map__sidebar-close" @click="closeSidebar">
+        <Icon name="20/chevron-left" />
+      </button>
 
-      <pre>
-        {{ sidebar }}
-      </pre>
+      <div class="map__sidebar-content">
+        <div class="map__sidebar-loading">
+          <Loader child size="small" />
+        </div>
+
+        <MapSidebar v-if="sidebar" :data="sidebar" />
+      </div>
     </div>
 
     <div class="map__loading">
-      <Loader child />
+      <Loader child size="medium" />
     </div>
 
     <div v-if="syncStatus" class="map__bar">
@@ -85,6 +93,7 @@
   import { computed, shallowRef, ref } from 'vue';
   import Loader from '@/components/loader/Loader.vue';
   import Icon from '@/components/icon/Icon.vue';
+  import MapSidebar from '../mapSidebar/MapSidebar.vue';
 
   // Props
   const props = defineProps({
@@ -111,6 +120,9 @@
     sidebarStatus: {
       type: Boolean,
     },
+    sidebarPending: {
+      type: Boolean,
+    },
     syncStatus: {
       type: Boolean,
     },
@@ -135,6 +147,8 @@
   const classList = computed(() => {
     return {
       ['map--loading']: props.loading,
+      ['map--sidebar-show']: props.sidebarStatus,
+      ['map--sidebar-pending']: props.sidebarPending,
     };
   });
 
