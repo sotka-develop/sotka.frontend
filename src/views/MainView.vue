@@ -133,11 +133,11 @@
   const mapSyncStatus = ref(false);
 
   // очистка данных точки после закрытия сайдбара
-  watch(mapSidebarStatus, (val) => {
-    if (!val) {
-      mapSidebarData.value = {};
-    }
-  });
+  // watch(mapSidebarStatus, (val) => {
+  //   if (!val) {
+  //     mapSidebarData.value = {};
+  //   }
+  // });
 
   // координаты по умолчанию - РФ целиком
   const defaultCoords = {

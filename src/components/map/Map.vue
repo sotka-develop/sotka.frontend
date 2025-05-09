@@ -45,7 +45,7 @@
     </div>
 
     <div class="map__sidebar">
-      <button type="button" class="map__sidebar-close" @click="closeSidebar">
+      <button type="button" class="map__sidebar-toggle" @click="toggleSidebar">
         <Icon name="20/chevron-left" />
       </button>
 
@@ -90,7 +90,7 @@
     YandexMapZoomControl,
   } from 'vue-yandex-maps';
 
-  import { computed, shallowRef, ref } from 'vue';
+  import { computed, shallowRef, ref, watch } from 'vue';
   import Loader from '@/components/loader/Loader.vue';
   import Icon from '@/components/icon/Icon.vue';
   import MapSidebar from '../mapSidebar/MapSidebar.vue';
@@ -134,6 +134,7 @@
   const mapZoomMax = 12;
   const center = ref([101, 62]);
   const zoomRange = { min: 3, max: 12 };
+  const isDirty = ref(false);
 
   const enabledBehaviors = ref(['drag', 'pinchZoom', 'dblClick']);
 
@@ -149,6 +150,7 @@
       ['map--loading']: props.loading,
       ['map--sidebar-show']: props.sidebarStatus,
       ['map--sidebar-pending']: props.sidebarPending,
+      ['map--is-dirty']: isDirty.value,
     };
   });
 
@@ -156,8 +158,8 @@
 
   const emit = defineEmits(['update:sidebarStatus', 'update:syncStatus', 'sync']);
 
-  function closeSidebar() {
-    emit('update:sidebarStatus', false);
+  function toggleSidebar() {
+    emit('update:sidebarStatus', !props.sidebarStatus);
   }
 
   function closeBar() {
@@ -196,6 +198,13 @@
       mapZoom.value -= 1;
     }
   }
+
+  watch(
+    () => props.sidebar,
+    (val) => {
+      isDirty.value = true;
+    }
+  );
 </script>
 
 <style lang="scss" scoped>
