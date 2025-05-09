@@ -85,41 +85,41 @@
 
   // заголовки в таблице
   const tableHeaders = [
-    { title: 'Ссылка', key: 'link' },
-    { title: 'Кадастровый номер', key: 'cadaster_number' },
-    { title: 'Площадь', key: 'area' },
-    { title: 'Площадь (по НСПД)', key: 'area_from_nspd' },
-    { title: 'Минимальная цена', key: 'price_min' },
-    { title: 'Кадастровая стоимость (по НСПД)', key: 'cadastral_cost_from_nspd' },
-    { title: '% соотношение начальной цены и кадастровой стоимости', key: 'price_min_cadastral_cost_ratio_percent' },
-    { title: 'Код ЭТП', key: 'etp_code' },
-    { title: 'Категория', key: 'category' },
-    { title: 'Категория (по НСПД)', key: 'category_from_nspd' },
-    { title: 'Разрешенное использование', key: 'permitted_use' },
-    { title: 'Разрешенное использование (по документу НСПД)', key: 'permitted_use_from_nspd' },
-    { title: 'Регион', key: 'region' },
-    { title: 'Федеральный округ', key: 'federal_district' },
-    { title: 'Композиция', key: 'composition' },
+    { title: 'Ссылка', key: 'link', sortable: false },
+    { title: 'Кадастровый номер', key: 'cadaster_number', sortable: false },
+    { title: 'Площадь', key: 'area', sortable: false },
+    { title: 'Площадь (по НСПД)', key: 'area_from_nspd', sortable: false },
+    { title: 'Минимальная цена', key: 'price_min', sortable: false },
+    { title: 'Кадастровая стоимость (по НСПД)', key: 'cadastral_cost_from_nspd', sortable: false },
+    { title: '% соотношение начальной цены и кадастровой стоимости', key: 'price_min_cadastral_cost_ratio_percent', sortable: false },
+    { title: 'Код ЭТП', key: 'etp_code', sortable: false },
+    { title: 'Категория', key: 'category', sortable: false },
+    { title: 'Категория (по НСПД)', key: 'category_from_nspd', sortable: false },
+    { title: 'Разрешенное использование', key: 'permitted_use', sortable: false },
+    { title: 'Разрешенное использование (по документу НСПД)', key: 'permitted_use_from_nspd', sortable: false },
+    { title: 'Регион', key: 'region', sortable: false },
+    { title: 'Федеральный округ', key: 'federal_district', sortable: false },
+    { title: 'Композиция', key: 'composition', sortable: false },
   ];
 
   // преобоазование данных лотов для таблицы
   function transformLotsToTable(lots) {
     return lots.map((lot) => ({
-      link: lot.link || '',
-      cadaster_number: lot.cadaster_number || '',
-      area: lot.area || '',
-      area_from_nspd: lot.area_from_nspd || '',
-      price_min: lot.price_min || '',
-      cadastral_cost_from_nspd: lot.cadastral_cost_from_nspd || '',
-      price_min_cadastral_cost_ratio_percent: lot.price_min_cadastral_cost_ratio_percent || '',
-      etp_code: lot.etp_code?.entity_name || '',
-      category: lot.category || '',
-      category_from_nspd: lot.category_from_nspd || '',
-      permitted_use: lot.permitted_use || '',
-      permitted_use_from_nspd: lot.permitted_use_established_by_document_from_nspd || '',
-      region: lot.region?.region || '',
-      federal_district: lot.federal_district?.federal_district || '',
-      composition: lot.composition || '',
+      link: lot.link || '-',
+      cadaster_number: lot.cadaster_number || '-',
+      area: lot.area || '-',
+      area_from_nspd: lot.area_from_nspd || '-',
+      price_min: lot.price_min || '-',
+      cadastral_cost_from_nspd: lot.cadastral_cost_from_nspd || '-',
+      price_min_cadastral_cost_ratio_percent: lot.price_min_cadastral_cost_ratio_percent || '-',
+      etp_code: lot.etp_code?.entity_name || '-',
+      category: lot.category || '-',
+      category_from_nspd: lot.category_from_nspd || '-',
+      permitted_use: lot.permitted_use || '-',
+      permitted_use_from_nspd: lot.permitted_use_established_by_document_from_nspd || '-',
+      region: lot.region?.region || '-',
+      federal_district: lot.federal_district?.federal_district || '-',
+      composition: lot.composition || '-',
     }));
   }
   //#endregion
@@ -131,13 +131,6 @@
   const mapSidebarData = ref(null);
   const mapSidebarStatus = ref(false);
   const mapSyncStatus = ref(false);
-
-  // очистка данных точки после закрытия сайдбара
-  // watch(mapSidebarStatus, (val) => {
-  //   if (!val) {
-  //     mapSidebarData.value = {};
-  //   }
-  // });
 
   // координаты по умолчанию - РФ целиком
   const defaultCoords = {

@@ -17,6 +17,19 @@
       <template #item.link="{ item }">
         <a :href="item.link" target="_blank">{{ item.link }}</a>
       </template>
+
+      <template #footer.prepend>
+        <div class="table__items-per-page">
+          <v-select
+            :items="[5, 10, 25, 50]"
+            :model-value="itemsPerPage"
+            label=""
+            @update:model-value="(val) => emit('update:itemsPerPage', val)"
+            variant="outlined"
+            hide-details
+          />
+        </div>
+      </template>
     </v-data-table-server>
   </div>
 </template>

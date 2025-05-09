@@ -1,3 +1,46 @@
 .table {
   $root: &;
+
+  &:deep(.v-data-table__td) {
+    min-width: 200px;
+  }
+
+  &:deep(hr) {
+    display: none;
+  }
+
+  &:deep(.v-table__wrapper) {
+    border: 1px solid $color-border-base-1-500;
+    border-radius: 8px;
+  }
+
+  &:deep(.v-data-table-footer__items-per-page) {
+    display: none;
+  }
+
+  &:deep(.v-data-table-footer) {
+    padding: 0;
+    margin-top: 24px;
+  }
+
+  &:deep(.v-btn) {
+    @include defaultTransition(opacity, color);
+
+    &:hover {
+      opacity: 1;
+      color: $color-bg-accent-100;
+    }
+  }
+
+  &__items-per-page {
+    margin-right: auto;
+
+    &:deep(.v-field__input) {
+      min-height: 40px;
+      height: 40px;
+      padding: 0 12px;
+
+      @include text-body;
+    }
+  }
 }
