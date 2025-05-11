@@ -211,11 +211,9 @@
   };
 
   // обновление карты
-  const onCoordsUpdate = debounce(async (event) => {
+  const onCoordsUpdate = async (event) => {
     const filtersModel = filtersStore.getFormattedFilters(); // данные всех фильтров
-
-    mapZoom.value = Math.floor(event?.location?.zoom || mapDefaultZoom.value);
-
+    mapZoom.value = (event?.location?.zoom || mapDefaultZoom.value).toFixed(2);
     const bounds = event?.location?.bounds;
     const search_filters = { ...filtersModel, page: null, page_size: null };
 
@@ -226,7 +224,6 @@
         lon_rd: bounds[1][0],
         lat_lu: bounds[1][1],
       };
-
       const mapPayload = {
         ...coords,
         search_filters,
@@ -239,7 +236,7 @@
 
       mapSyncStatus.value = true;
     }
-  }, 1000);
+  };
   //#endregion
 
   // для пропуска onUpdateOptions после инициализации

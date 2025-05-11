@@ -5,10 +5,10 @@
       :settings="{
         location: {
           center: center,
-          zoom: mapZoom,
+          zoom: zoom,
         },
         zoomRange: zoomRange,
-        behaviors: enabledBehaviors,
+        // behaviors: enabledBehaviors,
       }"
       width="100%"
       height="100%"
@@ -95,6 +95,9 @@
   import Icon from '@/components/icon/Icon.vue';
   import MapSidebar from '../mapSidebar/MapSidebar.vue';
 
+  import debounce from 'lodash.debounce';
+  import { supportsTouch } from '@/assets/js/utils/isTouch';
+
   // Props
   const props = defineProps({
     dots: {
@@ -129,14 +132,19 @@
   });
 
   const map = shallowRef(null);
-  const mapZoom = ref(3);
-  const mapZoomMin = 3;
-  const mapZoomMax = 15;
+  const zoom = ref(3);
+  const zoomDefault = 3;
+  const zoomMin = 3;
+  const zoomMax = 21;
+  const zoomRange = { min: zoomMin, max: zoomMax };
   const center = ref([101, 62]);
-  const zoomRange = { min: 3, max: 12 };
   const isDirty = ref(false);
 
-  const enabledBehaviors = ref(['drag', 'pinchZoom', 'dblClick']);
+  let enabledBehaviors = ['drag', 'pinchZoom', 'dblClick'];
+
+  if (supportsTouch()) {
+    enabledBehaviors = ['pinchZoom', 'dblClick'];
+  }
 
   const markers = computed(() =>
     props.dots.map((dot) => ({
@@ -170,32 +178,33 @@
     emit('sync');
   }
 
-  function handleCoordsUpdate(data) {
+  const handleCoordsUpdate = debounce((data) => {
     const location = data.location;
     center.value = location.center;
+    zoom.value = location.zoom || zoomDefault;
 
     if (props.onCoordsUpdate) {
       props.onCoordsUpdate(data);
     }
-  }
+  }, 1000);
 
   const zoomOutDisabled = computed(() => {
-    return mapZoom.value === 3;
+    return zoom.value === zoomMin;
   });
 
   const zoomInDisabled = computed(() => {
-    return mapZoom.value === 12;
+    return zoom.value === zoomMax;
   });
 
   function zoomIn() {
-    if (mapZoom.value < mapZoomMax) {
-      mapZoom.value += 1;
+    if (zoom.value < zoomMax) {
+      zoom.value = Math.floor(zoom.value + 1);
     }
   }
 
   function zoomOut() {
-    if (mapZoom.value > mapZoomMin) {
-      mapZoom.value -= 1;
+    if (zoom.value > zoomMin) {
+      zoom.value = Math.floor(zoom.value - 1);
     }
   }
 
