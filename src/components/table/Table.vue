@@ -21,7 +21,7 @@
       <template #footer.prepend>
         <div class="table__items-per-page">
           <v-select
-            :items="[5, 10, 25, 50]"
+            :items="[5, 10, 25, 50, 100]"
             :model-value="itemsPerPage"
             label=""
             @update:model-value="(val) => emit('update:itemsPerPage', val)"

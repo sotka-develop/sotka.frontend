@@ -131,7 +131,7 @@
   const map = shallowRef(null);
   const mapZoom = ref(3);
   const mapZoomMin = 3;
-  const mapZoomMax = 12;
+  const mapZoomMax = 15;
   const center = ref([101, 62]);
   const zoomRange = { min: 3, max: 12 };
   const isDirty = ref(false);
