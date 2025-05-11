@@ -15,7 +15,11 @@
       @update:options="onUpdateOptions"
     >
       <template #item.link="{ item }">
-        <a :href="item.link" target="_blank">{{ item.link }}</a>
+        <a class="table__link" :href="item.link" target="_blank">{{ item.link }}</a>
+      </template>
+
+      <template #item.lot="{ item }">
+        <a class="table__link" :href="`https://torgi.gov.ru/new/public/lots/lot/${item.lot}`" target="_blank">{{ item.lot }}</a>
       </template>
 
       <template #footer.prepend>

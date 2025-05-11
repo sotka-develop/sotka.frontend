@@ -46,94 +46,73 @@
 
     return [
       {
-        text: 'Извещение, лот',
-        href: `https://torgi.gov.ru/new/public/lots/lot/${props?.data?.lot || ''}`,
-        value: props?.data?.lot || '',
-      },
-      {
-        text: 'Площадь (TG)',
-        value: props?.data?.area || '-',
-      },
-      {
-        text: 'Площадь (КН)',
-        value: props?.data?.areaFromNspd || '-',
-      },
-      {
-        text: 'Кадастровая стоимость',
-        value: props?.data?.cadastralCostFromNspd || '-',
-      },
-      {
-        text: 'Начальная цена',
-        value: props?.data?.priceMin || '-',
-      },
-      {
-        text: 'Задаток (р)',
-        value: '-',
-      },
-      {
-        text: 'Задаток (%)',
-        value: '-',
-      },
-      {
-        text: '% соот. НЦ и КС',
-        value: props?.data?.priceMinCadastralCostRatioPercent || '-',
+        text: 'Кадастровый номер',
+        value: props?.data?.cadasterNumber || '-',
       },
       {
         text: 'Координаты',
         value: `${props?.data?.latitude || '-'}, ${props?.data?.longitude || '-'}`,
       },
       {
-        text: 'Оконч.подач.заяв.',
-        value: props?.data?.biddEndTime || '-',
-      },
-      {
-        text: 'Дата проведения торгов',
-        value: props?.data?.auctionStartDate || '-',
-      },
-      {
         text: 'Форма проведения',
-        value: '-',
+        value: props?.data?.biddFormRaw,
       },
       {
         text: 'Вид сделки',
-        value: props?.data?.typeTransactionRus || '-',
+        value: props?.data?.typeTransactionRus,
+      },
+      {
+        text: 'Категория {КН}',
+        value: props?.data?.categoryFromNspd,
+      },
+      {
+        text: 'ВРИ {КН}',
+        value: props?.data?.permittedUseEstablishedByDocumentFromNspd,
+      },
+      {
+        text: 'Площадь {КН}',
+        value: props?.data?.area,
+      },
+      {
+        text: 'Начальная цена',
+        value: props?.data?.priceMinInRub,
+      },
+      {
+        text: 'Кадастровая стоимость',
+        value: props?.data?.cadastralCostFromNspdInRub,
+      },
+      {
+        text: '% соот. НЦ и КС',
+        value: props?.data?.priceMinCadastralCostRatioPercent,
+      },
+      {
+        text: 'Оконч.подач.заяв.',
+        value: props?.data?.biddEndTime,
+      },
+      {
+        text: 'Дата проведения торгов',
+        value: props?.data?.auctionStartDate,
       },
       {
         text: 'ЭТП',
-        value: props?.data?.etpCode || '-',
-      },
-      {
-        text: 'Категория (TG)',
-        value: props?.data?.category || '-',
-      },
-      {
-        text: 'Категория (КН)',
-        value: props?.data?.categoryFromNspd || '-',
-      },
-      {
-        text: 'ВРИ (TG)',
-        value: props?.data?.permittedUse || '-',
-      },
-      {
-        text: 'ВРИ (КН)',
-        value: props?.data?.permittedUseEstablishedByDocumentFromNspd || '-',
-      },
-      {
-        text: 'Субъект РФ',
-        value: props?.data?.region || '-',
-      },
-      {
-        text: 'Федеральный округ',
-        value: props?.data?.federalDistrict || '-',
+        value: props?.data?.etp_code,
       },
       {
         text: 'Ссылка',
+        href: props?.data?.link,
         value: props?.data?.link || '',
-        href: `${props?.data?.link}`,
       },
       {
-        text: 'Составность',
-        value: props?.data?.composition || '-',
+        text: 'Категория {TG}',
+        value: props?.data?.categoryPurposeOrCategoryFromTorgigovProcessed,
+      },
+      {
+        text: 'ВРИ {TG}',
+        value: props?.data?.permittedUse,
+      },
+      {
+        text: 'Площадь {TG}',
+        value: props?.data?.area,
       },
     ];
   });

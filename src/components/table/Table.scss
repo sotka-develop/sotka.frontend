@@ -43,4 +43,14 @@
       @include text-body;
     }
   }
+
+  &__link {
+    color: $color-bg-accent-100;
+
+    @include defaultTransition(color);
+
+    @include hover {
+      color: $color-bg-accent-200;
+    }
+  }
 }
