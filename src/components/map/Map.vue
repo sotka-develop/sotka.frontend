@@ -28,6 +28,9 @@
           </div>
         </template>
       </yandex-map-marker>
+
+      <yandex-map-feature v-for="(feature, index) in features" :key="index" :settings="feature" />
+
       <YandexMapListener
         :settings="{
           onUpdate: handleCoordsUpdate,
@@ -79,15 +82,11 @@
 <script setup>
   import {
     YandexMap,
-    YandexMapClusterer,
-    YandexMapControl,
-    YandexMapControlButton,
-    YandexMapControls,
     YandexMapListener,
     YandexMapDefaultFeaturesLayer,
     YandexMapDefaultSchemeLayer,
     YandexMapMarker,
-    YandexMapZoomControl,
+    YandexMapFeature,
   } from 'vue-yandex-maps';
 
   import { computed, shallowRef, ref, watch } from 'vue';
@@ -101,6 +100,10 @@
   // Props
   const props = defineProps({
     dots: {
+      type: Array,
+      default: [],
+    },
+    polygons: {
       type: Array,
       default: [],
     },
@@ -152,6 +155,39 @@
       data: dot,
     }))
   );
+
+  const defaultSettings = {
+    geometry: {
+      type: 'Polygon',
+    },
+    style: {
+      stroke: [
+        {
+          color: '#006efc',
+          width: 4,
+        },
+      ],
+      fill: 'rgba(56, 56, 219, 0.5)',
+    },
+  };
+
+  const features = computed(() => {
+    return [
+      {
+        ...defaultSettings,
+        geometry: {
+          ...defaultSettings.geometry,
+          coordinates: [polygonsArray],
+        },
+      },
+    ];
+  });
+
+  const polygonsArray = computed(() => {
+    if (!props.polygons || !props.polygons.length) return [];
+
+    return props.polygons.flatMap((item) => item[0].map((coords) => [coords[0], coords[1]]));
+  });
 
   const classList = computed(() => {
     return {

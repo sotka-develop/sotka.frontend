@@ -20,6 +20,7 @@
 
         <Map
           :dots="dots"
+          :polygons="polygons"
           :onCoordsUpdate="onCoordsUpdate"
           :onClusterClick="onClusterClick"
           :onPointClick="onPointClick"
@@ -64,8 +65,6 @@
   import { storeToRefs } from 'pinia';
   import { useFiltersStore } from '@/stores/filters';
   import { useLotsStore } from '@/stores/lots';
-
-  import debounce from 'lodash.debounce';
 
   // store
   const filtersStore = useFiltersStore();
@@ -158,6 +157,9 @@
 
   // отображаемые точки на карте
   const dots = ref([]);
+
+  // полигоны
+  const polygons = ref([]);
 
   // список точек после обновления карты
   const landAreasIds = ref(null);
@@ -308,6 +310,7 @@
     }
 
     dots.value = mapResult.dots || [];
+    polygons.value = mapResult.polygons || [];
     landAreasIds.value = (mapResult?.land_areas_ids || []).filter((item) => item);
   }
 
