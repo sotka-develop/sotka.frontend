@@ -1,5 +1,6 @@
 <template>
-  <div class="map" :class="classList">
+  <div class="map" :class="classList" ref="mapRef">
+    <div class="map__message text-small" :class="{ 'is-active': showMessage }">{{ preventMessage }}</div>
     <yandex-map
       v-model="map"
       :settings="{
@@ -8,7 +9,7 @@
           zoom: zoom,
         },
         zoomRange: zoomRange,
-        // behaviors: enabledBehaviors,
+        behaviors: enabledBehaviors,
       }"
       width="100%"
       height="100%"
@@ -89,13 +90,19 @@
     YandexMapFeature,
   } from 'vue-yandex-maps';
 
-  import { computed, shallowRef, ref, watch } from 'vue';
+  import { computed, shallowRef, ref, watch, onMounted } from 'vue';
   import Loader from '@/components/loader/Loader.vue';
   import Icon from '@/components/icon/Icon.vue';
   import MapSidebar from '../mapSidebar/MapSidebar.vue';
 
   import debounce from 'lodash.debounce';
   import { supportsTouch } from '@/assets/js/utils/isTouch';
+
+  import { useKeyPressed } from '@/composables/useKeyPressed';
+  import { useTouchDevice } from '@/composables/useTouchDevice';
+
+  const { ctrlPressed } = useKeyPressed();
+  const { isTouchDevice } = useTouchDevice();
 
   // Props
   const props = defineProps({
@@ -143,11 +150,9 @@
   const center = ref([101, 62]);
   const isDirty = ref(false);
 
-  let enabledBehaviors = ['drag', 'pinchZoom', 'dblClick'];
+  const mapRef = ref(null);
 
-  if (supportsTouch()) {
-    enabledBehaviors = ['pinchZoom', 'dblClick'];
-  }
+  const enabledBehaviors = ref([]);
 
   const markers = computed(() =>
     props.dots.map((dot) => ({
@@ -202,6 +207,15 @@
     };
   });
 
+  const showMessage = ref(false);
+  const preventMessage = computed(() => {
+    if (isTouchDevice()) {
+      return 'Нажмите на карту два раза, чтобы взаимодействовать с картой';
+    }
+
+    return 'Зажмите Ctrl, чтобы изменить масштаб';
+  });
+
   const actionText = 'Обновить таблицу';
 
   const emit = defineEmits(['update:sidebarStatus', 'update:syncStatus', 'sync']);
@@ -254,6 +268,40 @@
       isDirty.value = true;
     }
   );
+
+  watch(
+    () => ctrlPressed.value,
+    (newVal) => {
+      if (!newVal) {
+        enabledBehaviors.value = ['drag'];
+      } else {
+        showMessage.value = false;
+        enabledBehaviors.value = ['scrollZoom', 'drag'];
+      }
+    }
+  );
+
+  onMounted(() => {
+    mapRef.value.addEventListener('wheel', (e) => {
+      showMessage.value = true;
+
+      if (ctrlPressed.value) {
+        showMessage.value = false;
+        e.preventDefault();
+      }
+    });
+
+    mapRef.value.addEventListener('touchstart', (e) => {
+      // ?
+    });
+
+    mapRef.value.addEventListener('touchend', (e) => {
+      showMessage.value = false;
+    });
+    mapRef.value.addEventListener('mouseleave', (e) => {
+      showMessage.value = false;
+    });
+  });
 </script>
 
 <style lang="scss" scoped>

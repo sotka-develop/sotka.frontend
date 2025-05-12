@@ -25,7 +25,7 @@
 </template>
 
 <script setup>
-  import { computed, onMounted } from 'vue';
+  import { computed } from 'vue';
 
   const props = defineProps({
     data: {
@@ -115,10 +115,6 @@
         value: props?.data?.area,
       },
     ];
-  });
-
-  onMounted(() => {
-    console.log(props.data);
   });
 </script>
 
