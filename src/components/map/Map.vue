@@ -163,30 +163,34 @@
     style: {
       stroke: [
         {
-          color: '#006efc',
-          width: 4,
+          color: '#0469FF',
+          width: 1,
         },
       ],
-      fill: 'rgba(56, 56, 219, 0.5)',
+      fill: 'rgba(4, 105, 255, 0.1)',
     },
   };
 
   const features = computed(() => {
-    return [
-      {
+    if (!polygonsArray.value || !polygonsArray.value.length) return [];
+
+    return polygonsArray.value.map((item) => {
+      return {
         ...defaultSettings,
         geometry: {
           ...defaultSettings.geometry,
-          coordinates: [polygonsArray],
+          coordinates: [item],
         },
-      },
-    ];
+      };
+    });
   });
 
   const polygonsArray = computed(() => {
-    if (!props.polygons || !props.polygons.length) return [];
+    if (!props.polygons || !props.polygons.length) return [[]];
 
-    return props.polygons.flatMap((item) => item[0].map((coords) => [coords[0], coords[1]]));
+    return props.polygons.map((item) => {
+      return [...item[0].map((coords) => [coords[0], coords[1]])];
+    });
   });
 
   const classList = computed(() => {

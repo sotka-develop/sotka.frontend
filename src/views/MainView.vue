@@ -275,8 +275,6 @@
       return;
     }
 
-    console.log(result);
-
     const landAreas = result?.land_areas || []; // список сущностей
     tableItems.value = transformLotsToTable(landAreas); // преобразование к табличному виду
     totalCount.value = result?.total_count || 0; // всего сущностей
