@@ -1,6 +1,7 @@
 <template>
   <div class="table">
     <v-data-table-server
+      fixed-header
       :page="page"
       :items-per-page="itemsPerPage"
       :items="items"

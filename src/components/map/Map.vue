@@ -159,7 +159,7 @@
 
   const mapRef = ref(null);
 
-  const enabledBehaviors = ref([]);
+  const enabledBehaviors = ref(['drag']);
 
   const markers = computed(() =>
     props.dots.map((dot) => ({
@@ -213,8 +213,6 @@
       ['map--is-dirty']: isDirty.value,
     };
   });
-
-  const actions = [];
 
   const showMessage = ref(false);
   const preventMessage = computed(() => {

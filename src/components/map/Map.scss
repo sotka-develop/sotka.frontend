@@ -323,8 +323,13 @@
       opacity: 1;
       pointer-events: auto;
     }
-  }
 
-  &__actions {
+    @include media-breakpoint-down(sm) {
+      display: none;
+    }
+
+    @include touchDevice() {
+      display: none;
+    }
   }
 }

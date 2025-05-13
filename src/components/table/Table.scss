@@ -10,8 +10,13 @@
   }
 
   &:deep(.v-table__wrapper) {
+    height: 480px;
     border: 1px solid $color-border-base-1-500;
     border-radius: 8px;
+
+    @include media-breakpoint-up(md) {
+      height: 660px;
+    }
   }
 
   &:deep(.v-data-table-footer__items-per-page) {
