@@ -6,7 +6,7 @@ on:
       environment:
         description: 'Deployment environment'
         required: true
-        default: 'staging'
+        default: 'DEVELOP ACTIONS'
 
 jobs:
   deploy:
