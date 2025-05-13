@@ -12,6 +12,11 @@
     <Sync v-if="name === '24/sync'" />
     <Plus v-if="name === '24/plus'" />
     <Minus v-if="name === '24/minus'" />
+
+    <ArrowsPointing v-if="name === '24/arrows-pointing'" />
+    <HandDraw v-if="name === '24/hand-draw'" />
+    <Layers v-if="name === '24/layers'" />
+    <Measuring v-if="name === '24/measuring'" />
   </div>
 </template>
 
@@ -30,6 +35,10 @@
   import Sync from '@/assets/icons/24/sync.svg';
   import Plus from '@/assets/icons/24/plus.svg';
   import Minus from '@/assets/icons/24/minus.svg';
+  import ArrowsPointing from '@/assets/icons/24/arrows-pointing.svg';
+  import HandDraw from '@/assets/icons/24/hand-draw.svg';
+  import Layers from '@/assets/icons/24/layers.svg';
+  import Measuring from '@/assets/icons/24/measuring.svg';
 
   defineProps({
     name: {
@@ -50,6 +59,10 @@
     Sync,
     Plus,
     Minus,
+    ArrowsPointing,
+    HandDraw,
+    Layers,
+    Measuring,
   });
 </script>
 

@@ -1,6 +1,12 @@
 <template>
   <div class="map" :class="classList" ref="mapRef">
-    <div class="map__message text-small" :class="{ 'is-active': showMessage }">{{ preventMessage }}</div>
+    <div class="map__top">
+      <div class="map__message text-small" :class="{ 'is-active': showMessage }">{{ preventMessage }}</div>
+      <div class="map__actions">
+        <MapActions />
+      </div>
+    </div>
+
     <yandex-map
       v-model="map"
       :settings="{
@@ -94,6 +100,7 @@
   import Loader from '@/components/loader/Loader.vue';
   import Icon from '@/components/icon/Icon.vue';
   import MapSidebar from '../mapSidebar/MapSidebar.vue';
+  import MapActions from '../map-actions/MapActions.vue';
 
   import debounce from 'lodash.debounce';
   import { supportsTouch } from '@/assets/js/utils/isTouch';
@@ -206,6 +213,8 @@
       ['map--is-dirty']: isDirty.value,
     };
   });
+
+  const actions = [];
 
   const showMessage = ref(false);
   const preventMessage = computed(() => {

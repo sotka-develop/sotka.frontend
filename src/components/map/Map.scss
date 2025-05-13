@@ -67,15 +67,18 @@
 
     @include defaultTransition(transform);
 
-    @include media-breakpoint-up(xl) {
-      width: 404px;
-    }
     @include media-breakpoint-up(lg) {
       top: 12px;
       left: 12px;
       height: calc(100% - 24px);
     }
-    @include media-breakpoint-only(lg) {
+    @media (min-width: 1440px) {
+      width: 404px;
+    }
+    @media (max-width: 1439px) and (min-width: 1300px) {
+      width: 380px;
+    }
+    @media (max-width: 1299px) and (min-width: 1025px) {
       width: 360px;
     }
 
@@ -177,22 +180,27 @@
   &__bar {
     position: absolute;
     z-index: 1;
+    bottom: 12px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-
     background-color: $color-bg-accent-100;
     border-radius: 12px;
 
-    @include media-breakpoint-up(md) {
+    @media (min-width: 1300px) {
       left: 50%;
       transform: translateX(-50%);
-      bottom: 24px;
+    }
+    @media (max-width: 1299px) and (min-width: 1025px) {
+      left: 388px;
+    }
+    @include media-breakpoint-only(md) {
+      left: 50%;
+      transform: translateX(-50%);
     }
     @include media-breakpoint-down(sm) {
-      left: 16px;
-      bottom: 16px;
-      width: calc(100% - 32px);
+      left: 12px;
+      width: calc(100% - 24px);
     }
   }
 
@@ -288,14 +296,23 @@
     }
   }
 
-  &__message {
+  &__top {
     position: absolute;
     z-index: 1;
     top: 12px;
     right: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  &__message {
+    display: flex;
+    align-items: center;
     background-color: $color-white;
-    border-radius: 16px;
-    padding: 16px;
+    height: 40px;
+    border-radius: 8px;
+    padding: 0 16px;
     box-shadow: 0px 0px 12px 0px rgba($color-black, 0.12);
     pointer-events: none;
     opacity: 0;
@@ -306,5 +323,8 @@
       opacity: 1;
       pointer-events: auto;
     }
+  }
+
+  &__actions {
   }
 }
