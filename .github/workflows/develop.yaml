@@ -1,12 +1,9 @@
 name: Deploy to develop
 
 on:
-  workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Deployment environment'
-        required: true
-        default: 'DEVELOP ACTIONS'
+  push:
+    branches:
+      - develop
 
 jobs:
   deploy:
