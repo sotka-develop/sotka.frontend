@@ -1,0 +1,25 @@
+name: Deploy to develop
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: DEVELOP ACTIONS
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up SSH key
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > deploy_key
+          chmod 600 deploy_key
+
+      - name: Deploy with ssh
+        run: |
+          ssh -i ./deploy_key ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} \
+          -o StrictHostKeyChecking=no \
+           'cd sotka.frontend/; make upgrade_and_restart_pm2'
