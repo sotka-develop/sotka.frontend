@@ -3,7 +3,23 @@
     <div class="map__top">
       <div class="map__message text-small" :class="{ 'is-active': showMessage }">{{ preventMessage }}</div>
       <div class="map__actions">
-        <MapActions />
+        <div v-for="(action, idx) in actions" :key="action.name" class="map__action">
+          <button class="map__action-button" @click="action.handler" :data-map-action-button="action.name">
+            <Icon :name="action.icon" />
+          </button>
+        </div>
+
+        <div class="map__list">
+          <p class="map__list-title text-small">
+            {{ actionList.title }}
+          </p>
+
+          <div v-for="(item, idx) in actionList.items" :key="item.name" class="map__list-item">
+            <button type="button" @click="item.handler" class="map__list-action" :class="{ 'is-active': item.name === activeMapView }">
+              {{ item.text }}
+            </button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -20,7 +36,8 @@
       width="100%"
       height="100%"
     >
-      <yandex-map-default-scheme-layer />
+      <yandex-map-default-scheme-layer :settings="{ visible: activeMapView === 'scheme' }" />
+      <yandex-map-default-satellite-layer :settings="{ visible: activeMapView === 'satellite' }" />
       <yandex-map-default-features-layer />
 
       <yandex-map-marker v-for="(marker, index) in markers" :key="index" :settings="marker">
@@ -76,7 +93,7 @@
       <button type="button" class="map__bar-action" @click="sync">
         <Icon name="24/sync" />
 
-        {{ actionText }}
+        {{ syncText }}
       </button>
 
       <button type="button" class="map__bar-close" @click="closeBar">
@@ -91,16 +108,16 @@
     YandexMap,
     YandexMapListener,
     YandexMapDefaultFeaturesLayer,
+    YandexMapDefaultSatelliteLayer,
     YandexMapDefaultSchemeLayer,
     YandexMapMarker,
     YandexMapFeature,
   } from 'vue-yandex-maps';
 
-  import { computed, shallowRef, ref, watch, onMounted } from 'vue';
+  import { computed, shallowRef, ref, watch, onMounted, onUnmounted } from 'vue';
   import Loader from '@/components/loader/Loader.vue';
   import Icon from '@/components/icon/Icon.vue';
   import MapSidebar from '../mapSidebar/MapSidebar.vue';
-  import MapActions from '../map-actions/MapActions.vue';
 
   import debounce from 'lodash.debounce';
   import { supportsTouch } from '@/assets/js/utils/isTouch';
@@ -148,19 +165,66 @@
     },
   });
 
+  const mapRef = ref(null);
   const map = shallowRef(null);
   const zoom = ref(3);
   const zoomDefault = 3;
+  const prevZoom = ref(3);
   const zoomMin = 3;
   const zoomMax = 21;
   const zoomRange = { min: zoomMin, max: zoomMax };
   const center = ref([101, 62]);
+  const prevCenter = ref([101, 62]);
   const isDirty = ref(false);
-
-  const mapRef = ref(null);
-
   const enabledBehaviors = ref(['drag']);
 
+  const actions = [
+    { icon: '24/measuring', name: 'measuring', handler: () => {} },
+    { icon: '24/arrows-pointing', name: 'fullscreen', handler: () => {} },
+    { icon: '24/hand-draw', name: 'draw', handler: () => {} },
+    {
+      icon: '24/layers',
+      name: 'layers',
+      handler: () => {
+        toggleList();
+      },
+    },
+  ];
+
+  const actionList = {
+    title: 'Базовая карта',
+    items: [
+      {
+        text: 'Схема',
+        name: 'scheme',
+        handler: () => {
+          setMapView('scheme');
+          listShow.value = false;
+        },
+      },
+      {
+        text: 'Спутник',
+        name: 'satellite',
+        handler: () => {
+          setMapView('satellite');
+          listShow.value = false;
+        },
+      },
+    ],
+  };
+
+  const listShow = ref(false);
+  const activeMapView = ref('scheme');
+
+  function setMapView(payload) {
+    activeMapView.value = payload;
+  }
+
+  function toggleList() {
+    listShow.value = !listShow.value;
+  }
+
+  // Точки/метки
   const markers = computed(() =>
     props.dots.map((dot) => ({
       coordinates: [dot.center_longitude, dot.center_latitude],
@@ -168,6 +232,7 @@
     }))
   );
 
+  // Настройка и стилизация полигонов
   const defaultSettings = {
     geometry: {
       type: 'Polygon',
@@ -183,6 +248,7 @@
     },
   };
 
+  // Все полигоны
   const features = computed(() => {
     if (!polygonsArray.value || !polygonsArray.value.length) return [];
 
@@ -197,6 +263,7 @@
     });
   });
 
+  // Массив координат полигонов
   const polygonsArray = computed(() => {
     if (!props.polygons || !props.polygons.length) return [[]];
 
@@ -211,6 +278,7 @@
       ['map--sidebar-show']: props.sidebarStatus,
       ['map--sidebar-pending']: props.sidebarPending,
       ['map--is-dirty']: isDirty.value,
+      ['map--list-show']: listShow.value,
     };
   });
 
@@ -223,7 +291,7 @@
     return 'Зажмите Ctrl, чтобы изменить масштаб';
   });
 
-  const actionText = 'Обновить таблицу';
+  const syncText = 'Обновить таблицу';
 
   const emit = defineEmits(['update:sidebarStatus', 'update:syncStatus', 'sync']);
 
@@ -243,6 +311,15 @@
     const location = data.location;
     center.value = location.center;
     zoom.value = location.zoom || zoomDefault;
+
+    // если координаты и масштаб не изменились
+    const zoomIsEqual = Math.round(zoom.value) === Math.round(prevZoom.value);
+    const centerIsEqual = center.value.every((v, i) => Math.round(v) === Math.round(prevCenter.value[i]));
+
+    if (zoomIsEqual && centerIsEqual) return;
+
+    prevCenter.value = center.value;
+    prevZoom.value = zoom.value;
 
     if (props.onCoordsUpdate) {
       props.onCoordsUpdate(data);
@@ -288,6 +365,16 @@
     }
   );
 
+  const handleClickOutside = (e) => {
+    const isLayersButton = e.target.hasAttribute('data-map-action-button') && e.target.getAttribute('data-map-action-button') === 'layers';
+    const isInsideLayersButton = e.target.closest('[data-map-action-button="layers"]');
+    const isInsideMapList = e.target.closest('.map__list');
+
+    if (!isLayersButton && !isInsideLayersButton && !isInsideMapList) {
+      listShow.value = false;
+    }
+  };
+
   onMounted(() => {
     mapRef.value.addEventListener('wheel', (e) => {
       showMessage.value = true;
@@ -308,6 +395,12 @@
     mapRef.value.addEventListener('mouseleave', (e) => {
       showMessage.value = false;
     });
+
+    document.addEventListener('click', handleClickOutside);
+  });
+
+  onUnmounted(() => {
+    document.removeEventListener('click', handleClickOutside);
   });
 </script>
 

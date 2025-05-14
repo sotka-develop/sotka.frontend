@@ -332,4 +332,95 @@
       display: none;
     }
   }
+
+  &:deep(.ymaps3x0--layer.ymaps3x0--marker-layer) {
+    z-index: 1;
+  }
+
+  &:deep(.ymaps3x0--layer.ymaps3x0--graphics-layer) {
+    z-index: 1;
+  }
+
+  &__actions {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 4px 8px;
+    border-radius: 8px;
+    background-color: $color-white;
+    box-shadow: 0px 0px 12px 0px rgba($color-black, 0.12);
+  }
+
+  &__action-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: 0;
+    padding: 0;
+    color: $color-text-base-1-700;
+
+    @include defaultTransition(color);
+
+    @include hover {
+      color: $color-text-accent;
+    }
+
+    .icon {
+      width: 24px;
+      height: 24px;
+    }
+
+    #{$root}--list-show &[data-map-action-button='layers'] {
+      color: $color-text-accent;
+    }
+  }
+
+  &__list {
+    position: absolute;
+    top: calc(100% + 4px);
+    right: 0;
+    padding: 4px;
+    border-radius: 6px;
+    background-color: $color-white;
+    box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.12);
+
+    #{$root}:not(#{$root}--list-show) & {
+      display: none;
+    }
+  }
+
+  &__list-title {
+    padding: 8px 8px 4px 8px;
+    color: $color-text-base-1-500;
+    margin-bottom: 4px;
+  }
+
+  &__list-item {
+    &:not(:last-child) {
+      margin-bottom: 4px;
+    }
+  }
+
+  &__list-action {
+    width: 192px;
+    padding: 8px;
+    border: 0;
+    text-align: left;
+    background-color: transparent;
+    color: $color-text-base-1-700;
+    border-radius: 6px;
+
+    @include defaultTransition(background-color);
+
+    @include hover {
+      background-color: $color-bg-base-1-400;
+    }
+
+    &.is-active {
+      background-color: $color-bg-base-1-400;
+      cursor: default;
+    }
+  }
 }
