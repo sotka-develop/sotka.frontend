@@ -174,6 +174,7 @@
   const zoomMax = 21;
   const zoomRange = { min: zoomMin, max: zoomMax };
   const center = ref([101, 62]);
+  const centerDefault = [101, 62];
   const prevCenter = ref([101, 62]);
   const isDirty = ref(false);
   const enabledBehaviors = ref(['drag']);
@@ -215,6 +216,7 @@
 
   const listShow = ref(false);
   const activeMapView = ref('scheme');
+  const activeMapViewDefault = 'scheme';
 
   function setMapView(payload) {
     activeMapView.value = payload;
@@ -306,6 +308,23 @@
   function sync() {
     emit('sync');
   }
+
+  // TODO удалить?
+  const resetSidebar = () => {
+    isDirty.value = false;
+  };
+
+  const resetMap = () => {
+    isDirty.value = false;
+    zoom.value = zoomDefault;
+    center.value = centerDefault;
+    // activeMapView.value = activeMapViewDefault; // TODO нужно ли сбрасывать вид карты?
+  };
+
+  defineExpose({
+    resetSidebar,
+    resetMap,
+  });
 
   const handleCoordsUpdate = debounce((data) => {
     const location = data.location;

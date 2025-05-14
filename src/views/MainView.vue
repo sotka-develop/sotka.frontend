@@ -9,7 +9,7 @@
         <FiltersForm />
 
         <div class="section__actions">
-          <Button v-if="isFiltered" text="Применить" @click="search" />
+          <Button text="Применить" @click="filter" />
         </div>
       </div>
 
@@ -17,8 +17,8 @@
         <div class="section__title">
           <h2>Карта</h2>
         </div>
-
         <Map
+          ref="mapRef"
           :dots="dots"
           :polygons="polygons"
           :onCoordsUpdate="onCoordsUpdate"
@@ -73,10 +73,14 @@
   const { mapPending, lotsPending, landAreaPending } = storeToRefs(lotsStore);
 
   const isFiltered = ref(false); // фильтры применены, кнопка Применить не отображается
+  const filtersData = ref(null);
+  const isFiltering = ref(false); // идет фильтрация
 
   //#region данные таблицы
   const page = ref(1); // текущая страница таблицы
+  const pageDefaultValue = 1;
   const pageSize = ref(10); // количество элементов на странице таблицы
+  const pageSizeDefaultValue = 10;
   const totalCount = ref(0); // общее количество лотов
 
   // список лотов для текущей страницы таблицы
@@ -140,6 +144,7 @@
   //#endregion
 
   //#region карта
+  const mapRef = ref(null);
   const mapZoom = ref(3);
   const mapZoomDefault = 3;
   const mapDotsToCluster = ref(10);
@@ -214,7 +219,9 @@
 
   // обновление карты
   const onCoordsUpdate = async (event) => {
-    const filtersModel = filtersStore.getFormattedFilters(); // данные всех фильтров
+    // const filtersModel = filtersStore.getFormattedFilters(); // данные всех фильтров
+    const filtersModel = filtersData.value;
+
     mapZoom.value = (event?.location?.zoom || mapDefaultZoom.value).toFixed(2);
     const bounds = event?.location?.bounds;
     const search_filters = { ...filtersModel, page: null, page_size: null };
@@ -226,6 +233,7 @@
         lon_rd: bounds[1][0],
         lat_lu: bounds[1][1],
       };
+
       const mapPayload = {
         ...coords,
         search_filters,
@@ -236,7 +244,12 @@
 
       await loadMapData(mapPayload);
 
-      mapSyncStatus.value = true;
+      if (isFiltering.value) {
+        isFiltering.value = false;
+        mapSyncStatus.value = false;
+      } else {
+        mapSyncStatus.value = true;
+      }
     }
   };
   //#endregion
@@ -260,7 +273,9 @@
 
   // получение лотов в таблице
   async function fetchLotsData(sync = false) {
-    const filtersModel = filtersStore.getFormattedFilters(); // данные всех фильтров
+    //const filtersModel = filtersStore.getFormattedFilters(); // данные всех фильтров
+    const filtersModel = filtersData.value;
+
     const pagination = {
       page: page.value, // текущая страница
       page_size: pageSize.value, // всего элементов на странице
@@ -282,7 +297,8 @@
 
   // получение точек на карте
   async function loadMapData(payload = null) {
-    const filtersModel = filtersStore.getFormattedFilters(); // данные всех фильтров
+    // const filtersModel = filtersStore.getFormattedFilters(); // данные всех фильтров
+    const filtersModel = filtersData.value;
 
     const coords = defaultCoords; // координаты
     const zoom = mapZoomDefault; // масштаб
@@ -318,7 +334,25 @@
     await loadMapData();
   }
 
+  async function filter() {
+    isFiltering.value = true;
+
+    filtersData.value = filtersStore.getFormattedFilters();
+    page.value = pageDefaultValue;
+    pageSize.value = pageSizeDefaultValue;
+
+    mapSidebarStatus.value = false;
+
+    if (mapRef.value) {
+      mapRef.value.resetMap();
+    }
+
+    await fetchLotsData();
+  }
+
   onMounted(async () => {
+    filtersData.value = filtersStore.getFormattedFilters();
+
     // получаем данные фильтров
     await filtersStore.loadFilters();
 
