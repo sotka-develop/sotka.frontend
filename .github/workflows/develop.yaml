@@ -3,7 +3,7 @@ name: Deploy to develop
 on:
   push:
     branches:
-      - main
+      - develop
 
 jobs:
   deploy:
@@ -22,4 +22,4 @@ jobs:
         run: |
           ssh -i ./deploy_key ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} \
           -o StrictHostKeyChecking=no \
-           'cd sotka.frontend/; make upgrade_and_restart_pm2'
+           'cd sotka.frontend/; source ~/.nvm/nvm.sh; nvm use node; make upgrade_and_restart_pm2'
