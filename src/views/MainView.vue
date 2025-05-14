@@ -219,7 +219,8 @@
 
   // обновление карты
   const onCoordsUpdate = async (event) => {
-    // const filtersModel = filtersStore.getFormattedFilters(); // данные всех фильтров
+    if (isFiltering.value) return;
+
     const filtersModel = filtersData.value;
 
     mapZoom.value = (event?.location?.zoom || mapDefaultZoom.value).toFixed(2);
@@ -244,12 +245,7 @@
 
       await loadMapData(mapPayload);
 
-      if (isFiltering.value) {
-        isFiltering.value = false;
-        mapSyncStatus.value = false;
-      } else {
-        mapSyncStatus.value = true;
-      }
+      mapSyncStatus.value = true;
     }
   };
   //#endregion
@@ -297,7 +293,6 @@
 
   // получение точек на карте
   async function loadMapData(payload = null) {
-    // const filtersModel = filtersStore.getFormattedFilters(); // данные всех фильтров
     const filtersModel = filtersData.value;
 
     const coords = defaultCoords; // координаты
@@ -348,6 +343,10 @@
     }
 
     await fetchLotsData();
+    await loadMapData();
+
+    await new Promise((resolve) => setTimeout(resolve, 1100));
+    isFiltering.value = true;
   }
 
   onMounted(async () => {
