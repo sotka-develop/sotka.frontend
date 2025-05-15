@@ -69,7 +69,7 @@
   const filtersStore = useFiltersStore();
   const lotsStore = useLotsStore();
 
-  const { mapPending, lotsPending, landAreaPending } = storeToRefs(lotsStore);
+  const { mapPending, lotsPending, landAreaPending, clusterPending } = storeToRefs(lotsStore);
 
   const isFiltered = ref(false); // фильтры применены, кнопка Применить не отображается
   const filtersData = ref(null);
@@ -83,6 +83,9 @@
   const totalCount = ref(0); // общее количество лотов
   const sortKey = ref(null);
   const sortOrder = ref(null);
+
+  const clusterPage = ref(1);
+  const clusterPageSize = ref(10);
 
   // список лотов для текущей страницы таблицы
   const tableItems = ref([]);
@@ -163,6 +166,8 @@
     lon_rd: 180,
   };
 
+  const currentCoords = ref(defaultCoords);
+
   // отображаемые точки на карте
   const dots = ref([]);
 
@@ -173,7 +178,46 @@
   const landAreasIds = ref(null);
 
   // клик по кластеру
-  const onClusterClick = (data) => {};
+  const onClusterClick = async (data) => {
+    if (clusterPending.value) return;
+
+    const id = data?.data?.cluster_id;
+
+    if (id) {
+      const filtersModel = filtersData.value;
+
+      const pagination = {
+        page: clusterPage.value,
+        page_size: clusterPageSize.value,
+      };
+
+      if (sortKey.value && sortOrder.value) {
+        pagination.sort_by = {
+          field: sortKey.value,
+          sort_type: sortOrder.value.toUpperCase(),
+        };
+      }
+
+      const clusterPayload = {
+        ...currentCoords.value,
+        ...filtersModel,
+        ...pagination,
+        zoom: mapZoom.value,
+        dots_to_cluster: mapDotsToCluster.value,
+        land_ids: null,
+        cluster_id: id,
+      };
+
+      const result = await lotsStore.fetchClusterData({ ...clusterPayload });
+
+      if (!result) {
+        console.error('Ошибка при получении данных точки!');
+        return;
+      }
+
+      console.log(result);
+    }
+  };
 
   // клик по точке
   const onPointClick = async (data) => {
@@ -237,6 +281,8 @@
         lon_rd: bounds[1][0],
         lat_lu: bounds[1][1],
       };
+
+      currentCoords.value = coords;
 
       const mapPayload = {
         ...coords,

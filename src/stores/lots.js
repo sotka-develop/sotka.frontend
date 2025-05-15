@@ -9,6 +9,7 @@ export const useLotsStore = defineStore('lots', () => {
   const lotsPending = ref(false);
   const mapPending = ref(false);
   const landAreaPending = ref(false);
+  const clusterPending = ref(false);
   const error = ref(null);
 
   async function fetchLots(filters) {
@@ -83,6 +84,7 @@ export const useLotsStore = defineStore('lots', () => {
     }
   }
 
+  // данные метки
   async function fetchLandArea(payload) {
     const auth = useAuthStore();
 
@@ -120,14 +122,53 @@ export const useLotsStore = defineStore('lots', () => {
     }
   }
 
+  // данные кластера
+  async function fetchClusterData(payload) {
+    const auth = useAuthStore();
+
+    if (!auth.token) {
+      error.value = 'Нет токена';
+      return;
+    }
+
+    clusterPending.value = true;
+    error.value = null;
+
+    try {
+      const res = await fetch(`${baseUrl}/client/get_lots_in_cluster`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `${auth.token}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        throw new Error('Ошибка при получении данных кластера');
+      }
+
+      const data = await res.json();
+
+      return data.payload || null;
+    } catch (err) {
+      error.value = err.message;
+      console.error(err);
+    } finally {
+      clusterPending.value = false;
+    }
+  }
+
   return {
     fetchLots,
     fetchMapData,
     fetchLandArea,
+    fetchClusterData,
     lots,
     lotsPending,
     mapPending,
     landAreaPending,
+    clusterPending,
     error,
   };
 });
