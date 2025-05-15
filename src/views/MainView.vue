@@ -37,7 +37,6 @@
         <div class="section__title">
           <h2>Таблицы</h2>
         </div>
-
         <Table
           :page="page"
           :items-per-page="pageSize"
@@ -82,63 +81,67 @@
   const pageSize = ref(10); // количество элементов на странице таблицы
   const pageSizeDefaultValue = 10;
   const totalCount = ref(0); // общее количество лотов
+  const sortKey = ref(null);
+  const sortOrder = ref(null);
 
   // список лотов для текущей страницы таблицы
   const tableItems = ref([]);
 
   // заголовки в таблице
   const tableHeaders = [
-    { title: 'Кадастровый номер', key: 'cadasterNumber', sortable: false },
-    { title: 'Извещение, лот', key: 'lot', sortable: false },
-    { title: 'Площадь (TG)', key: 'area', sortable: false },
-    { title: 'Площадь (КН)', key: 'areaFromNspd', sortable: false },
-    { title: 'Кадастровая стоимость', key: 'cadastralCostFromNspdInRub', sortable: false },
-    { title: 'Начальная цена', key: 'priceMinInRub', sortable: false },
-    { title: 'Задаток (р)', key: 'depositInRub', sortable: false },
-    { title: 'Задаток (%)', key: 'depositPercent', sortable: false },
-    { title: '% соот. НЦ и КС', key: 'priceMinCadastralCostRatioPercent', sortable: false },
-    { title: 'Координаты', key: 'coords', sortable: false },
-    { title: 'Оконч.подач.заяв.', key: 'biddEndTime', sortable: false },
-    { title: 'Дата проведения торгов', key: 'auctionStartDate', sortable: false },
-    { title: 'Форма проведения', key: 'biddFormRaw', sortable: false },
-    { title: 'Вид сделки', key: 'typeTransactionRus', sortable: false },
-    { title: 'ЭТП', key: 'etpCode', sortable: false },
-    { title: 'Категория (TG)', key: 'categoryPurposeOrCategoryFromTorgigovProcessed', sortable: false },
-    { title: 'Категория (КН)', key: 'categoryFromNspd', sortable: false },
-    { title: 'ВРИ (TG)', key: 'permittedUse', sortable: false },
-    { title: 'ВРИ (КН)', key: 'permittedUseEstablishedByDocumentFromNspd', sortable: false },
-    { title: 'Субъект РФ', key: 'region', sortable: false },
-    { title: 'Федеральный округ', key: 'federalDistrict', sortable: false },
-    { title: 'Ссылка', key: 'link', sortable: false },
-    { title: 'Составность', key: 'composition', sortable: false },
+    { title: 'Кадастровый номер', key: 'cadaster_number', sortable: true },
+    { title: 'Извещение, лот', key: 'lot', sortable: true },
+    { title: 'Площадь (TG)', key: 'area', sortable: true },
+    { title: 'Площадь (КН)', key: 'area_from_nspd', sortable: true },
+    { title: 'Кадастровая стоимость', key: 'cadastral_cost_from_nspd_in_rub', sortable: true },
+    { title: 'Начальная цена', key: 'price_min_in_rub', sortable: true },
+    { title: 'Задаток (р)', key: 'deposit_in_rub', sortable: true },
+    { title: 'Задаток (%)', key: 'deposit_percent', sortable: true },
+    { title: '% соот. НЦ и КС', key: 'price_min_cadastral_cost_ratio_percent', sortable: true },
+    { title: 'Координаты', key: 'coords', sortable: true },
+    { title: 'Оконч.подач.заяв.', key: 'bidd_end_time', sortable: true },
+    { title: 'Дата проведения торгов', key: 'auction_start_date', sortable: true },
+    { title: 'Форма проведения', key: 'bidd_form_raw', sortable: true },
+    { title: 'Вид сделки', key: 'type_transaction_rus', sortable: true },
+    { title: 'ЭТП', key: 'etp_code', sortable: true },
+    { title: 'Категория (TG)', key: 'category_purpose_or_category_from_torgigov_processed', sortable: true },
+    { title: 'Категория (КН)', key: 'category_from_nspd', sortable: true },
+    { title: 'ВРИ (TG)', key: 'permitted_use', sortable: true },
+    { title: 'ВРИ (КН)', key: 'permitted_use_established_by_document_from_nspd', sortable: true },
+    { title: 'Субъект РФ', key: 'region', sortable: true },
+    { title: 'Федеральный округ', key: 'federal_district', sortable: true },
+    { title: 'Ссылка', key: 'link', sortable: true },
+    { title: 'Составность', key: 'composition', sortable: true },
   ];
+
+  const safeValue = (val) => ((val ?? '') === '' ? '-' : val);
 
   // преобоазование данных лотов для таблицы
   function transformLotsToTable(lots) {
     return lots.map((lot) => ({
-      cadasterNumber: lot?.cadaster_number || '-',
-      lot: lot?.lot || '-',
-      area: lot?.area || '-',
-      areaFromNspd: lot?.area_from_nspd || '-',
-      cadastralCostFromNspdInRub: lot?.cadastral_cost_from_nspd_in_rub || '-',
-      priceMinInRub: lot?.price_min_in_rub || '-',
-      depositInRub: lot?.deposit_in_rub || '-',
-      depositPercent: lot?.deposit_percent || '-',
-      priceMinCadastralCostRatioPercent: lot?.price_min_cadastral_cost_ratio_percent || '-',
-      coords: `${lot?.latitude || '-'}, ${lot?.longitude || '-'}`,
-      biddEndTime: lot?.bidd_end_time || '-',
-      auctionStartDate: lot?.auction_start_date || '-',
-      biddFormRaw: lot?.bidd_form_raw || '-',
-      typeTransactionRus: lot?.type_transaction_rus || '-',
-      etpCode: lot?.etp_code?.etp_code || '-',
-      categoryPurposeOrCategoryFromTorgigovProcessed: lot?.category_purpose_or_category_from_torgigov_processed || '-',
-      categoryFromNspd: lot?.category_from_nspd || '-',
-      permittedUse: lot?.permitted_use || '-',
-      permittedUseEstablishedByDocumentFromNspd: lot?.permitted_use_established_by_document_from_nspd || '-',
-      region: lot?.region?.region || '-',
-      federalDistrict: lot?.federal_district?.federal_district || '-',
-      link: lot?.link || '-',
-      composition: lot?.composition || '-',
+      cadaster_number: safeValue(lot?.cadaster_number),
+      lot: safeValue(lot?.lot),
+      area: safeValue(lot?.area),
+      area_from_nspd: safeValue(lot?.area_from_nspd),
+      cadastral_cost_from_nspd_in_rub: safeValue(lot?.cadastral_cost_from_nspd_in_rub),
+      price_min_in_rub: safeValue(lot?.price_min_in_rub),
+      deposit_in_rub: safeValue(lot?.deposit_in_rub),
+      deposit_percent: safeValue(lot?.deposit_percent),
+      price_min_cadastral_cost_ratio_percent: safeValue(lot?.price_min_cadastral_cost_ratio_percent),
+      coords: `${safeValue(lot?.latitude)}, ${safeValue(lot?.longitude)}`,
+      bidd_end_time: safeValue(lot?.bidd_end_time),
+      auction_start_date: safeValue(lot?.auction_start_date),
+      bidd_form_raw: safeValue(lot?.bidd_form_raw),
+      type_transaction_rus: safeValue(lot?.type_transaction_rus),
+      etp_code: safeValue(lot?.etp_code?.etp_code),
+      category_purpose_or_category_from_torgigov_processed: safeValue(lot?.category_purpose_or_category_from_torgigov_processed),
+      category_from_nspd: safeValue(lot?.category_from_nspd),
+      permitted_use: safeValue(lot?.permitted_use),
+      permitted_use_established_by_document_from_nspd: safeValue(lot?.permitted_use_established_by_document_from_nspd),
+      region: safeValue(lot?.region?.region),
+      federal_district: safeValue(lot?.federal_district?.federal_district),
+      link: safeValue(lot?.link),
+      composition: safeValue(lot?.composition),
     }));
   }
   //#endregion
@@ -264,6 +267,9 @@
     page.value = options.page;
     pageSize.value = options.itemsPerPage;
 
+    sortKey.value = options?.sortBy?.[0]?.key || null;
+    sortOrder.value = options?.sortBy?.[0]?.order || null;
+
     await fetchLotsData();
   }
 
@@ -276,6 +282,13 @@
       page: page.value, // текущая страница
       page_size: pageSize.value, // всего элементов на странице
     };
+
+    if (sortKey.value && sortOrder.value) {
+      pagination.sort_by = {
+        field: sortKey.value,
+        sort_type: sortOrder.value.toUpperCase(),
+      };
+    }
 
     const land_ids = sync ? landAreasIds.value : null; // null для получения всех точек
     const result = await lotsStore.fetchLots({ ...filtersModel, ...pagination, land_ids });
