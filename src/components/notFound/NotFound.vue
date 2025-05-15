@@ -33,7 +33,7 @@
   const title = 'Страница не найдена';
   const text = 'Проверьте запрос и попробуйте еще раз';
   const action = {
-    href: '/main',
+    href: '/',
     text: 'На главную',
   };
 

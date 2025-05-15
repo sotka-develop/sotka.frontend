@@ -13,7 +13,7 @@ import ErrorLayout from '@/layouts/Error.vue';
 
 const routes = [
   {
-    path: '/main',
+    path: '/',
     name: 'main',
     component: MainView,
     meta: {

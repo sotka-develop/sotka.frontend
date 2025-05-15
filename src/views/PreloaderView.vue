@@ -19,7 +19,7 @@
         await authStore.fetchUserData();
 
         // редирект на главную, если авторизован
-        const redirectTo = route.query.redirect || '/main';
+        const redirectTo = route.query.redirect || '/';
         router.replace(redirectTo);
       } catch (error) {
         await authStore.logout();

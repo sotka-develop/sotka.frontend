@@ -33,6 +33,10 @@
     href: {
       type: String,
     },
+    external: {
+      type: Boolean,
+      default: false,
+    },
     title: {
       type: String,
     },

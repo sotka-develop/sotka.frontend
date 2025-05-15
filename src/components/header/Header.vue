@@ -2,7 +2,7 @@
   <header class="header">
     <div class="header__container container">
       <div class="header__content">
-        <RouterLink v-if="route.name !== 'main'" class="header__logo" to="/main">
+        <RouterLink v-if="route.name !== 'main'" class="header__logo" to="/">
           <Icon name="logos/logo" />
         </RouterLink>
 
@@ -55,7 +55,7 @@
   const navigationData = [
     {
       text: 'Главная',
-      href: '/main',
+      href: '/',
     },
     {
       text: 'ZemlyaPRO',
