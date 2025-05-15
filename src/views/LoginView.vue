@@ -54,7 +54,7 @@
           password: formData.password,
           code: formData.code,
         });
-        const redirect = route.query.redirect || '/main';
+        const redirect = route.query.redirect || '/';
         router.replace(redirect);
       } catch (err) {
         console.error('Ошибка входа:', err);
