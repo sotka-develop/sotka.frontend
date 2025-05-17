@@ -405,7 +405,7 @@
     await loadMapData();
 
     await new Promise((resolve) => setTimeout(resolve, 1100));
-    isFiltering.value = true;
+    isFiltering.value = false;
   }
 
   onMounted(async () => {
