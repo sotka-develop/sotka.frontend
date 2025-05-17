@@ -15,7 +15,7 @@ export const useFiltersStore = defineStore('filters', () => {
   const rubrics = ref([]);
 
   // Составность
-  const composition = ref(['Кад. номер', 'Кад. квартал', 'Кад. район', 'Коорд. не определены']);
+  const compositions = ref(['Кад. номер', 'Кад. квартал', 'Кад. район', 'Коорд. не определены']);
 
   // ВРИ
   const usesData = ref([]);
@@ -26,7 +26,7 @@ export const useFiltersStore = defineStore('filters', () => {
   const etpCodesModel = ref(null);
   const regionsModel = ref(null);
   const rubricsModel = ref(null);
-  const compositionModel = ref(null);
+  const compositionsModel = ref(null);
 
   const biddEndTimeFromModel = ref(null);
   const biddEndTimeToModel = ref(null);
@@ -116,9 +116,9 @@ export const useFiltersStore = defineStore('filters', () => {
     {
       label: 'Композиция',
       hideDetails: true,
-      model: compositionModel,
+      model: compositionsModel,
       type: 'autocomplete',
-      items: composition,
+      items: compositions,
       placeholder: 'Выбрать значение',
       multiple: true,
     },
@@ -335,7 +335,7 @@ export const useFiltersStore = defineStore('filters', () => {
       etp_codes_ids: etpCodesModel.value || [],
       cadaster_number: cadasterNumberModel.value?.toString() || null,
       lot: lotModel.value || null,
-      composition: compositionModel.value || [],
+      compositions: compositionsModel.value || [],
       added_at: formatDate(addedAtModel.value),
       rubrics_ids: rubricsModel.value || [],
       categories_ids: categoriesModel.value || [],

@@ -114,7 +114,7 @@
     { title: 'Субъект РФ', key: 'region', sortable: true },
     { title: 'Федеральный округ', key: 'federal_district', sortable: true },
     { title: 'Ссылка', key: 'link', sortable: true },
-    { title: 'Составность', key: 'composition', sortable: true },
+    { title: 'Составность', key: 'compositions', sortable: true },
   ];
 
   const safeValue = (val) => ((val ?? '') === '' ? '-' : val);
@@ -144,7 +144,7 @@
       region: safeValue(lot?.region?.region),
       federal_district: safeValue(lot?.federal_district?.federal_district),
       link: safeValue(lot?.link),
-      composition: safeValue(lot?.composition),
+      compositions: safeValue(lot?.compositions),
     }));
   }
   //#endregion
