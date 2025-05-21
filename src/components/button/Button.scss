@@ -85,6 +85,24 @@
     }
   }
 
+  &--light {
+    background-color: transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    color: $color-text-base-1-500;
+
+    @include defaultTransition(color);
+
+    @include hover {
+      color: $color-text-base-1-600;
+    }
+
+    &:active {
+      color: $color-text-accent;
+    }
+  }
+
   &--disabled#{$root}--secondary,
   &:disabled#{$root}--secondary {
     background-color: $color-bg-base-1-200;

@@ -1,6 +1,6 @@
 // stores/filters.js
 import { defineStore } from 'pinia';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useAuthStore } from './auth';
 import { debounce } from 'lodash';
 
@@ -20,20 +20,47 @@ export const useFiltersStore = defineStore('filters', () => {
   // ВРИ
   const usesData = ref([]);
 
+  // Флаг для отслеживания изменений
+  const isDirty = ref(false);
+
+  // Дефолтные значения для сравнения
+  const defaultValues = {
+    biddFormsModel: [],
+    categoriesModel: [],
+    etpCodesModel: [],
+    regionsModel: [],
+    rubricsModel: [],
+    compositionsModel: ['Кад. квартал', 'Кад. район', 'Кад. номер'],
+    biddEndTimeFromModel: null,
+    biddEndTimeToModel: null,
+    addedAtModel: null,
+    cadasterNumberModel: null,
+    lotModel: null,
+    useModel: [],
+    priceMinFromModel: null,
+    priceMinToModel: null,
+    cadastralCostFromModel: null,
+    cadastralCostToModel: null,
+    priceRatioFromModel: null,
+    priceRatioToModel: null,
+    areaFromModel: null,
+    areaToModel: null,
+  };
+
   // v-model
-  const biddFormsModel = ref(null);
-  const categoriesModel = ref(null);
-  const etpCodesModel = ref(null);
-  const regionsModel = ref(null);
-  const rubricsModel = ref(null);
-  const compositionsModel = ref(null);
+  const biddFormsModel = ref([]);
+  const categoriesModel = ref([]);
+  const etpCodesModel = ref([]);
+  const regionsModel = ref([]);
+  const rubricsModel = ref([]);
+  const compositionsModel = ref(['Кад. квартал', 'Кад. район', 'Кад. номер']);
 
   const biddEndTimeFromModel = ref(null);
   const biddEndTimeToModel = ref(null);
   const addedAtModel = ref(null);
   const cadasterNumberModel = ref(null);
   const lotModel = ref(null);
-  const useModel = ref(null);
+  const useModel = ref([]);
   const priceMinFromModel = ref(null);
   const priceMinToModel = ref(null);
   const cadastralCostFromModel = ref(null);
@@ -42,6 +69,81 @@ export const useFiltersStore = defineStore('filters', () => {
   const priceRatioToModel = ref(null);
   const areaFromModel = ref(null);
   const areaToModel = ref(null);
+
+  // Список моделей для отслеживания
+  const models = [
+    biddFormsModel,
+    categoriesModel,
+    etpCodesModel,
+    regionsModel,
+    rubricsModel,
+    compositionsModel,
+    biddEndTimeFromModel,
+    biddEndTimeToModel,
+    addedAtModel,
+    cadasterNumberModel,
+    lotModel,
+    useModel,
+    priceMinFromModel,
+    priceMinToModel,
+    cadastralCostFromModel,
+    cadastralCostToModel,
+    priceRatioFromModel,
+    priceRatioToModel,
+    areaFromModel,
+    areaToModel,
+  ];
+
+  // Функция сравнения значений
+  const isEqual = (a, b) => {
+    if (Array.isArray(a) && Array.isArray(b)) {
+      // Сравнение как множества, игнорируя порядок
+      const setA = new Set(a);
+      const setB = new Set(b);
+      if (setA.size !== setB.size) return false;
+      return [...setA].every((item) => setB.has(item));
+    }
+    return a === b;
+  };
+
+  // Отслеживание изменений в моделях
+  watch(
+    models,
+    () => {
+      console.log(models);
+      isDirty.value = models.some((model, index) => {
+        const key = Object.keys(defaultValues)[index];
+        return !isEqual(model.value, defaultValues[key]);
+      });
+    },
+    { deep: true }
+  );
+
+  // Сброс фильтров до дефолтных значений
+  function resetFilters() {
+    biddFormsModel.value = defaultValues.biddFormsModel;
+    categoriesModel.value = defaultValues.categoriesModel;
+    etpCodesModel.value = defaultValues.etpCodesModel;
+    regionsModel.value = defaultValues.regionsModel;
+    rubricsModel.value = defaultValues.rubricsModel;
+    compositionsModel.value = defaultValues.compositionsModel;
+    biddEndTimeFromModel.value = defaultValues.biddEndTimeFromModel;
+    biddEndTimeToModel.value = defaultValues.biddEndTimeToModel;
+    addedAtModel.value = defaultValues.addedAtModel;
+    cadasterNumberModel.value = defaultValues.cadasterNumberModel;
+    lotModel.value = defaultValues.lotModel;
+    useModel.value = defaultValues.useModel;
+    priceMinFromModel.value = defaultValues.priceMinFromModel;
+    priceMinToModel.value = defaultValues.priceMinToModel;
+    cadastralCostFromModel.value = defaultValues.cadastralCostFromModel;
+    cadastralCostToModel.value = defaultValues.cadastralCostToModel;
+    priceRatioFromModel.value = defaultValues.priceRatioFromModel;
+    priceRatioToModel.value = defaultValues.priceRatioToModel;
+    areaFromModel.value = defaultValues.areaFromModel;
+    areaToModel.value = defaultValues.areaToModel;
+
+    isDirty.value = false;
+  }
 
   const onSearchPermittedUses = debounce(async (event) => {
     const value = event?.target?.value || '';
@@ -358,5 +460,7 @@ export const useFiltersStore = defineStore('filters', () => {
     searchPermittedUses,
     fieldsData,
     getFormattedFilters,
+    resetFilters,
+    isDirty,
   };
 });

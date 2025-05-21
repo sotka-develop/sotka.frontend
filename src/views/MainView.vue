@@ -9,6 +9,7 @@
         <FiltersForm />
 
         <div class="section__actions">
+          <Button v-if="isDirty" text="Сбросить фильтры" theme="light" prepend-icon="24/close" @click="reset" />
           <Button text="Применить" @click="filter" />
         </div>
       </div>
@@ -17,6 +18,7 @@
         <div class="section__title">
           <h2>Карта</h2>
         </div>
+
         <Map
           ref="mapRef"
           :dots="dots"
@@ -37,6 +39,7 @@
         <div class="section__title">
           <h2>Таблицы</h2>
         </div>
+
         <Table
           :page="page"
           :items-per-page="pageSize"
@@ -70,6 +73,7 @@
   const lotsStore = useLotsStore();
 
   const { mapPending, lotsPending, landAreaPending, clusterPending } = storeToRefs(lotsStore);
+  const { isDirty } = storeToRefs(filtersStore);
 
   const isFiltered = ref(false); // фильтры применены, кнопка Применить не отображается
   const filtersData = ref(null);
@@ -266,7 +270,12 @@
 
   // обновление карты
   const onCoordsUpdate = async (event) => {
-    if (isFiltering.value) return;
+    if (isFiltering.value) {
+      isFiltering.value = false;
+      mapSyncStatus.value = false;
+
+      return;
+    }
 
     const filtersModel = filtersData.value;
 
@@ -403,9 +412,12 @@
 
     await fetchLotsData();
     await loadMapData();
+  }
 
-    await new Promise((resolve) => setTimeout(resolve, 1100));
-    isFiltering.value = false;
+  async function reset() {
+    filtersStore.resetFilters();
+
+    await filter();
   }
 
   onMounted(async () => {
