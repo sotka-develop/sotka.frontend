@@ -97,7 +97,7 @@ export const useLotsStore = defineStore('lots', () => {
     error.value = null;
 
     try {
-      const params = new URLSearchParams({ land_area_id: payload });
+      const params = new URLSearchParams({ land_area_id: payload, get_coords: true });
 
       const res = await fetch(`${baseUrl}/client/land_area/by_id?${params.toString()}`, {
         method: 'GET',

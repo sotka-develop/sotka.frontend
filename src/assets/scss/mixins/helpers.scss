@@ -76,10 +76,12 @@
 }
 
 @mixin line-clamp($font-size, $line-height, $lines-to-show) {
+  $font-size-px: $font-size * 1px;
+
   display: block;
   display: -webkit-box;
-  font-size: rem($font-size);
-  max-height: rem($font-size * $line-height * $lines-to-show);
+  font-size: $font-size-px;
+  max-height: calc(#{$font-size-px} * #{$line-height} * #{$lines-to-show});
   line-height: $line-height;
   overflow: hidden;
   text-overflow: ellipsis;

@@ -23,6 +23,20 @@
         <a class="table__link" :href="`https://torgi.gov.ru/new/public/lots/lot/${item.lot}`" target="_blank">{{ item.lot }}</a>
       </template>
 
+      <template #item.permitted_use="{ item }">
+        <span class="table__text table__text--large" :title="item.permitted_use">{{ item.permitted_use }}</span>
+      </template>
+
+      <template #item.category_from_nspd="{ item }">
+        <span class="table__text table__text--large" :title="item.category_from_nspd">{{ item.category_from_nspd }}</span>
+      </template>
+
+      <template #item.permitted_use_established_by_document_from_nspd="{ item }">
+        <span class="table__text table__text--large" :title="item.permitted_use_established_by_document_from_nspd">{{
+          item.permitted_use_established_by_document_from_nspd
+        }}</span>
+      </template>
+
       <template #footer.prepend>
         <div class="table__items-per-page">
           <v-select

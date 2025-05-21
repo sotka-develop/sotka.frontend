@@ -54,7 +54,7 @@
 </template>
 
 <script setup>
-  import { onMounted, ref, watch } from 'vue';
+  import { onMounted, ref } from 'vue';
 
   import Table from '@/components/table/Table.vue';
   import Button from '@/components/button/Button.vue';
@@ -235,8 +235,8 @@
 
       mapSidebarData.value = {
         cadasterNumber: result?.cadaster_number || '-',
-        latitude: result?.latitude || '-',
-        longitude: result?.longitude || '-',
+        latitude: result?.coords?.latitude || '-',
+        longitude: result?.coords?.longitude || '-',
         biddFormRaw: result?.bidd_form_raw || '-',
         typeTransactionRus: result?.type_transaction_rus || '-',
         categoryFromNspd: result?.category_from_nspd || '-',

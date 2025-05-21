@@ -3,6 +3,15 @@
 
   &:deep(.v-data-table__td) {
     min-width: 200px;
+    padding: 16px;
+
+    &:has(.table__text--large) {
+      min-width: 280px;
+
+      @include media-breakpoint-up(md) {
+        min-width: 400px;
+      }
+    }
   }
 
   &:deep(hr) {
@@ -57,5 +66,9 @@
     @include hover {
       color: $color-bg-accent-200;
     }
+  }
+
+  &__text {
+    @include line-clamp(14, 1.4, 2);
   }
 }

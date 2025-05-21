@@ -15,7 +15,7 @@
             </template>
 
             <template v-else-if="item.value">
-              <span class="map-sidebar__value">{{ item.value }}</span>
+              <span class="map-sidebar__value" :title="item.value">{{ item.value }}</span>
             </template>
           </li>
         </ul>
@@ -95,7 +95,7 @@
       },
       {
         text: 'ЭТП',
-        value: props?.data?.etp_code || '-',
+        value: props?.data?.etpCode || '-',
       },
       {
         text: 'Ссылка',

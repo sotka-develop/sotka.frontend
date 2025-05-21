@@ -38,7 +38,7 @@
     },
     clearable: {
       type: Boolean,
-      default: true,
+      default: false,
     },
     hideDetails: {
       type: Boolean,

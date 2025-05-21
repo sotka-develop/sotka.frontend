@@ -44,6 +44,10 @@
     padding-top: 3px;
   }
 
+  &__value {
+    @include line-clamp(14, 1.4, 3);
+  }
+
   &__link {
     word-break: break-word;
     color: $color-bg-accent-100;

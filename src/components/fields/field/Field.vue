@@ -72,7 +72,7 @@
     },
     clearable: {
       type: Boolean,
-      default: true,
+      default: false,
     },
     step: {
       type: Number,
@@ -85,6 +85,10 @@
     textFieldProps: {
       type: Object,
       default: () => ({}),
+    },
+    precision: {
+      type: [Number, String],
+      default: () => null,
     },
     onInput: Function,
   });
@@ -157,6 +161,7 @@
         controlVariant: props.controlVariant,
         textFieldProps: props.textFieldProps,
         hideDetails: props.hideDetails,
+        precision: props.precision,
       };
     }
 

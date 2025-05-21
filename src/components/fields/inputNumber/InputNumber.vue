@@ -1,11 +1,17 @@
 <template>
   <div class="input-number">
-    <v-number-input variant="outlined" v-bind="inputProps" :model-value="modelValue" @update:modelValue="emitUpdate" />
+    <v-number-input
+      variant="outlined"
+      v-bind="inputProps"
+      :model-value="modelValue"
+      :precision="precision"
+      @update:modelValue="emitUpdate"
+    />
   </div>
 </template>
 
 <script setup>
-  import { computed } from 'vue';
+  import { computed, ref } from 'vue';
 
   const props = defineProps({
     label: {
@@ -53,6 +59,10 @@
     textFieldProps: {
       type: Object,
       default: () => ({}),
+    },
+    precision: {
+      type: [Number, String],
+      default: null,
     },
   });
 

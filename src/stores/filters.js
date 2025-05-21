@@ -185,6 +185,7 @@ export const useFiltersStore = defineStore('filters', () => {
       model: priceRatioFromModel,
       type: 'number',
       placeholder: 'Например, 1111',
+      precision: 0,
     },
     {
       label: '% нач.ц/кад.стоим. до',
@@ -192,6 +193,7 @@ export const useFiltersStore = defineStore('filters', () => {
       model: priceRatioToModel,
       type: 'number',
       placeholder: 'Например, 1111',
+      precision: 0,
     },
     {
       label: 'Площадь от',
