@@ -34,8 +34,8 @@ export const useFiltersStore = defineStore('filters', () => {
     biddEndTimeFromModel: null,
     biddEndTimeToModel: null,
     addedAtModel: null,
-    cadasterNumberModel: null,
-    lotModel: null,
+    cadasterNumberModel: '',
+    lotModel: '',
     useModel: [],
     priceMinFromModel: null,
     priceMinToModel: null,
@@ -58,8 +58,8 @@ export const useFiltersStore = defineStore('filters', () => {
   const biddEndTimeFromModel = ref(null);
   const biddEndTimeToModel = ref(null);
   const addedAtModel = ref(null);
-  const cadasterNumberModel = ref(null);
-  const lotModel = ref(null);
+  const cadasterNumberModel = ref('');
+  const lotModel = ref('');
   const useModel = ref([]);
   const priceMinFromModel = ref(null);
   const priceMinToModel = ref(null);
