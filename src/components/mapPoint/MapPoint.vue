@@ -1,21 +1,21 @@
 <template>
-  <div class="map-sidebar">
-    <SimpleBar class="map-sidebar__bar" data-simplebar-auto-hide="false">
-      <div class="map-sidebar__content">
-        <p v-if="title" class="map-sidebar__title h5">{{ title }}</p>
+  <div class="map-point">
+    <SimpleBar class="map-point__bar" data-simplebar-auto-hide="false">
+      <div class="map-point__content">
+        <p v-if="title" class="map-point__title h5">{{ title }}</p>
 
-        <p class="map-sidebar__subtitle text-lead">{{ subtitle }}</p>
+        <p class="map-point__subtitle text-lead">{{ subtitle }}</p>
 
-        <ul class="map-sidebar__list">
-          <li v-for="(item, idx) in information" :key="idx" class="map-sidebar__item">
-            <span class="map-sidebar__text text-small">{{ item.text }}</span>
+        <ul class="map-point__list">
+          <li v-for="(item, idx) in information" :key="idx" class="map-point__item">
+            <span class="map-point__text text-small">{{ item.text }}</span>
 
             <template v-if="item.href && item.value">
-              <a :href="item.href" class="map-sidebar__link" target="_blank">{{ item.value }}</a>
+              <a :href="item.href" class="map-point__link" target="_blank">{{ item.value }}</a>
             </template>
 
             <template v-else-if="item.value">
-              <span class="map-sidebar__value" :title="item.value">{{ item.value }}</span>
+              <span class="map-point__value" :title="item.value">{{ item.value }}</span>
             </template>
           </li>
         </ul>
@@ -119,5 +119,5 @@
 </script>
 
 <style lang="scss" scoped>
-  @import 'MapSidebar';
+  @import 'MapPoint';
 </style>

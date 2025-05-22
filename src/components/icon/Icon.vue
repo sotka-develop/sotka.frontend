@@ -12,7 +12,7 @@
     <Sync v-if="name === '24/sync'" />
     <Plus v-if="name === '24/plus'" />
     <Minus v-if="name === '24/minus'" />
-
+    <House v-if="name === '24/house'" />
     <ArrowsPointing v-if="name === '24/arrows-pointing'" />
     <HandDraw v-if="name === '24/hand-draw'" />
     <Layers v-if="name === '24/layers'" />
@@ -39,6 +39,7 @@
   import HandDraw from '@/assets/icons/24/hand-draw.svg';
   import Layers from '@/assets/icons/24/layers.svg';
   import Measuring from '@/assets/icons/24/measuring.svg';
+  import House from '@/assets/icons/24/house.svg';
 
   defineProps({
     name: {
@@ -63,6 +64,7 @@
     HandDraw,
     Layers,
     Measuring,
+    House,
   });
 </script>
 

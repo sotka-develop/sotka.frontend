@@ -81,7 +81,9 @@
           <Loader child size="small" />
         </div>
 
-        <MapSidebar v-if="sidebar" :data="sidebar" />
+        <MapPoint v-if="pointData" :data="pointData" />
+
+        <MapCluster v-if="clusterData" :data="clusterData" />
       </div>
     </div>
 
@@ -117,7 +119,8 @@
   import { computed, shallowRef, ref, watch, onMounted, onUnmounted } from 'vue';
   import Loader from '@/components/loader/Loader.vue';
   import Icon from '@/components/icon/Icon.vue';
-  import MapSidebar from '../mapSidebar/MapSidebar.vue';
+  import MapPoint from '../mapPoint/MapPoint.vue';
+  import MapCluster from '../mapCluster/MapCluster.vue';
 
   import debounce from 'lodash.debounce';
   import { supportsTouch } from '@/assets/js/utils/isTouch';
@@ -151,7 +154,10 @@
       type: Boolean,
       default: false,
     },
-    sidebar: {
+    pointData: {
+      type: Object,
+    },
+    clusterData: {
       type: Object,
     },
     sidebarStatus: {
@@ -366,7 +372,14 @@
   }
 
   watch(
-    () => props.sidebar,
+    () => props.pointData,
+    (val) => {
+      isDirty.value = true;
+    }
+  );
+
+  watch(
+    () => props.clusterData,
     (val) => {
       isDirty.value = true;
     }

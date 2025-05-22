@@ -27,8 +27,9 @@
           :onClusterClick="onClusterClick"
           :onPointClick="onPointClick"
           :loading="mapPending"
-          :sidebar="mapSidebarData"
-          :sidebar-pending="landAreaPending"
+          :point-data="mapPointData"
+          :cluster-data="mapClusterData"
+          :sidebar-pending="sidebarPending"
           v-model:sidebarStatus="mapSidebarStatus"
           v-model:syncStatus="mapSyncStatus"
           @sync="tableSync"
@@ -57,7 +58,7 @@
 </template>
 
 <script setup>
-  import { onMounted, ref } from 'vue';
+  import { computed, onMounted, ref } from 'vue';
 
   import Table from '@/components/table/Table.vue';
   import Button from '@/components/button/Button.vue';
@@ -158,7 +159,8 @@
   const mapZoom = ref(3);
   const mapZoomDefault = 3;
   const mapDotsToCluster = ref(10);
-  const mapSidebarData = ref(null);
+  const mapPointData = ref(null);
+  const mapClusterData = ref(null);
   const mapSidebarStatus = ref(false);
   const mapSyncStatus = ref(false);
 
@@ -183,7 +185,7 @@
 
   // клик по кластеру
   const onClusterClick = async (data) => {
-    if (clusterPending.value) return;
+    if (sidebarPending.value) return;
 
     const id = data?.data?.cluster_id;
 
@@ -219,13 +221,21 @@
         return;
       }
 
+      mapPointData.value = null;
+
+      mapClusterData.value = {
+        items: result?.land_areas || [],
+      };
+
+      mapSidebarStatus.value = true;
+
       console.log(result);
     }
   };
 
   // клик по точке
   const onPointClick = async (data) => {
-    if (landAreaPending.value) return;
+    if (sidebarPending.value) return;
 
     const id = data?.data?.land_ids[0];
 
@@ -237,7 +247,9 @@
         return;
       }
 
-      mapSidebarData.value = {
+      mapClusterData.value = null;
+
+      mapPointData.value = {
         cadasterNumber: result?.cadaster_number || '-',
         latitude: result?.coords?.latitude || '-',
         longitude: result?.coords?.longitude || '-',
@@ -260,6 +272,10 @@
       mapSidebarStatus.value = true;
     }
   };
+
+  const sidebarPending = computed(() => {
+    return landAreaPending.value || clusterPending.value;
+  });
 
   // синхронизация таблицы с картой
   const tableSync = async () => {
