@@ -122,6 +122,12 @@
     { title: 'Составность', key: 'compositions', sortable: true },
   ];
 
+  function formatCadastralRatio(value) {
+    if (value == null || value === '') return '-';
+
+    return Number(value) === 0 ? '<1' : value || '-';
+  }
+
   const safeValue = (val) => ((val ?? '') === '' ? '-' : val);
 
   // преобоазование данных лотов для таблицы
@@ -135,7 +141,7 @@
       price_min_in_rub: safeValue(lot?.price_min_in_rub),
       deposit_in_rub: safeValue(lot?.deposit_in_rub),
       deposit_percent: safeValue(lot?.deposit_percent),
-      price_min_cadastral_cost_ratio_percent: safeValue(lot?.price_min_cadastral_cost_ratio_percent),
+      price_min_cadastral_cost_ratio_percent: formatCadastralRatio(safeValue(lot?.price_min_cadastral_cost_ratio_percent)),
       coords: `${safeValue(lot?.latitude)}, ${safeValue(lot?.longitude)}`,
       bidd_end_time: safeValue(lot?.bidd_end_time),
       auction_start_date: safeValue(lot?.auction_start_date),
@@ -259,7 +265,7 @@
         permittedUseEstablishedByDocumentFromNspd: result?.permitted_use_established_by_document_from_nspd || '-',
         priceMinInRub: result?.price_min_in_rub || '-',
         cadastralCostFromNspdInRub: result?.cadastral_cost_from_nspd_in_rub || '-',
-        priceMinCadastralCostRatioPercent: result?.price_min_cadastral_cost_ratio_percent | '-',
+        priceMinCadastralCostRatioPercent: formatCadastralRatio(result?.price_min_cadastral_cost_ratio_percent),
         biddEndTime: result?.bidd_end_time || '-',
         auctionStartDate: result?.auction_start_date || '-',
         etpCode: result?.etp_code?.etp_code || '-',
