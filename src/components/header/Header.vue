@@ -1,5 +1,5 @@
 <template>
-  <header class="header">
+  <header class="header header--fixed" ref="headerRef">
     <div class="header__container container">
       <div class="header__content">
         <RouterLink v-if="route.name !== 'main'" class="header__logo" to="/">
@@ -42,6 +42,7 @@
 </template>
 
 <script setup>
+  import { ref, onMounted, onUnmounted } from 'vue';
   import { useAuthStore } from '@/stores/auth';
   import { useRoute, useRouter } from 'vue-router';
   import Icon from '@/components/icon/Icon.vue';
@@ -89,6 +90,8 @@
     theme: 'secondary',
   };
 
+  const headerRef = ref(null);
+
   async function logout() {
     try {
       await authStore.logout();
@@ -99,6 +102,32 @@
       console.warn(error);
     }
   }
+
+  let lastScrollY = window.scrollY;
+
+  function handleScroll() {
+    const currentScrollY = window.scrollY;
+    const isScrollingDown = currentScrollY > lastScrollY;
+    const isScrollingUp = currentScrollY < lastScrollY;
+
+    if (!headerRef.value) return;
+
+    if (isScrollingDown && currentScrollY > 25) {
+      headerRef.value.classList.add('header--hidden');
+    } else if (isScrollingUp) {
+      headerRef.value.classList.remove('header--hidden');
+    }
+
+    lastScrollY = currentScrollY;
+  }
+
+  onMounted(() => {
+    window.addEventListener('scroll', handleScroll, { passive: true });
+  });
+
+  onUnmounted(() => {
+    window.removeEventListener('scroll', handleScroll);
+  });
 </script>
 
 <style lang="scss" scoped>
