@@ -55,7 +55,7 @@
       },
       {
         text: 'Форма проведения',
-        value: props?.data?.biddFormRaw || '-',
+        value: props?.data?.biddForm || '-',
       },
       {
         text: 'Вид сделки',
