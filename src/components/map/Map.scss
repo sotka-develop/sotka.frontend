@@ -15,6 +15,17 @@
     height: 640px;
   }
 
+  &--fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 100;
+    border: 0;
+    border-radius: 0;
+  }
+
   &__point {
     width: 28px;
     height: 28px;
@@ -324,6 +335,10 @@
       pointer-events: auto;
     }
 
+    #{$root}--fullscreen & {
+      display: none;
+    }
+
     @include media-breakpoint-down(sm) {
       display: none;
     }
@@ -373,6 +388,10 @@
     }
 
     #{$root}--list-show &[data-map-action-button='layers'] {
+      color: $color-text-accent;
+    }
+
+    #{$root}--fullscreen &[data-map-action-button='fullscreen'] {
       color: $color-text-accent;
     }
   }

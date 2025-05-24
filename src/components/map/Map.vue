@@ -127,6 +127,7 @@
 
   import { useKeyPressed } from '@/composables/useKeyPressed';
   import { useTouchDevice } from '@/composables/useTouchDevice';
+  import { disableScroll, enableScroll } from '@/composables/useScrollLock';
 
   const { ctrlPressed } = useKeyPressed();
   const { isTouchDevice } = useTouchDevice();
@@ -186,9 +187,15 @@
   const enabledBehaviors = ref(['drag']);
 
   const actions = [
-    { icon: '24/measuring', name: 'measuring', handler: () => {} },
-    { icon: '24/arrows-pointing', name: 'fullscreen', handler: () => {} },
-    { icon: '24/hand-draw', name: 'draw', handler: () => {} },
+    // { icon: '24/measuring', name: 'measuring', handler: () => {} },
+    {
+      icon: '24/arrows-pointing',
+      name: 'fullscreen',
+      handler: () => {
+        toggleFullscreen();
+      },
+    },
+    // { icon: '24/hand-draw', name: 'draw', handler: () => {} },
     {
       icon: '24/layers',
       name: 'layers',
@@ -230,6 +237,12 @@
 
   function toggleList() {
     listShow.value = !listShow.value;
+  }
+
+  const fullscreen = ref(false);
+
+  function toggleFullscreen() {
+    fullscreen.value = !fullscreen.value;
   }
 
   // Точки/метки
@@ -287,6 +300,7 @@
       ['map--sidebar-pending']: props.sidebarPending,
       ['map--is-dirty']: isDirty.value,
       ['map--list-show']: listShow.value,
+      ['map--fullscreen']: fullscreen.value,
     };
   });
 
@@ -386,16 +400,31 @@
   );
 
   watch(
-    () => ctrlPressed.value,
-    (newVal) => {
-      if (!newVal) {
-        enabledBehaviors.value = ['drag'];
+    () => fullscreen.value,
+    (val) => {
+      if (val) {
+        disableScroll();
       } else {
-        showMessage.value = false;
-        enabledBehaviors.value = ['scrollZoom', 'drag'];
+        enableScroll();
       }
     }
   );
+
+  watch([() => ctrlPressed.value, () => fullscreen.value], ([isCtrl, isFs]) => {
+    if (isFs) {
+      showMessage.value = false;
+      enabledBehaviors.value = ['scrollZoom', 'drag'];
+
+      return;
+    }
+
+    if (isCtrl) {
+      showMessage.value = false;
+      enabledBehaviors.value = ['scrollZoom', 'drag'];
+    } else {
+      enabledBehaviors.value = ['drag'];
+    }
+  });
 
   const handleClickOutside = (e) => {
     const isLayersButton = e.target.hasAttribute('data-map-action-button') && e.target.getAttribute('data-map-action-button') === 'layers';
