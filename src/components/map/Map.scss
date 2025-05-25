@@ -211,6 +211,15 @@
       left: 12px;
       width: calc(100% - 24px);
     }
+
+    #{$root}--fullscreen & {
+      left: 50%;
+      transform: translateX(-50%);
+
+      @include media-breakpoint-down(sm) {
+        width: calc(100% - 32px);
+      }
+    }
   }
 
   &__bar-action {
