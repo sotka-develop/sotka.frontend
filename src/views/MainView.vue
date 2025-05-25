@@ -1,57 +1,51 @@
 <template>
   <main class="main">
     <div class="container">
-      <div class="section">
-        <div class="section__title">
-          <h2>Лоты</h2>
-        </div>
+      <div class="mb-24">
+        <Section title="Лоты">
+          <FiltersForm />
 
-        <FiltersForm />
-
-        <div class="section__actions">
-          <Button v-if="isDirty" text="Сбросить фильтры" theme="light" prepend-icon="24/close" @click="reset" />
-          <Button text="Применить" @click="filter" />
-        </div>
+          <template #actions>
+            <Button v-if="isDirty" text="Сбросить фильтры" theme="light" prepend-icon="24/close" @click="reset" />
+            <Button text="Применить" @click="filter" />
+          </template>
+        </Section>
       </div>
 
-      <div class="section">
-        <div class="section__title">
-          <h2>Карта</h2>
-        </div>
-
-        <Map
-          ref="mapRef"
-          :dots="dots"
-          :polygons="polygons"
-          :onCoordsUpdate="onCoordsUpdate"
-          :onClusterClick="onClusterClick"
-          :onPointClick="onPointClick"
-          :loading="mapPending"
-          :point-data="mapPointData"
-          :cluster-data="mapClusterData"
-          :sidebar-pending="sidebarPending"
-          v-model:sidebarStatus="mapSidebarStatus"
-          v-model:syncStatus="mapSyncStatus"
-          @sync="tableSync"
-        />
+      <div class="mb-24">
+        <Section title="Карта">
+          <Map
+            ref="mapRef"
+            :dots="dots"
+            :polygons="polygons"
+            :onCoordsUpdate="onCoordsUpdate"
+            :onClusterClick="onClusterClick"
+            :onPointClick="onPointClick"
+            :loading="mapPending"
+            :point-data="mapPointData"
+            :cluster-data="mapClusterData"
+            :sidebar-pending="sidebarPending"
+            v-model:sidebarStatus="mapSidebarStatus"
+            v-model:syncStatus="mapSyncStatus"
+            @sync="tableSync"
+          />
+        </Section>
       </div>
 
-      <div class="section">
-        <div class="section__title">
-          <h2>Таблицы</h2>
-        </div>
-
-        <Table
-          :page="page"
-          :items-per-page="pageSize"
-          :items="tableItems"
-          :headers="tableHeaders"
-          :items-length="totalCount"
-          :loading="lotsPending"
-          :on-update-options="onUpdateOptions"
-          @update:page="page = $event"
-          @update:itemsPerPage="pageSize = $event"
-        />
+      <div class="mb-24">
+        <Section title="Таблица">
+          <Table
+            :page="page"
+            :items-per-page="pageSize"
+            :items="tableItems"
+            :headers="tableHeaders"
+            :items-length="totalCount"
+            :loading="lotsPending"
+            :on-update-options="onUpdateOptions"
+            @update:page="page = $event"
+            @update:itemsPerPage="pageSize = $event"
+          />
+        </Section>
       </div>
     </div>
   </main>
@@ -60,6 +54,7 @@
 <script setup>
   import { computed, onMounted, ref } from 'vue';
 
+  import Section from '@/components/section/Section.vue';
   import Table from '@/components/table/Table.vue';
   import Button from '@/components/button/Button.vue';
   import FiltersForm from '@/components/filtersForm/FiltersForm.vue';
@@ -78,7 +73,7 @@
   const { mapPending, lotsPending, landAreaPending, clusterPending } = storeToRefs(lotsStore);
   const { isDirty } = storeToRefs(filtersStore);
 
-  const isFiltered = ref(false); // фильтры применены, кнопка Применить не отображается
+  const isFiltered = ref(false); // фильтры применены, кнопка Применить неактивна
   const filtersData = ref(null);
   const isFiltering = ref(false); // идет фильтрация
 
@@ -414,10 +409,18 @@
 
     await fetchLotsData();
     await loadMapData();
+
+    if (isDirty.value) {
+      isFiltered.value = true;
+    } else {
+      isFiltered.value = false;
+    }
   }
 
   async function reset() {
     filtersStore.resetFilters();
+
+    if (!isFiltered.value) return;
 
     await filter();
   }
@@ -431,57 +434,3 @@
     await initialSearch();
   });
 </script>
-
-<style lang="scss" scoped>
-  // TODO временно
-  .main {
-    padding: 36px 0 36px;
-  }
-
-  .form-filters {
-    &__items {
-      display: grid;
-      gap: 24px 28px;
-
-      &--1 {
-        grid-template-columns: 1fr;
-      }
-
-      &--3 {
-        grid-template-columns: 1fr 1fr 2fr;
-      }
-
-      &--4 {
-        grid-template-columns: 1fr 1fr 1fr 1fr;
-      }
-
-      &:not(:last-child) {
-        margin-bottom: 28px;
-      }
-    }
-  }
-
-  .section {
-    background-color: $color-white;
-    border-radius: 24px;
-    padding: 24px;
-    box-shadow: 0px 0px 12px 0px #76a3c01f;
-
-    &:not(:last-child) {
-      margin-bottom: 24px;
-    }
-
-    &__title {
-      margin-bottom: 28px;
-    }
-
-    &__actions {
-      display: flex;
-      gap: 8px;
-      justify-content: flex-end;
-      border-top: 1px solid $color-border-base-1-400;
-      padding-top: 24px;
-      margin-top: 44px;
-    }
-  }
-</style>

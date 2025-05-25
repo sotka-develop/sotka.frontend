@@ -329,20 +329,13 @@
     emit('sync');
   }
 
-  // TODO удалить?
-  const resetSidebar = () => {
-    isDirty.value = false;
-  };
-
   const resetMap = () => {
     isDirty.value = false;
     zoom.value = zoomDefault;
     center.value = centerDefault;
-    // activeMapView.value = activeMapViewDefault; // TODO нужно ли сбрасывать вид карты?
   };
 
   defineExpose({
-    resetSidebar,
     resetMap,
   });
 
