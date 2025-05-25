@@ -47,7 +47,7 @@
     return [
       {
         text: 'Кадастровый номер',
-        value: props?.data?.cadasterNumber || '-',
+        value: props?.data?.cadaster_number || '-',
       },
       {
         text: 'Координаты',
@@ -55,19 +55,19 @@
       },
       {
         text: 'Форма проведения',
-        value: props?.data?.biddForm || '-',
+        value: props?.data?.bidd_form || '-',
       },
       {
         text: 'Вид сделки',
-        value: props?.data?.typeTransactionRus || '-',
+        value: props?.data?.type_transaction_rus || '-',
       },
       {
         text: 'Категория {КН}',
-        value: props?.data?.categoryFromNspd || '-',
+        value: props?.data?.category_from_nspd || '-',
       },
       {
         text: 'ВРИ {КН}',
-        value: props?.data?.permittedUseEstablishedByDocumentFromNspd || '-',
+        value: props?.data?.permitted_use_established_by_document_from_nspd || '-',
       },
       {
         text: 'Площадь {КН}',
@@ -75,27 +75,27 @@
       },
       {
         text: 'Начальная цена',
-        value: props?.data?.priceMinInRub || '-',
+        value: props?.data?.price_min_in_rub || '-',
       },
       {
         text: 'Кадастровая стоимость',
-        value: props?.data?.cadastralCostFromNspdInRub || '-',
+        value: props?.data?.cadastral_cost_from_nspd_in_rub || '-',
       },
       {
         text: '% соот. НЦ и КС',
-        value: props?.data?.priceMinCadastralCostRatioPercent || '-',
+        value: props?.data?.price_min_cadastral_cost_ratio_percent || '-',
       },
       {
         text: 'Оконч.подач.заяв.',
-        value: props?.data?.biddEndTime || '-',
+        value: props?.data?.bidd_end_time || '-',
       },
       {
         text: 'Дата проведения торгов',
-        value: props?.data?.auctionStartDate || '-',
+        value: props?.data?.auction_start_date || '-',
       },
       {
         text: 'ЭТП',
-        value: props?.data?.etpCode || '-',
+        value: props?.data?.etp_code || '-',
       },
       {
         text: 'Ссылка',
@@ -104,11 +104,11 @@
       },
       {
         text: 'Категория {TG}',
-        value: props?.data?.categoryPurposeOrCategoryFromTorgigovProcessed,
+        value: props?.data?.category_purpose_or_category_from_torgigov_processed,
       },
       {
         text: 'ВРИ {TG}',
-        value: props?.data?.permittedUse || '-',
+        value: props?.data?.permitted_use || '-',
       },
       {
         text: 'Площадь {TG}',

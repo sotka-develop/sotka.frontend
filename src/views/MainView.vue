@@ -69,6 +69,8 @@
   import { useFiltersStore } from '@/stores/filters';
   import { useLotsStore } from '@/stores/lots';
 
+  import { preparePointData } from '@/composables/usePointData';
+
   // store
   const filtersStore = useFiltersStore();
   const lotsStore = useLotsStore();
@@ -88,9 +90,6 @@
   const totalCount = ref(0); // общее количество лотов
   const sortKey = ref(null);
   const sortOrder = ref(null);
-
-  const clusterPage = ref(1);
-  const clusterPageSize = ref(10);
 
   // список лотов для текущей страницы таблицы
   const tableItems = ref([]);
@@ -199,8 +198,8 @@
       const filtersModel = filtersData.value;
 
       const pagination = {
-        page: clusterPage.value,
-        page_size: clusterPageSize.value,
+        page: 1,
+        page_size: data?.data?.points_count || 10,
       };
 
       if (sortKey.value && sortOrder.value) {
@@ -213,14 +212,13 @@
       const clusterPayload = {
         ...currentCoords.value,
         ...filtersModel,
-        ...pagination,
         zoom: mapZoom.value,
         dots_to_cluster: mapDotsToCluster.value,
         land_ids: null,
         cluster_id: id,
       };
 
-      const result = await lotsStore.fetchClusterData({ ...clusterPayload });
+      const result = await lotsStore.fetchClusterData({ ...clusterPayload }, pagination);
 
       if (!result) {
         console.error('Ошибка при получении данных точки!');
@@ -255,25 +253,7 @@
 
       mapClusterData.value = null;
 
-      mapPointData.value = {
-        cadasterNumber: result?.cadaster_number || '-',
-        latitude: result?.coords?.latitude || '-',
-        longitude: result?.coords?.longitude || '-',
-        biddForm: result?.bidd_form?.bidd_form || '-',
-        typeTransactionRus: result?.type_transaction_rus || '-',
-        categoryFromNspd: result?.category_from_nspd || '-',
-        permittedUseEstablishedByDocumentFromNspd: result?.permitted_use_established_by_document_from_nspd || '-',
-        priceMinInRub: result?.price_min_in_rub || '-',
-        cadastralCostFromNspdInRub: result?.cadastral_cost_from_nspd_in_rub || '-',
-        priceMinCadastralCostRatioPercent: formatCadastralRatio(result?.price_min_cadastral_cost_ratio_percent),
-        biddEndTime: result?.bidd_end_time || '-',
-        auctionStartDate: result?.auction_start_date || '-',
-        etpCode: result?.etp_code?.etp_code || '-',
-        link: result?.link || '-',
-        categoryPurposeOrCategoryFromTorgigovProcessed: result?.category_purpose_or_category_from_torgigov_processed || '-',
-        permittedUse: result?.permitted_use || '-',
-        area: result?.area || '-',
-      };
+      mapPointData.value = preparePointData(result);
 
       mapSidebarStatus.value = true;
     }

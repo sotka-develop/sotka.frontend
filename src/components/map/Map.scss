@@ -107,7 +107,7 @@
     color: $color-white;
     border-radius: 8px;
 
-    @include defaultTransition(background-color);
+    @include defaultTransition(background-color, left);
 
     @include hover {
       background-color: $color-bg-accent-200;
@@ -125,8 +125,6 @@
     @include media-breakpoint-up(lg) {
       top: 16px;
       left: calc(100% + 8px);
-
-      @include defaultTransition(left);
     }
     @include media-breakpoint-down(md) {
       top: 16px;

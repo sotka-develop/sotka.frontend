@@ -6,6 +6,7 @@
     <!-- 20 -->
     <Eye v-if="name === '20/eye'" />
     <ChevronLeft v-if="name === '20/chevron-left'" />
+    <ChevronRight v-if="name === '20/chevron-right'" />
 
     <!-- 24 -->
     <Close v-if="name === '24/close'" />
@@ -29,6 +30,7 @@
   // 20
   import Eye from '@/assets/icons/20/eye.svg';
   import ChevronLeft from '@/assets/icons/20/chevron-left.svg';
+  import ChevronRight from '@/assets/icons/20/chevron-right.svg';
 
   // 24
   import Close from '@/assets/icons/24/close.svg';
@@ -54,7 +56,7 @@
     // 20
     Eye,
     ChevronLeft,
-
+    ChevronRight,
     //24
     Close,
     Sync,

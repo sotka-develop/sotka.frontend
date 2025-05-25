@@ -123,7 +123,7 @@ export const useLotsStore = defineStore('lots', () => {
   }
 
   // данные кластера
-  async function fetchClusterData(payload) {
+  async function fetchClusterData(params, pagination) {
     const auth = useAuthStore();
 
     if (!auth.token) {
@@ -135,13 +135,18 @@ export const useLotsStore = defineStore('lots', () => {
     error.value = null;
 
     try {
-      const res = await fetch(`${baseUrl}/client/get_lots_in_cluster`, {
+      const queryParams = new URLSearchParams({
+        page: pagination.page,
+        page_size: pagination.page_size,
+      });
+
+      const res = await fetch(`${baseUrl}/client/get_lots_in_cluster?${queryParams.toString()}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `${auth.token}`,
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(params),
       });
 
       if (!res.ok) {

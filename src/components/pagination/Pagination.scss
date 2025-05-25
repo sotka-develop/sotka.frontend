@@ -1,0 +1,49 @@
+.pagination {
+  $root: &;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &__items {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  &__button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: 0;
+    padding: 0;
+    border-radius: 8px;
+
+    &:not(#{$root}__button--ellipsis) {
+      @include hover {
+        background-color: $color-bg-accent-100;
+        color: $color-white;
+      }
+    }
+
+    @include defaultTransition(background-color, color);
+
+    .icon {
+      width: 20px;
+      height: 20px;
+    }
+
+    &--active {
+      background-color: $color-bg-accent-100;
+      color: $color-white;
+      cursor: default;
+    }
+
+    &--disabled {
+      pointer-events: none;
+      color: $color-text-base-1-500;
+    }
+  }
+}
