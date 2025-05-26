@@ -3,11 +3,11 @@
     <div class="header__container container">
       <div class="header__content">
         <RouterLink v-if="route.name !== 'main'" class="header__logo" to="/">
-          <Icon name="logos/logo" />
+          <Image v-bind="logoData" />
         </RouterLink>
 
         <div v-else class="header__logo">
-          <Icon name="logos/logo" />
+          <Image v-bind="logoData" />
         </div>
 
         <nav class="header__navigation">
@@ -45,8 +45,13 @@
   import { ref, onMounted, onUnmounted } from 'vue';
   import { useAuthStore } from '@/stores/auth';
   import { useRoute, useRouter } from 'vue-router';
-  import Icon from '@/components/icon/Icon.vue';
+  import Image from '@/components/image/Image.vue';
   import Button from '@/components/button/Button.vue';
+
+  const logoData = {
+    src: 'images/logo/logo.png',
+    alt: '',
+  };
 
   const route = useRoute();
   const router = useRouter();

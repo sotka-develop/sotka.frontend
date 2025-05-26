@@ -22,8 +22,8 @@
 
   &__logo {
     display: block;
-    width: 78px;
-    height: 40px;
+    width: 64px;
+    height: 64px;
 
     @include media-breakpoint-up(xl) {
       margin-right: 22.75%;
