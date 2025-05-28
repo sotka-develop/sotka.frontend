@@ -13,7 +13,8 @@
   import Select from '@/components/fields/select/Select.vue';
   import DatePicker from '@/components/fields/datePicker/DatePicker.vue';
   import InputNumber from '@/components/fields/inputNumber/InputNumber.vue';
-  import Autocomplete from '@/components/fields/autocomplete/Autocomplete.vue';
+  import Combobox from '@/components/fields/combobox/Combobox.vue';
+  import TreeSelect from '@/components/fields/treeselect/TreeSelect.vue';
 
   const props = defineProps({
     type: {
@@ -103,8 +104,10 @@
         return DatePicker;
       case 'number':
         return InputNumber;
-      case 'autocomplete':
-        return Autocomplete;
+      case 'combobox':
+        return Combobox;
+      case 'treeselect':
+        return TreeSelect;
       default:
         return Input;
     }
@@ -165,7 +168,7 @@
       };
     }
 
-    if (props.type === 'autocomplete') {
+    if (props.type === 'combobox') {
       return {
         // label: props.label,
         placeholder: props.placeholder,
@@ -179,6 +182,24 @@
         itemValue: props.itemValue,
         hideDetails: props.hideDetails,
         onInput: props.onInput,
+      };
+    }
+
+    if (props.type === 'treeselect') {
+      return {
+        // label: props.label,
+        placeholder: props.placeholder,
+        readonly: props.readonly,
+        items: props.items,
+        rules: props.rules,
+        errorMessages: props.errorMessages,
+        multiple: props.multiple,
+        returnObject: props.returnObject,
+        itemTitle: props.itemTitle,
+        itemValue: props.itemValue,
+        hideDetails: props.hideDetails,
+        onInput: props.onInput,
+        clearable: props.clearable,
       };
     }
 

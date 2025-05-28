@@ -1,5 +1,5 @@
 <template>
-  <div class="autocomplete">
+  <div class="combobox">
     <v-combobox
       variant="outlined"
       v-bind="inputProps"
@@ -89,5 +89,5 @@
 </script>
 
 <style lang="scss" scoped>
-  @import 'Autocomplete';
+  @import 'Combobox';
 </style>

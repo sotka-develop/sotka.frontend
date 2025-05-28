@@ -11,8 +11,9 @@ export const useFiltersStore = defineStore('filters', () => {
   const biddForms = ref([]);
   const categories = ref([]);
   const etpCodes = ref([]);
-  const regions = ref([]);
   const rubrics = ref([]);
+  // const regions = ref([]);
+  const regionsByDistricts = ref([]);
 
   // Составность
   const compositions = ref(['Кад. номер', 'Кад. квартал', 'Кад. район', 'Коорд. не определены']);
@@ -28,7 +29,8 @@ export const useFiltersStore = defineStore('filters', () => {
     biddFormsModel: [],
     categoriesModel: [],
     etpCodesModel: [],
-    regionsModel: [],
+    // regionsModel: [],
+    regionsByDistrictsModel: [],
     rubricsModel: [],
     compositionsModel: ['Кад. квартал', 'Кад. район', 'Кад. номер'],
     biddEndTimeFromModel: null,
@@ -51,7 +53,8 @@ export const useFiltersStore = defineStore('filters', () => {
   const biddFormsModel = ref([]);
   const categoriesModel = ref([]);
   const etpCodesModel = ref([]);
-  const regionsModel = ref([]);
+  // const regionsModel = ref([]);
+  const regionsByDistrictsModel = ref([]);
   const rubricsModel = ref([]);
   const compositionsModel = ref(['Кад. квартал', 'Кад. район', 'Кад. номер']);
 
@@ -75,7 +78,8 @@ export const useFiltersStore = defineStore('filters', () => {
     biddFormsModel,
     categoriesModel,
     etpCodesModel,
-    regionsModel,
+    // regionsModel,
+    regionsByDistrictsModel,
     rubricsModel,
     compositionsModel,
     biddEndTimeFromModel,
@@ -110,9 +114,10 @@ export const useFiltersStore = defineStore('filters', () => {
   watch(
     models,
     () => {
-      console.log(models);
+      // console.log(models);
       isDirty.value = models.some((model, index) => {
         const key = Object.keys(defaultValues)[index];
+
         return !isEqual(model.value, defaultValues[key]);
       });
     },
@@ -124,7 +129,8 @@ export const useFiltersStore = defineStore('filters', () => {
     biddFormsModel.value = defaultValues.biddFormsModel;
     categoriesModel.value = defaultValues.categoriesModel;
     etpCodesModel.value = defaultValues.etpCodesModel;
-    regionsModel.value = defaultValues.regionsModel;
+    // regionsModel.value = defaultValues.regionsModel;
+    regionsByDistrictsModel.value = defaultValues.regionsByDistrictsModel;
     rubricsModel.value = defaultValues.rubricsModel;
     compositionsModel.value = defaultValues.compositionsModel;
     biddEndTimeFromModel.value = defaultValues.biddEndTimeFromModel;
@@ -178,17 +184,27 @@ export const useFiltersStore = defineStore('filters', () => {
       label: 'Форма торгов',
       hideDetails: true,
       model: biddFormsModel,
-      type: 'autocomplete',
+      type: 'combobox',
       items: biddForms,
       placeholder: 'Выбрать значение',
       multiple: true,
     },
+    // {
+    //   label: 'Регион',
+    //   hideDetails: true,
+    //   model: regionsModel,
+    //   type: 'combobox',
+    //   items: regions,
+    //   placeholder: 'Регион, область, город',
+    //   multiple: true,
+    // },
     {
-      label: 'Регион',
+      label: 'Регион по округам',
       hideDetails: true,
-      model: regionsModel,
-      type: 'autocomplete',
-      items: regions,
+      model: regionsByDistrictsModel,
+      type: 'treeselect',
+      items: regionsByDistricts,
+      clearable: false,
       placeholder: 'Регион, область, город',
       multiple: true,
     },
@@ -196,7 +212,7 @@ export const useFiltersStore = defineStore('filters', () => {
       label: 'Код ЭТП',
       hideDetails: true,
       model: etpCodesModel,
-      type: 'autocomplete',
+      type: 'combobox',
       items: etpCodes,
       placeholder: 'Выбрать значение',
       multiple: true,
@@ -219,7 +235,7 @@ export const useFiltersStore = defineStore('filters', () => {
       label: 'Композиция',
       hideDetails: true,
       model: compositionsModel,
-      type: 'autocomplete',
+      type: 'combobox',
       items: compositions,
       placeholder: 'Выбрать значение',
       multiple: true,
@@ -228,7 +244,7 @@ export const useFiltersStore = defineStore('filters', () => {
       label: 'Рубрики',
       hideDetails: true,
       model: rubricsModel,
-      type: 'autocomplete',
+      type: 'combobox',
       items: rubrics,
       placeholder: 'Выбрать значение',
       multiple: true,
@@ -237,7 +253,7 @@ export const useFiltersStore = defineStore('filters', () => {
       label: 'Категория ЗУ',
       hideDetails: true,
       model: categoriesModel,
-      type: 'autocomplete',
+      type: 'combobox',
       items: categories,
       placeholder: 'Выбрать значение',
       multiple: true,
@@ -246,7 +262,7 @@ export const useFiltersStore = defineStore('filters', () => {
       label: 'ВРИ',
       hideDetails: true,
       model: useModel,
-      type: 'autocomplete',
+      type: 'combobox',
       items: usesData,
       placeholder: 'Выбрать значение',
       multiple: true,
@@ -361,18 +377,41 @@ export const useFiltersStore = defineStore('filters', () => {
           value: item.id,
         };
       });
-      regions.value = (data?.payload?.regions || []).map((item) => {
-        return {
-          text: item.region,
-          value: item.id,
-        };
-      });
       rubrics.value = (data?.payload?.rubrics || []).map((item) => {
         return {
           text: item.rubric,
           value: item.id,
         };
       });
+      // regions.value = (data?.payload?.regions || []).map((item) => {
+      //   return {
+      //     text: item.region,
+      //     value: item.id,
+      //   };
+      // });
+      regionsByDistricts.value = Object.values(
+        (data?.payload?.regions || []).reduce((acc, { id, region, federal_district_id, federal_district }) => {
+          const districtId = federal_district_id;
+          const districtName = federal_district.federal_district;
+
+          if (!acc[districtId]) {
+            acc[districtId] = {
+              name: districtName,
+              id: districtId,
+              items: [],
+            };
+          }
+
+          acc[districtId].items.push({
+            text: region,
+            value: id,
+          });
+
+          return acc;
+        }, {})
+      );
+
+      // console.log(regionsByDistricts.value);
     } catch (err) {
       console.error('Ошибка при загрузке фильтров:', err);
       error.value = err.message;
@@ -435,7 +474,8 @@ export const useFiltersStore = defineStore('filters', () => {
       bidd_end_time_from: formatDate(biddEndTimeFromModel.value),
       bidd_end_time_to: formatDate(biddEndTimeToModel.value),
       bidd_form_ids: biddFormsModel.value || [],
-      region_ids: regionsModel.value || [],
+      // region_ids: regionsModel.value || [],
+      region_ids: regionsByDistrictsModel.value || [],
       etp_codes_ids: etpCodesModel.value || [],
       cadaster_number: cadasterNumberModel.value?.toString() || null,
       lot: lotModel.value || null,
