@@ -58,4 +58,27 @@
 
     @include defaultTransition(color);
   }
+
+  &__pin {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: 0;
+    padding: 0;
+    color: $color-black;
+    margin-bottom: 8px;
+
+    .icon {
+      width: 24px;
+      height: 24px;
+    }
+
+    @include defaultTransition(color);
+
+    @include hover {
+      color: $color-bg-accent-100;
+    }
+  }
 }

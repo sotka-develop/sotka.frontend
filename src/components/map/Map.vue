@@ -81,9 +81,9 @@
           <Loader child size="small" />
         </div>
 
-        <MapPoint v-if="pointData" :data="pointData" />
+        <MapPoint v-if="pointData" :data="pointData" @centering="centering" />
 
-        <MapCluster v-if="clusterData" :data="clusterData" />
+        <MapCluster v-if="clusterData" :data="clusterData" @centering="centering" />
       </div>
     </div>
 
@@ -376,6 +376,10 @@
     if (zoom.value > zoomMin) {
       zoom.value = Math.floor(zoom.value - 1);
     }
+  }
+
+  function centering(centerCoords) {
+    center.value = centerCoords;
   }
 
   watch(

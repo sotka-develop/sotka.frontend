@@ -18,6 +18,7 @@
     <HandDraw v-if="name === '24/hand-draw'" />
     <Layers v-if="name === '24/layers'" />
     <Measuring v-if="name === '24/measuring'" />
+    <MapPin v-if="name === '24/map-pin'" />
   </div>
 </template>
 
@@ -42,6 +43,7 @@
   import Layers from '@/assets/icons/24/layers.svg';
   import Measuring from '@/assets/icons/24/measuring.svg';
   import House from '@/assets/icons/24/house.svg';
+  import MapPin from '@/assets/icons/24/map-pin.svg';
 
   defineProps({
     name: {
@@ -67,6 +69,7 @@
     Layers,
     Measuring,
     House,
+    MapPin,
   });
 </script>
 

@@ -30,7 +30,7 @@
       </button>
 
       <div class="map-cluster__point-content">
-        <MapPoint :data="pointData" />
+        <MapPoint :data="pointData" @centering="centeringOnPoint" />
       </div>
     </div>
   </div>
@@ -90,6 +90,12 @@
   }
 
   const backButtonText = 'Объекты';
+
+  const emit = defineEmits(['centering']);
+
+  function centeringOnPoint(centerCoords) {
+    emit('centering', centerCoords);
+  }
 
   // сброс номера страницы, если меняется количество элементов
   watch(items, (newArr) => {

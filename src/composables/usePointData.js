@@ -6,8 +6,8 @@ function formatCadastralRatio(value) {
 export function preparePointData(data) {
   return {
     cadaster_number: data?.cadaster_number || '-',
-    latitude: data?.coords?.latitude || '-',
-    longitude: data?.coords?.longitude || '-',
+    latitude: data?.coords?.latitude,
+    longitude: data?.coords?.longitude,
     bidd_form: data?.bidd_form?.bidd_form || '-',
     type_transaction_rus: data?.type_transaction_rus || '-',
     category_from_nspd: data?.category_from_nspd || '-',

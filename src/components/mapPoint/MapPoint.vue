@@ -6,6 +6,10 @@
 
         <p class="map-point__subtitle text-lead">{{ subtitle }}</p>
 
+        <button type="button" class="map-point__pin" v-if="coords" @click="centeringOnPoint">
+          <Icon name="24/map-pin" />
+        </button>
+
         <ul class="map-point__list">
           <li v-for="(item, idx) in information" :key="idx" class="map-point__item">
             <span class="map-point__text text-small">{{ item.text }}</span>
@@ -26,6 +30,7 @@
 
 <script setup>
   import { computed } from 'vue';
+  import Icon from '@/components/icon/Icon.vue';
 
   const props = defineProps({
     data: {
@@ -116,6 +121,23 @@
       },
     ];
   });
+
+  const coords = computed(() => {
+    if (!props.data) return null;
+
+    const latitude = props?.data?.latitude;
+    const longitude = props?.data?.longitude;
+
+    if (!latitude || !longitude) return null;
+
+    return [longitude, latitude];
+  });
+
+  const emit = defineEmits(['centering']);
+
+  function centeringOnPoint() {
+    emit('centering', coords.value);
+  }
 </script>
 
 <style lang="scss" scoped>
