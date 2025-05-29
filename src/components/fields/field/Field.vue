@@ -13,7 +13,7 @@
   import Select from '@/components/fields/select/Select.vue';
   import DatePicker from '@/components/fields/datePicker/DatePicker.vue';
   import InputNumber from '@/components/fields/inputNumber/InputNumber.vue';
-  import Combobox from '@/components/fields/combobox/Combobox.vue';
+  import Autocomplete from '@/components/fields/autocomplete/Autocomplete.vue';
   import TreeSelect from '@/components/fields/treeselect/TreeSelect.vue';
 
   const props = defineProps({
@@ -104,8 +104,8 @@
         return DatePicker;
       case 'number':
         return InputNumber;
-      case 'combobox':
-        return Combobox;
+      case 'autocomplete':
+        return Autocomplete;
       case 'treeselect':
         return TreeSelect;
       default:
@@ -168,7 +168,7 @@
       };
     }
 
-    if (props.type === 'combobox') {
+    if (props.type === 'autocomplete') {
       return {
         // label: props.label,
         placeholder: props.placeholder,

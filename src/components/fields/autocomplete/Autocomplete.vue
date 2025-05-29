@@ -1,6 +1,6 @@
 <template>
-  <div class="combobox">
-    <v-combobox
+  <div class="autocomplete">
+    <v-autocomplete
       variant="outlined"
       v-bind="inputProps"
       :model-value="modelValue"
@@ -89,5 +89,5 @@
 </script>
 
 <style lang="scss" scoped>
-  @import 'Combobox';
+  @import 'Autocomplete';
 </style>
