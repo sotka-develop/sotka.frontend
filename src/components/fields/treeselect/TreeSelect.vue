@@ -1,5 +1,5 @@
 <template>
-  <div class="treeselect">
+  <div class="treeselect" :class="classList">
     <Treeselect
       v-model="selected"
       :options="transformedOptions"
@@ -11,8 +11,20 @@
       value-consists-of="LEAF_PRIORITY"
       @input="handleInput"
     >
-      <template #no-results-options-tip="{ node, shouldShowCount, count, labelClassName, countClassName }">
+      <template #no-results-options-tip>
         <div class="treeselect__no-result">{{ noResultText }}</div>
+      </template>
+
+      <template #value-label="{ node }">
+        <div class="treeselect__item" :class="{ 'treeselect__item--first': node.id === firstSelectedId }">
+          <div class="treeselect__text">{{ node.label }}</div>
+
+          <button v-if="showCounter" type="button" class="treeselect__toggle" @click="toggleShowAll">{{ counterValue }}</button>
+
+          <button v-if="showAll && node.id === lastSelectedId" type="button" class="treeselect__toggle" @click="toggleShowAll">
+            {{ hideButtonText }}
+          </button>
+        </div>
       </template>
     </Treeselect>
   </div>
@@ -69,6 +81,43 @@
     if (props.onInput) {
       props.onInput(value);
     }
+  }
+
+  const classList = computed(() => {
+    return {
+      ['treeselect--multiple']: props.multiple,
+      ['treeselect--showall']: showAll.value,
+    };
+  });
+
+  const firstSelectedId = computed(() => {
+    if (!selected.value || !selected.value.length) return null;
+
+    return selected.value[0];
+  });
+
+  const lastSelectedId = computed(() => {
+    if (!selected.value || !selected.value.length) return null;
+
+    return selected.value[selected.value.length - 1];
+  });
+
+  const counterValue = computed(() => {
+    if (!selected.value || selected.value.length < 2) return null;
+
+    return `+${selected.value.length - 1}`;
+  });
+
+  const showCounter = computed(() => {
+    return !showAll.value && counterValue.value;
+  });
+
+  const hideButtonText = 'Свернуть';
+
+  const showAll = ref(false);
+
+  function toggleShowAll() {
+    showAll.value = !showAll.value;
   }
 
   watch(selected, (newValue) => {

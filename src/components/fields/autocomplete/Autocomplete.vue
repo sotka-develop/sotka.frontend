@@ -7,12 +7,32 @@
       :items="items"
       @update:modelValue="emitUpdate"
       @input="handleInput"
-    />
+    >
+      <template #selection="{ item, index, props }">
+        <!-- Всегда отображается первый выбранный элемент -->
+        <div v-if="index === 0" class="autocomplete__item text-body">{{ item.title }}</div>
+
+        <!-- Если выбрано больше одного элемента и showAll = false -->
+        <button v-else-if="index === 1 && !showAll" class="autocomplete__toggle text-body" @click="toggleShowAll">
+          {{ counterValue }}
+        </button>
+
+        <!-- Отображается все, если showAll = true и index > 0 -->
+        <div v-else-if="index > 0 && showAll" class="autocomplete__toggle text-body">
+          {{ item.title }}
+        </div>
+
+        <!-- Если showAll = true, то кнопка "Свернуть" -->
+        <button v-if="index === modelValue.length - 1 && showAll" class="autocomplete__toggle text-body" @click="toggleShowAll">
+          {{ hideButtonText }}
+        </button>
+      </template>
+    </v-autocomplete>
   </div>
 </template>
 
 <script setup>
-  import { computed } from 'vue';
+  import { computed, ref } from 'vue';
 
   const props = defineProps({
     label: {
@@ -86,6 +106,18 @@
     hideDetails: props.hideDetails,
     errorMessages: props.errorMessages,
   }));
+
+  const showAll = ref(false);
+
+  const counterValue = computed(() => {
+    return `+${(props?.modelValue?.length || 0) - 1}`;
+  });
+
+  const hideButtonText = 'Свернуть';
+
+  function toggleShowAll() {
+    showAll.value = !showAll.value;
+  }
 </script>
 
 <style lang="scss" scoped>

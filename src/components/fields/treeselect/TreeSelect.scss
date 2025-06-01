@@ -4,4 +4,27 @@
   &__no-result {
     padding: 0 12px;
   }
+
+  &:deep(.vue3-treeselect__multi-value-item-container) {
+    display: none;
+
+    &:has(.treeselect__item--first) {
+      display: block;
+    }
+  }
+
+  &--showall {
+    &:deep(.vue3-treeselect__multi-value-item-container) {
+      display: block;
+    }
+  }
+
+  &:deep(.vue3-treeselect__multi-value-item-container) {
+    transition: none;
+  }
+
+  &:deep(.vue3-treeselect__icon.vue3-treeselect__value-remove) {
+    display: none;
+    pointer-events: none;
+  }
 }
