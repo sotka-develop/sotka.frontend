@@ -1,0 +1,131 @@
+.v-field__input {
+  // letter-spacing: 0 !important;
+}
+
+.v-field.v-field--variant-outlined {
+  // &.v-field__outline {
+  //   opacity: 1;
+  // }
+
+  // &.v-field__outline__start {
+  //   display: none;
+  // }
+
+  // &.v-field__outline__end {
+  //   border: 1px solid $color-border-base-1-400;
+  //   border-radius: 8px;
+  //   opacity: 1;
+  // }
+
+  // &.v-field__input {
+  //   display: flex;
+  //   align-items: center;
+  //   flex-wrap: nowrap;
+  //   min-height: 40px;
+  //   padding: 0 12px;
+  //   gap: 8px 4px;
+  // }
+}
+
+.field {
+  .v-field.v-field--variant-outlined {
+    background-color: $color-bg-base-1-100;
+    border-radius: 8px;
+
+    @include defaultTransition(background-color);
+
+    &:hover {
+      background-color: $color-bg-base-1-300;
+    }
+
+    .v-field__outline {
+      opacity: 1;
+    }
+
+    .v-field__outline__start {
+      display: none;
+    }
+
+    .v-field__outline__end {
+      border: 1px solid $color-border-base-1-400;
+      border-radius: 8px;
+      opacity: 1;
+    }
+  }
+
+  .v-field__input {
+    letter-spacing: 0;
+    min-height: 40px;
+    padding: 8px 12px;
+
+    @include text-body;
+  }
+}
+
+.v-list {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.v-list .v-selection-control__input::before {
+  content: none;
+}
+
+.v-list .mdi-checkbox-marked::before {
+  color: $color-bg-accent-100;
+}
+
+.v-list .v-selection-control__input > .v-icon {
+  opacity: 1;
+  color: $color-bg-accent-100;
+}
+
+.v-overlay__content.v-autocomplete__content {
+  border-radius: 0 !important;
+  box-shadow: none;
+  overflow: visible !important;
+}
+
+.v-overlay__content .v-sheet {
+  margin-top: 4px;
+  border-radius: 8px !important;
+}
+
+.v-overlay__content .v-list {
+  margin-top: 4px;
+  border-radius: 8px !important;
+
+  .v-list-item {
+    @include defaultTransition(background-color);
+
+    &:hover {
+      background-color: $color-bg-base-1-400;
+    }
+
+    .v-list-item-title {
+      @include text-body;
+    }
+
+    .v-list-item__prepend {
+      margin-right: 8px;
+    }
+
+    .v-selection-control__wrapper {
+      width: 24px;
+      height: 24px;
+    }
+
+    &.v-list-item--active {
+      background-color: $color-bg-base-1-400;
+      opacity: 1;
+    }
+
+    .v-list-item__overlay {
+      display: none;
+    }
+  }
+}
+
+.v-list .v-ripple__container {
+  display: none;
+}

@@ -1,13 +1,70 @@
-.combobox {
+.autocomplete {
   $root: &;
 
   position: relative;
 
-  &:deep(.v-field__input) {
-    display: flex;
-    align-items: center;
-    min-height: 40px;
-    // height: 40px;
-    padding: 0 12px;
+  &--showall {
+    &:deep(.v-field__input) {
+      flex-wrap: wrap;
+      padding-bottom: 38px;
+    }
   }
+
+  &__item {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    background-color: $color-bg-base-1-400;
+    padding: 2px 8px;
+    border-radius: 8px;
+  }
+
+  &__toggle {
+    background-color: $color-bg-base-1-400;
+    padding: 2px 8px;
+    border-radius: 8px;
+    align-self: self-start;
+    margin-top: 8px;
+
+    @include defaultTransition(background-color);
+
+    @include hover {
+      background-color: $color-bg-base-1-500;
+    }
+
+    #{$root}--showall & {
+      position: absolute;
+      bottom: 8px;
+      left: 12px;
+    }
+  }
+
+  &:deep(.v-autocomplete__selection) {
+    max-width: 80%;
+    width: auto;
+    height: auto;
+  }
+
+  // &:deep(.v-field__input) {
+  //   display: flex;
+  //   align-items: center;
+  //   flex-wrap: nowrap;
+  //   min-height: 40px;
+  //   padding: 0 12px;
+  //   gap: 8px 4px;
+  // }
+
+  // &:deep(.v-field__outline) {
+  //   opacity: 1;
+  // }
+
+  // &:deep(.v-field__outline__start) {
+  //   display: none;
+  // }
+
+  // &:deep(.v-field__outline__end) {
+  //   border: 1px solid $color-border-base-1-400;
+  //   border-radius: 8px;
+  //   opacity: 1;
+  // }
 }

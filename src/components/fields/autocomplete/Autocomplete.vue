@@ -1,5 +1,5 @@
 <template>
-  <div class="autocomplete">
+  <div class="autocomplete" :class="classList">
     <v-autocomplete
       variant="outlined"
       v-bind="inputProps"
@@ -7,23 +7,26 @@
       :items="items"
       @update:modelValue="emitUpdate"
       @input="handleInput"
+      :menu-props="{ maxWidth: '400' }"
     >
-      <template #selection="{ item, index, props }">
+      <template #selection="{ item, index }">
         <!-- Всегда отображается первый выбранный элемент -->
         <div v-if="index === 0" class="autocomplete__item text-body">{{ item.title }}</div>
 
+        <!-- Отображается все, если showAll = true и index > 0 -->
+        <div v-else-if="index > 0 && showAll" class="autocomplete__item text-body">
+          {{ item.title }}
+        </div>
+      </template>
+
+      <template #append-inner>
         <!-- Если выбрано больше одного элемента и showAll = false -->
-        <button v-else-if="index === 1 && !showAll" class="autocomplete__toggle text-body" @click="toggleShowAll">
+        <button v-if="itemsCount > 1 && !showAll" class="autocomplete__toggle text-body" @click="toggleShowAll">
           {{ counterValue }}
         </button>
 
-        <!-- Отображается все, если showAll = true и index > 0 -->
-        <div v-else-if="index > 0 && showAll" class="autocomplete__toggle text-body">
-          {{ item.title }}
-        </div>
-
         <!-- Если showAll = true, то кнопка "Свернуть" -->
-        <button v-if="index === modelValue.length - 1 && showAll" class="autocomplete__toggle text-body" @click="toggleShowAll">
+        <button v-if="itemsCount > 1 && showAll" class="autocomplete__toggle text-body" @click="toggleShowAll">
           {{ hideButtonText }}
         </button>
       </template>
@@ -118,6 +121,18 @@
   function toggleShowAll() {
     showAll.value = !showAll.value;
   }
+
+  const classList = computed(() => {
+    return {
+      ['autocomplete--showall']: showAll.value,
+    };
+  });
+
+  const itemsCount = computed(() => {
+    if (!props.modelValue) return 0;
+
+    return props.modelValue.length;
+  });
 </script>
 
 <style lang="scss" scoped>

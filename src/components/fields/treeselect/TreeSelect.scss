@@ -5,6 +5,67 @@
     padding: 0 12px;
   }
 
+  &__label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    background-color: $color-bg-base-1-400;
+    color: $color-black;
+    padding: 2px 8px;
+    border-radius: 8px;
+    max-width: 55%;
+
+    #{$root}--showall & {
+      max-width: 100%;
+      white-space: normal;
+    }
+  }
+
+  &__toggle {
+    background-color: $color-bg-base-1-400;
+    color: $color-black;
+    padding: 2px 8px;
+    border-radius: 8px;
+  }
+
+  &__item {
+    &--first {
+      display: flex;
+      gap: 8px;
+    }
+
+    &--last {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+  }
+
+  &:deep(.vue3-treeselect__placeholder) {
+    @include text-body;
+  }
+
+  &:deep(.vue3-treeselect__option-arrow-container) {
+    .vue3-treeselect__option-arrow {
+      color: $color-black;
+      opacity: 0.6;
+
+      @include defaultTransition(opacity);
+    }
+
+    &:hover {
+      .vue3-treeselect__option-arrow {
+        opacity: 1;
+      }
+    }
+  }
+
   &:deep(.vue3-treeselect__multi-value-item-container) {
     display: none;
 
@@ -16,6 +77,8 @@
   &--showall {
     &:deep(.vue3-treeselect__multi-value-item-container) {
       display: block;
+
+      @include text-body;
     }
   }
 
@@ -26,5 +89,146 @@
   &:deep(.vue3-treeselect__icon.vue3-treeselect__value-remove) {
     display: none;
     pointer-events: none;
+  }
+
+  &:deep(.vue3-treeselect__control-arrow) {
+    color: $color-black;
+    opacity: 0.6;
+
+    @include defaultTransition(transform);
+  }
+
+  &:deep(.vue3-treeselect__control) {
+    height: 40px;
+    border-radius: 8px;
+    background-color: $color-bg-base-1-100;
+    border-radius: 8px;
+    border: 1px solid $color-border-base-1-400;
+    padding: 8px 12px;
+
+    @include defaultTransition(background-color);
+
+    &:hover {
+      background-color: $color-bg-base-1-300;
+      border-color: $color-border-base-1-400 !important;
+    }
+  }
+
+  &:deep(.vue3-treeselect__menu-container) {
+    margin-top: 4px;
+    border-radius: 8px;
+  }
+
+  &:deep(.vue3-treeselect__menu) {
+    border-radius: 8px;
+    background-color: $color-white;
+    box-shadow: 0px 4px 12px 0px rgba($color-black, 0.12);
+    border: 0;
+    padding: 0;
+  }
+
+  &:deep(.vue3-treeselect__option) {
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+    background-color: transparent;
+
+    @include defaultTransition(background-color);
+  }
+
+  &:deep(.vue3-treeselect__multi-value-item) {
+    background-color: transparent;
+    padding: 0;
+    border: 0;
+    color: $color-text-base-1-500;
+
+    @include text-body;
+  }
+
+  &:deep(.vue3-treeselect__multi-value-label) {
+    padding: 0;
+  }
+
+  &:deep(.vue3-treeselect__option--highlight) {
+    background-color: $color-bg-base-1-400;
+  }
+
+  &:deep(.vue3-treeselect__option) {
+    padding: 0 16px;
+  }
+
+  &:deep(.vue3-treeselect__indent-level-1 .vue3-treeselect__option) {
+    padding: 0 16px 0 32px;
+  }
+
+  &:deep(.vue3-treeselect__checkbox-container) {
+    min-width: 24px;
+    width: 24px;
+    height: 24px;
+  }
+
+  &:deep(.vue3-treeselect__checkbox) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    width: 16px;
+    height: 16px;
+    border: 2px solid $color-border-accent-2-100;
+
+    @include defaultTransition(background-color);
+  }
+
+  &:deep(.vue3-treeselect__checkbox.vue3-treeselect__checkbox--checked) {
+    background-color: $color-bg-accent-100;
+  }
+
+  &:deep(.vue3-treeselect__minus-mark) {
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    width: 100%;
+    height: 100%;
+
+    &:before {
+      display: block;
+      width: 10px;
+      height: 1px;
+      content: '';
+      background-color: $color-white;
+    }
+  }
+
+  &:deep(.vue3-treeselect__check-mark) {
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    width: 100%;
+    height: 100%;
+
+    &:before {
+      display: block;
+      width: 12px;
+      height: 12px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z' fill='%23fff' /%3E%3C/svg%3E");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      content: '';
+    }
+  }
+
+  &:deep(.vue3-treeselect__checkbox--indeterminate) {
+    background-color: $color-bg-accent-100;
+  }
+
+  &:deep(.vue3-treeselect__label) {
+    @include text-body;
   }
 }
