@@ -60,11 +60,25 @@
 
     @include text-body;
   }
+
+  .v-progress-linear__buffer {
+    background-color: $color-bg-accent-100;
+  }
+
+  .v-progress-linear__indeterminate {
+    background-color: $color-bg-accent-100;
+  }
 }
 
 .v-list {
   padding-top: 0 !important;
   padding-bottom: 0 !important;
+
+  .v-list-item-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
 }
 
 .v-list .v-selection-control__input::before {

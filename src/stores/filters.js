@@ -7,6 +7,11 @@ import { debounce } from 'lodash';
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
 export const useFiltersStore = defineStore('filters', () => {
+  const isLoading = ref(false);
+  const error = ref(null);
+  const permittedUsesPending = ref(false);
+  const permittedUseshideNoData = ref(true);
+
   // данные, получаемые через loadFilters
   const biddForms = ref([]);
   const categories = ref([]);
@@ -154,7 +159,7 @@ export const useFiltersStore = defineStore('filters', () => {
   const onSearchPermittedUses = debounce(async (event) => {
     const value = event?.target?.value || '';
 
-    const result = await searchPermittedUses(value, 50, 0);
+    const result = await searchPermittedUses(value, 1000, 0);
     usesData.value = result.value;
   }, 800);
 
@@ -261,12 +266,14 @@ export const useFiltersStore = defineStore('filters', () => {
     {
       label: 'ВРИ',
       hideDetails: true,
+      hideNoData: permittedUseshideNoData,
       model: useModel,
       type: 'autocomplete',
       items: usesData,
       placeholder: 'Выбрать значение',
       multiple: true,
       returnObject: false,
+      loading: permittedUsesPending,
       onInput: onSearchPermittedUses,
     },
     {
@@ -328,9 +335,6 @@ export const useFiltersStore = defineStore('filters', () => {
       placeholder: 'Например, 1111',
     },
   ];
-
-  const isLoading = ref(false);
-  const error = ref(null);
 
   // Получение фильтров
   async function loadFilters() {
@@ -437,6 +441,8 @@ export const useFiltersStore = defineStore('filters', () => {
       url.searchParams.append('limit', limit);
       url.searchParams.append('offset', offset);
 
+      permittedUsesPending.value = true;
+
       const res = await fetch(url.toString(), {
         headers: {
           'Content-Type': 'application/json',
@@ -456,8 +462,12 @@ export const useFiltersStore = defineStore('filters', () => {
         text: item.permitted_use,
         value: item.id,
       }));
+
+      permittedUseshideNoData.value = false;
     } catch (err) {
       console.error('Ошибка при поиске ВРИ:', err);
+    } finally {
+      permittedUsesPending.value = false;
     }
 
     return result;

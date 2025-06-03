@@ -37,6 +37,9 @@
     readonly: {
       type: Boolean,
     },
+    loading: {
+      type: Boolean,
+    },
     multiple: {
       type: Boolean,
       default: false,
@@ -54,6 +57,10 @@
       default: false,
     },
     returnObject: {
+      type: Boolean,
+      default: false,
+    },
+    hideNoData: {
       type: Boolean,
       default: false,
     },
@@ -122,6 +129,7 @@
       rules: props.rules,
       errorMessages: props.errorMessages,
       hideDetails: props.hideDetails,
+      loading: props.loading,
     };
 
     if (props.type === 'select') {
@@ -182,6 +190,8 @@
         itemValue: props.itemValue,
         hideDetails: props.hideDetails,
         onInput: props.onInput,
+        loading: props.loading,
+        hideNoData: props.hideNoData,
       };
     }
 

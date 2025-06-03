@@ -5,6 +5,9 @@
       v-bind="inputProps"
       :model-value="modelValue"
       :items="items"
+      :loading="loading"
+      no-data-text="Ничего не найдено"
+      :hide-no-data="hideNoData"
       @update:modelValue="emitUpdate"
       @input="handleInput"
       :menu-props="{ maxWidth: '400' }"
@@ -29,6 +32,18 @@
         <button v-if="itemsCount > 1 && showAll" class="autocomplete__toggle text-body" @click="toggleShowAll">
           {{ hideButtonText }}
         </button>
+      </template>
+
+      <template v-slot:item="{ item, props }">
+        <v-list-item v-bind="props" :title="item.name">
+          <v-list-item-title :title="item.title">
+            <div v-if="multiple" class="autocomplete__checkbox">
+              <div class="autocomplete__mark"></div>
+            </div>
+
+            {{ item.title }}
+          </v-list-item-title>
+        </v-list-item>
       </template>
     </v-autocomplete>
   </div>
@@ -55,6 +70,10 @@
       type: Boolean,
       default: false,
     },
+    loading: {
+      type: Boolean,
+      default: false,
+    },
     multiple: {
       type: Boolean,
       default: false,
@@ -69,6 +88,10 @@
     itemTitle: {
       type: String,
       default: 'text',
+    },
+    hideNoData: {
+      type: Boolean,
+      default: false,
     },
     itemValue: {
       type: String,
@@ -125,6 +148,7 @@
   const classList = computed(() => {
     return {
       ['autocomplete--showall']: showAll.value,
+      ['autocomplete--hide-no-data']: props.hideNoData,
     };
   });
 

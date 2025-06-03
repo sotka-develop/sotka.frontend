@@ -105,6 +105,7 @@
     border-radius: 8px;
     border: 1px solid $color-border-base-1-400;
     padding: 8px 12px;
+    box-shadow: none;
 
     @include defaultTransition(background-color);
 
@@ -230,5 +231,22 @@
 
   &:deep(.vue3-treeselect__label) {
     @include text-body;
+  }
+
+  &:deep(.vue3-treeselect__menu) {
+    width: 100%;
+  }
+
+  &:deep(.vue3-treeselect__tip) {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 0 16px;
+    height: 48px;
+  }
+
+  &:deep(.treeselect__no-result) {
+    padding: 0;
+    color: $color-black;
   }
 }

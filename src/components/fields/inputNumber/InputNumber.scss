@@ -1,24 +1,3 @@
 .input-number {
   $root: &;
-
-  // &:deep(.v-field__input) {
-  //   display: flex;
-  //   align-items: center;
-  //   min-height: 40px;
-  //   height: 40px;
-  //   padding: 0 12px;
-
-  //   @include text-body;
-  // }
-
-  // &:deep(.v-field) {
-  //   background-color: $color-bg-base-1-100;
-  //   border-radius: 8px;
-
-  //   @include defaultTransition(background-color);
-
-  //   &:hover {
-  //     background-color: $color-bg-base-1-300;
-  //   }
-  // }
 }
