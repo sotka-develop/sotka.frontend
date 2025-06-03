@@ -348,8 +348,6 @@
     const zoomIsEqual = Math.round(zoom.value) === Math.round(prevZoom.value);
     const centerIsEqual = center.value.every((v, i) => v === prevCenter.value[i]);
 
-    console.log(center.value);
-
     if (zoomIsEqual && centerIsEqual) return;
 
     prevCenter.value = center.value;
