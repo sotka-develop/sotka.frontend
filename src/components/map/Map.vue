@@ -346,7 +346,9 @@
 
     // если координаты и масштаб не изменились
     const zoomIsEqual = Math.round(zoom.value) === Math.round(prevZoom.value);
-    const centerIsEqual = center.value.every((v, i) => Math.round(v) === Math.round(prevCenter.value[i]));
+    const centerIsEqual = center.value.every((v, i) => v === prevCenter.value[i]);
+
+    console.log(center.value);
 
     if (zoomIsEqual && centerIsEqual) return;
 

@@ -69,16 +69,17 @@
     padding: 0;
     color: $color-black;
     margin-bottom: 8px;
-
-    .icon {
-      width: 24px;
-      height: 24px;
-    }
+    color: $color-bg-accent-100;
 
     @include defaultTransition(color);
 
     @include hover {
-      color: $color-bg-accent-100;
+      color: $color-bg-accent-300;
+    }
+
+    .icon {
+      width: 24px;
+      height: 24px;
     }
   }
 }
