@@ -71,4 +71,25 @@
   &__actions {
     margin-left: auto;
   }
+
+  &__toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: 0;
+    color: $color-black;
+    margin-left: auto;
+
+    @include media-breakpoint-up(lg) {
+      display: none;
+    }
+
+    .icon {
+      width: 24px;
+      height: 24px;
+    }
+  }
 }

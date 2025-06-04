@@ -19,6 +19,8 @@
     <Layers v-if="name === '24/layers'" />
     <Measuring v-if="name === '24/measuring'" />
     <MapPin v-if="name === '24/map-pin'" />
+    <Menu v-if="name === '24/menu'" />
+    <MenuClose v-if="name === '24/menu-close'" />
   </div>
 </template>
 
@@ -44,6 +46,8 @@
   import Measuring from '@/assets/icons/24/measuring.svg';
   import House from '@/assets/icons/24/house.svg';
   import MapPin from '@/assets/icons/24/map-pin.svg';
+  import Menu from '@/assets/icons/24/menu.svg';
+  import MenuClose from '@/assets/icons/24/menu-close.svg';
 
   defineProps({
     name: {
@@ -70,6 +74,8 @@
     Measuring,
     House,
     MapPin,
+    Menu,
+    MenuClose,
   });
 </script>
 

@@ -36,8 +36,15 @@
             <Button v-bind="buttonData" @click="logout" />
           </div>
         </div> -->
+
+        <button type="button" class="header__toggle" @click="toggleMenu">
+          <Icon v-if="isMenuOpen" name="24/menu-close" />
+          <Icon v-else name="24/menu" />
+        </button>
       </div>
     </div>
+
+    <Menu :items="navigationData" v-if="isMenuOpen" @close="isMenuOpen = false" />
   </header>
 </template>
 
@@ -47,6 +54,8 @@
   import { useRoute, useRouter } from 'vue-router';
   import Image from '@/components/image/Image.vue';
   import Button from '@/components/button/Button.vue';
+  import Menu from '@/components/menu/Menu.vue';
+  import Icon from '@/components/icon/Icon.vue';
 
   const logoData = {
     src: 'images/logo/logo.png',
@@ -65,19 +74,19 @@
     },
     {
       text: 'Вопросы',
-      href: '',
+      href: '/questions',
     },
     {
       text: 'Видео',
-      href: '',
+      href: '/video',
     },
     {
       text: 'Тарифы',
-      href: '',
+      href: '/tariffs',
     },
     {
       text: 'Контакты',
-      href: '',
+      href: '/contacts',
     },
   ];
 
@@ -86,6 +95,9 @@
     title: 'Войти',
     theme: 'secondary',
   };
+
+  const isMenuOpen = ref(false);
+  const toggleMenu = () => (isMenuOpen.value = !isMenuOpen.value);
 
   const headerRef = ref(null);
 
