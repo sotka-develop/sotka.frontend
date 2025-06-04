@@ -17,7 +17,6 @@ export const useFiltersStore = defineStore('filters', () => {
   const categories = ref([]);
   const etpCodes = ref([]);
   const rubrics = ref([]);
-  // const regions = ref([]);
   const regionsByDistricts = ref([]);
 
   // Составность
@@ -34,7 +33,6 @@ export const useFiltersStore = defineStore('filters', () => {
     biddFormsModel: [],
     categoriesModel: [],
     etpCodesModel: [],
-    // regionsModel: [],
     regionsByDistrictsModel: [],
     rubricsModel: [],
     compositionsModel: ['Кад. квартал', 'Кад. район', 'Кад. номер'],
@@ -58,7 +56,6 @@ export const useFiltersStore = defineStore('filters', () => {
   const biddFormsModel = ref([]);
   const categoriesModel = ref([]);
   const etpCodesModel = ref([]);
-  // const regionsModel = ref([]);
   const regionsByDistrictsModel = ref([]);
   const rubricsModel = ref([]);
   const compositionsModel = ref(['Кад. квартал', 'Кад. район', 'Кад. номер']);
@@ -83,7 +80,6 @@ export const useFiltersStore = defineStore('filters', () => {
     biddFormsModel,
     categoriesModel,
     etpCodesModel,
-    // regionsModel,
     regionsByDistrictsModel,
     rubricsModel,
     compositionsModel,
@@ -134,7 +130,6 @@ export const useFiltersStore = defineStore('filters', () => {
     biddFormsModel.value = defaultValues.biddFormsModel;
     categoriesModel.value = defaultValues.categoriesModel;
     etpCodesModel.value = defaultValues.etpCodesModel;
-    // regionsModel.value = defaultValues.regionsModel;
     regionsByDistrictsModel.value = defaultValues.regionsByDistrictsModel;
     rubricsModel.value = defaultValues.rubricsModel;
     compositionsModel.value = defaultValues.compositionsModel;
@@ -165,6 +160,16 @@ export const useFiltersStore = defineStore('filters', () => {
 
   const fieldsData = [
     {
+      label: 'Регион по округам',
+      hideDetails: true,
+      model: regionsByDistrictsModel,
+      type: 'treeselect',
+      items: regionsByDistricts,
+      clearable: false,
+      placeholder: 'Регион, область, город',
+      multiple: true,
+    },
+    {
       label: 'Дата подачи от',
       hideDetails: true,
       model: biddEndTimeFromModel,
@@ -194,25 +199,7 @@ export const useFiltersStore = defineStore('filters', () => {
       placeholder: 'Выбрать значение',
       multiple: true,
     },
-    // {
-    //   label: 'Регион',
-    //   hideDetails: true,
-    //   model: regionsModel,
-    //   type: 'autocomplete',
-    //   items: regions,
-    //   placeholder: 'Регион, область, город',
-    //   multiple: true,
-    // },
-    {
-      label: 'Регион по округам',
-      hideDetails: true,
-      model: regionsByDistrictsModel,
-      type: 'treeselect',
-      items: regionsByDistricts,
-      clearable: false,
-      placeholder: 'Регион, область, город',
-      multiple: true,
-    },
+
     {
       label: 'Код ЭТП',
       hideDetails: true,
@@ -387,12 +374,7 @@ export const useFiltersStore = defineStore('filters', () => {
           value: item.id,
         };
       });
-      // regions.value = (data?.payload?.regions || []).map((item) => {
-      //   return {
-      //     text: item.region,
-      //     value: item.id,
-      //   };
-      // });
+
       regionsByDistricts.value = Object.values(
         (data?.payload?.regions || []).reduce((acc, { id, region, federal_district_id, federal_district }) => {
           const districtId = federal_district_id;
@@ -414,8 +396,6 @@ export const useFiltersStore = defineStore('filters', () => {
           return acc;
         }, {})
       );
-
-      // console.log(regionsByDistricts.value);
     } catch (err) {
       console.error('Ошибка при загрузке фильтров:', err);
       error.value = err.message;
@@ -484,7 +464,6 @@ export const useFiltersStore = defineStore('filters', () => {
       bidd_end_time_from: formatDate(biddEndTimeFromModel.value),
       bidd_end_time_to: formatDate(biddEndTimeToModel.value),
       bidd_form_ids: biddFormsModel.value || [],
-      // region_ids: regionsModel.value || [],
       region_ids: regionsByDistrictsModel.value || [],
       etp_codes_ids: etpCodesModel.value || [],
       cadaster_number: cadasterNumberModel.value?.toString() || null,
