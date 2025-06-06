@@ -10,6 +10,10 @@
     text-overflow: ellipsis;
   }
 
+  &__counter {
+    color: $color-black;
+  }
+
   &__text {
     white-space: nowrap;
     overflow: hidden;

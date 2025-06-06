@@ -31,11 +31,11 @@
           </ul>
         </nav>
 
-        <!-- <div class="header__actions">
+        <div class="header__actions">
           <div class="header__action">
             <Button v-bind="buttonData" @click="logout" />
           </div>
-        </div> -->
+        </div>
 
         <button type="button" class="header__toggle" @click="toggleMenu">
           <Icon v-if="isMenuOpen" name="24/menu-close" />
@@ -91,8 +91,8 @@
   ];
 
   const buttonData = {
-    text: 'Войти',
-    title: 'Войти',
+    text: 'Выйти',
+    title: 'Выйти',
     theme: 'secondary',
   };
 

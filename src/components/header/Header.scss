@@ -70,6 +70,10 @@
 
   &__actions {
     margin-left: auto;
+
+    @include media-breakpoint-down(md) {
+      display: none;
+    }
   }
 
   &__toggle {

@@ -17,6 +17,12 @@
       </template>
 
       <template #value-label="{ node }">
+        <div v-if="selectedCount" class="treeselect__item" :class="{ 'treeselect__item--first': node.id === firstSelectedId }">
+          <span class="treeselect__counter">{{ selectedCount }}</span>
+        </div>
+      </template>
+
+      <!-- <template #value-label="{ node }">
         <div
           class="treeselect__item"
           :class="{ 'treeselect__item--first': node.id === firstSelectedId, 'treeselect__item--last': node.id === lastSelectedId }"
@@ -29,7 +35,7 @@
             {{ hideButtonText }}
           </button>
         </div>
-      </template>
+      </template> -->
 
       <template #option-label="{ node, shouldShowCount, count, labelClassName, countClassName }">
         <label :class="labelClassName">
@@ -119,6 +125,12 @@
     if (!selected.value || selected.value.length < 2) return null;
 
     return `+${selected.value.length - 1}`;
+  });
+
+  const selectedCount = computed(() => {
+    if (!selected.value || selected.value.length === 0) return 0;
+
+    return `Выбрано (${selected.value.length})`;
   });
 
   const showCounter = computed(() => {

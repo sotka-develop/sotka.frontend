@@ -20,6 +20,12 @@
             </RouterLink>
           </li>
         </ul>
+
+        <div class="menu__actions">
+          <div class="menu__action">
+            <Button v-bind="buttonData" @click="logout" />
+          </div>
+        </div>
       </div>
     </div>
   </teleport>
@@ -27,10 +33,22 @@
 
 <script setup>
   import { onBeforeUnmount, onMounted } from 'vue';
-  import { useRoute } from 'vue-router';
+  import { useAuthStore } from '@/stores/auth';
+  import { useRoute, useRouter } from 'vue-router';
   import { disableScroll, enableScroll } from '@/composables/useScrollLock';
 
+  import Button from '@/components/button/Button.vue';
+
   const route = useRoute();
+  const router = useRouter();
+
+  const authStore = useAuthStore();
+
+  const buttonData = {
+    text: 'Выйти',
+    title: 'Выйти',
+    theme: 'secondary',
+  };
 
   const props = defineProps({
     items: {
@@ -47,6 +65,17 @@
     if (window.innerWidth >= 1024) {
       enableScroll();
       close();
+    }
+  }
+
+  async function logout() {
+    try {
+      await authStore.logout();
+
+      const redirect = route.query.redirect || '/login';
+      router.replace(redirect);
+    } catch (error) {
+      console.warn(error);
     }
   }
 

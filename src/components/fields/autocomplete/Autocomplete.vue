@@ -14,26 +14,30 @@
       :menu-props="{ maxWidth: '400' }"
     >
       <template #selection="{ item, index }">
-        <!-- Всегда отображается первый выбранный элемент -->
-        <div v-if="index === 0" class="autocomplete__item text-body">{{ item.title }}</div>
+        <div v-if="selectedCount && index === 0">{{ selectedCount }}</div>
+      </template>
 
-        <!-- Отображается все, если showAll = true и index > 0 -->
-        <div v-else-if="index > 0 && showAll" class="autocomplete__item text-body">
+      <!-- <template #selection="{ item, index }"> -->
+      <!-- Всегда отображается первый выбранный элемент -->
+      <!-- <div v-if="index === 0" class="autocomplete__item text-body">{{ item.title }}</div> -->
+
+      <!-- Отображается все, если showAll = true и index > 0 -->
+      <!-- <div v-else-if="index > 0 && showAll" class="autocomplete__item text-body">
           {{ item.title }}
-        </div>
-      </template>
+        </div> -->
+      <!-- </template> -->
 
-      <template #append-inner>
-        <!-- Если выбрано больше одного элемента и showAll = false -->
-        <button v-if="itemsCount > 1 && !showAll" class="autocomplete__toggle text-body" @click="toggleShowAll">
+      <!-- <template #append-inner> -->
+      <!-- Если выбрано больше одного элемента и showAll = false -->
+      <!-- <button v-if="itemsCount > 1 && !showAll" class="autocomplete__toggle text-body" @click="toggleShowAll">
           {{ counterValue }}
-        </button>
+        </button> -->
 
-        <!-- Если showAll = true, то кнопка "Свернуть" -->
-        <button v-if="itemsCount > 1 && showAll" class="autocomplete__toggle text-body" @click="toggleShowAll">
+      <!-- Если showAll = true, то кнопка "Свернуть" -->
+      <!-- <button v-if="itemsCount > 1 && showAll" class="autocomplete__toggle text-body" @click="toggleShowAll">
           {{ hideButtonText }}
-        </button>
-      </template>
+        </button> -->
+      <!-- </template> -->
 
       <template v-slot:item="{ item, props }">
         <v-list-item v-bind="props" :title="item.name">
@@ -141,6 +145,12 @@
 
   const counterValue = computed(() => {
     return `+${(props?.modelValue?.length || 0) - 1}`;
+  });
+
+  const selectedCount = computed(() => {
+    if (!props?.modelValue?.length) return null;
+
+    return `Выбрано (${props?.modelValue?.length})`;
   });
 
   const hideButtonText = 'Свернуть';
