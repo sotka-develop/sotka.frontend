@@ -5,6 +5,7 @@
       v-bind="inputProps"
       :model-value="modelValue"
       :precision="precision"
+      :disabled="disabled"
       @update:modelValue="emitUpdate"
     />
   </div>
@@ -16,6 +17,9 @@
   const props = defineProps({
     label: {
       type: String,
+    },
+    disabled: {
+      type: Boolean,
     },
     placeholder: {
       type: String,

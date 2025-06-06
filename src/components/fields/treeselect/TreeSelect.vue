@@ -7,6 +7,7 @@
       :clearable="clearable"
       :placeholder="placeholder"
       :searchable="true"
+      :disabled="disabled"
       :noResultsText="noResultText"
       value-consists-of="LEAF_PRIORITY"
       @input="handleInput"
@@ -45,6 +46,9 @@
 
   const props = defineProps({
     placeholder: String,
+    disabled: {
+      type: Boolean,
+    },
     modelValue: {
       type: [Array],
       default: [],

@@ -428,6 +428,8 @@
   onMounted(async () => {
     filtersData.value = filtersStore.getFormattedFilters();
 
+    // получение данных по доступным фильтрам
+    await filtersStore.baseFilters();
     // получаем данные фильтров
     await filtersStore.loadFilters();
 

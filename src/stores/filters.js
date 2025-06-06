@@ -369,7 +369,6 @@ export const useFiltersStore = defineStore('filters', () => {
   watch(
     models,
     () => {
-      // console.log(models);
       isDirty.value = models.some((model, index) => {
         const key = Object.keys(defaultValues)[index];
 
@@ -499,8 +498,9 @@ export const useFiltersStore = defineStore('filters', () => {
     usesNspdData.value = result.value;
   }, 800);
 
-  const fieldsData = [
+  const fieldsData = ref([
     {
+      name: 'region_ids',
       label: 'Регион',
       hideDetails: true,
       model: regionsByDistrictsModel,
@@ -511,6 +511,7 @@ export const useFiltersStore = defineStore('filters', () => {
       multiple: true,
     },
     {
+      name: 'bidd_start_time_from',
       label: 'Начало пдч.заяв. от',
       hideDetails: true,
       model: biddStartTimeFromModel,
@@ -518,6 +519,7 @@ export const useFiltersStore = defineStore('filters', () => {
       placeholder: '--.--.--',
     },
     {
+      name: 'bidd_start_time_to',
       label: 'Начало пдч.заяв. до',
       hideDetails: true,
       model: biddStartTimeToModel,
@@ -525,6 +527,7 @@ export const useFiltersStore = defineStore('filters', () => {
       placeholder: '--.--.--',
     },
     {
+      name: 'bidd_type_ids',
       label: 'Вид торгов',
       hideDetails: true,
       model: biddTypesModel,
@@ -534,6 +537,7 @@ export const useFiltersStore = defineStore('filters', () => {
       multiple: true,
     },
     {
+      name: 'transaction_types',
       label: 'Вид сделки',
       hideDetails: true,
       model: transactionTypesModel,
@@ -543,6 +547,7 @@ export const useFiltersStore = defineStore('filters', () => {
       multiple: true,
     },
     {
+      name: 'bidd_end_time_from',
       label: 'Окнч.пдч.заяв. от',
       hideDetails: true,
       model: biddEndTimeFromModel,
@@ -550,6 +555,7 @@ export const useFiltersStore = defineStore('filters', () => {
       placeholder: '--.--.--',
     },
     {
+      name: 'bidd_end_time_to',
       label: 'Окнч.пдч.заяв. до',
       hideDetails: true,
       model: biddEndTimeToModel,
@@ -557,6 +563,7 @@ export const useFiltersStore = defineStore('filters', () => {
       placeholder: '--.--.--',
     },
     {
+      name: 'bidd_form_ids',
       label: 'Форма проведения',
       hideDetails: true,
       model: biddFormsModel,
@@ -566,6 +573,7 @@ export const useFiltersStore = defineStore('filters', () => {
       multiple: true,
     },
     {
+      name: 'etp_codes_ids',
       label: 'ЭТП',
       hideDetails: true,
       model: etpCodesModel,
@@ -575,6 +583,7 @@ export const useFiltersStore = defineStore('filters', () => {
       multiple: true,
     },
     {
+      name: 'lot',
       label: 'Извещение, лот',
       hideDetails: true,
       model: lotModel,
@@ -582,6 +591,7 @@ export const useFiltersStore = defineStore('filters', () => {
       placeholder: 'Например, 1111',
     },
     {
+      name: 'cadaster_number',
       label: 'Кадастровый номер',
       hideDetails: true,
       model: cadasterNumberModel,
@@ -589,6 +599,7 @@ export const useFiltersStore = defineStore('filters', () => {
       placeholder: 'Например, 1111',
     },
     {
+      name: 'tg_to_kn_area_ratio',
       label: 'Сравн. S (TG и КН)',
       hideDetails: true,
       model: tgToKnModel,
@@ -598,6 +609,7 @@ export const useFiltersStore = defineStore('filters', () => {
       multiple: true,
     },
     {
+      name: 'compositions',
       label: 'Составность',
       hideDetails: true,
       model: compositionsModel,
@@ -607,7 +619,8 @@ export const useFiltersStore = defineStore('filters', () => {
       multiple: true,
     },
     {
-      label: '% нач.ц/кад.стоим. от',
+      name: 'price_min_cadastral_cost_ratio_percent_from',
+      label: '% НЦ /КС (более)',
       hideDetails: true,
       model: priceRatioFromModel,
       type: 'number',
@@ -615,7 +628,8 @@ export const useFiltersStore = defineStore('filters', () => {
       precision: 0,
     },
     {
-      label: '% нач.ц/кад.стоим. от',
+      name: 'price_min_cadastral_cost_ratio_percent_to',
+      label: '% НЦ /КС (менее)',
       hideDetails: true,
       model: priceRatioToModel,
       type: 'number',
@@ -623,6 +637,23 @@ export const useFiltersStore = defineStore('filters', () => {
       precision: 0,
     },
     {
+      name: 'price_min_from',
+      label: 'Нач. цена, р (более)',
+      hideDetails: true,
+      model: priceMinFromModel,
+      type: 'number',
+      placeholder: 'Например, 1111',
+    },
+    {
+      name: 'price_min_to',
+      label: 'Нач. цена, р (менее)',
+      hideDetails: true,
+      model: priceMinToModel,
+      type: 'number',
+      placeholder: 'Например, 1111',
+    },
+    {
+      name: 'cadastral_cost_from',
       label: 'К. стоим-ть (более)',
       hideDetails: true,
       model: cadastralCostFromModel,
@@ -630,6 +661,7 @@ export const useFiltersStore = defineStore('filters', () => {
       placeholder: 'Например, 1111',
     },
     {
+      name: 'cadastral_cost_to',
       label: 'К. стоим-ть (менее)',
       hideDetails: true,
       model: cadastralCostToModel,
@@ -637,6 +669,7 @@ export const useFiltersStore = defineStore('filters', () => {
       placeholder: 'Например, 1111',
     },
     {
+      name: 'deposit_from',
       label: 'Задаток, р (более)',
       hideDetails: true,
       model: depositFromModel,
@@ -644,6 +677,7 @@ export const useFiltersStore = defineStore('filters', () => {
       placeholder: 'Например, 1111',
     },
     {
+      name: 'deposit_to',
       label: 'Задаток, р (менее)',
       hideDetails: true,
       model: depositToModel,
@@ -651,6 +685,7 @@ export const useFiltersStore = defineStore('filters', () => {
       placeholder: 'Например, 1111',
     },
     {
+      name: 'deposit_percent_from',
       label: 'Задаток, % (более)',
       hideDetails: true,
       model: depositPercentFromModel,
@@ -659,6 +694,7 @@ export const useFiltersStore = defineStore('filters', () => {
       precision: 0,
     },
     {
+      name: 'deposit_percent_to',
       label: 'Задаток, % (менее)',
       hideDetails: true,
       model: depositPercentToModel,
@@ -667,6 +703,7 @@ export const useFiltersStore = defineStore('filters', () => {
       precision: 0,
     },
     {
+      name: 'categories_ids',
       label: 'Категория',
       hideDetails: true,
       model: categoriesModel,
@@ -676,6 +713,7 @@ export const useFiltersStore = defineStore('filters', () => {
       multiple: true,
     },
     {
+      name: 'area_from',
       label: 'Площадь от',
       hideDetails: true,
       model: areaFromModel,
@@ -683,6 +721,7 @@ export const useFiltersStore = defineStore('filters', () => {
       placeholder: 'Например, 1111',
     },
     {
+      name: 'area_to',
       label: 'Площадь до',
       hideDetails: true,
       model: areaToModel,
@@ -690,6 +729,7 @@ export const useFiltersStore = defineStore('filters', () => {
       placeholder: 'Например, 1111',
     },
     {
+      name: 'permitted_uses_id',
       label: 'ВРИ',
       hideDetails: true,
       hideNoData: permittedUseshideNoData,
@@ -703,6 +743,7 @@ export const useFiltersStore = defineStore('filters', () => {
       onInput: onSearchPermittedUses,
     },
     {
+      name: 'rubrics_ids',
       label: 'Рубрика',
       hideDetails: true,
       model: rubricsModel,
@@ -712,6 +753,7 @@ export const useFiltersStore = defineStore('filters', () => {
       multiple: true,
     },
     {
+      name: 'categories_nspd_ids',
       label: 'Категория [КН]',
       hideDetails: true,
       model: categoriesNspdModel,
@@ -721,6 +763,7 @@ export const useFiltersStore = defineStore('filters', () => {
       multiple: true,
     },
     {
+      name: 'area_from_nspd_from',
       label: 'Площадь от [КН]',
       hideDetails: true,
       model: areaFromNspdModel,
@@ -728,6 +771,7 @@ export const useFiltersStore = defineStore('filters', () => {
       placeholder: 'Например, 1111',
     },
     {
+      name: 'area_from_nspd_to',
       label: 'Площадь до [КН]',
       hideDetails: true,
       model: areaToNspdModel,
@@ -735,6 +779,7 @@ export const useFiltersStore = defineStore('filters', () => {
       placeholder: 'Например, 1111',
     },
     {
+      name: 'permitted_uses_nspd_id',
       label: 'ВРИ [КН]',
       hideDetails: true,
       hideNoData: permittedUseshideNoData,
@@ -748,6 +793,7 @@ export const useFiltersStore = defineStore('filters', () => {
       onInput: onSearchPermittedUsesNspd,
     },
     {
+      name: 'rubric_nspd_ids',
       label: 'Рубрика [КН]',
       hideDetails: true,
       model: rubricsNspdModel,
@@ -756,7 +802,7 @@ export const useFiltersStore = defineStore('filters', () => {
       placeholder: 'Выбрать значение',
       multiple: true,
     },
-  ];
+  ]);
 
   // Получение фильтров
   async function loadFilters() {
@@ -843,6 +889,53 @@ export const useFiltersStore = defineStore('filters', () => {
       error.value = err.message;
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  async function baseFilters() {
+    const auth = useAuthStore();
+
+    if (!auth.token) {
+      error.value = 'Отсутствует токен авторизации.';
+      console.warn(error.value);
+
+      return;
+    }
+
+    error.value = null;
+
+    try {
+      const res = await fetch(`${baseUrl}/client/filters/base_filters`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `${auth.token}`,
+        },
+      });
+
+      if (!res.ok) {
+        throw new Error(`Ошибка загрузки данныех по доступным фильтрам: ${res.status} ${res.statusText}`);
+      }
+
+      const data = await res.json();
+
+      const fields = data?.payload || [];
+      // console.log(fields);
+
+      fields.forEach((item) => {
+        const name = item.name;
+        const isAvailable = item.is_available;
+
+        if (name && !isAvailable) {
+          const field = fieldsData.value.find((item) => item.name === name);
+
+          if (field) {
+            field.disabled = true;
+          }
+        }
+      });
+    } catch (err) {
+      console.error('Ошибка при загрузке фильтров:', err);
+      error.value = err.message;
     }
   }
 
@@ -972,7 +1065,7 @@ export const useFiltersStore = defineStore('filters', () => {
       deposit_percent_from: depositPercentFromModel.value || null,
 
       // 23) Задаток, % (менее)
-      deposit_percent_to: depositPercentFromModel.value || null,
+      deposit_percent_to: depositPercentToModel.value || null,
 
       // 24) Категория
       categories_ids: categoriesModel.value || [],
@@ -993,21 +1086,22 @@ export const useFiltersStore = defineStore('filters', () => {
       categories_nspd_ids: categoriesNspdModel.value || [],
 
       // 30) Площадь, м2 (более) НСПД
-      area_from_nspd: areaFromNspdModel.value || null,
+      area_from_nspd_from: areaFromNspdModel.value || null,
 
       // 31) Площадь, м2 (менее) НСПД
-      area_from_nspd: areaFromNspdModel.value || null,
+      area_from_nspd_to: areaToNspdModel.value || null,
 
       // 32) ВРИ НСПД
       permitted_uses_nspd_id: useNspdModel.value || [],
 
       // 33) Рубрика НСПД
-      rubrics_ids: rubricsNspdModel.value || [],
+      rubric_nspd_ids: rubricsNspdModel.value || [],
     };
   }
 
   return {
     loadFilters,
+    baseFilters,
     searchPermittedUses,
     fieldsData,
     getFormattedFilters,

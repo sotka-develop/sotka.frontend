@@ -11,6 +11,7 @@
       :item-title="itemTitle"
       :item-value="itemValue"
       :rules="rules"
+      :disabled="disabled"
       :hide-details="hideDetails"
       :return-object="returnObject"
       :error-messages="errorMessages"
@@ -23,6 +24,9 @@
   const props = defineProps({
     label: {
       type: String,
+    },
+    disabled: {
+      type: Boolean,
     },
     placeholder: {
       type: String,

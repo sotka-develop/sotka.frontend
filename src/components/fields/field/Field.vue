@@ -40,6 +40,9 @@
     loading: {
       type: Boolean,
     },
+    disabled: {
+      type: Boolean,
+    },
     multiple: {
       type: Boolean,
       default: false,
@@ -130,6 +133,7 @@
       errorMessages: props.errorMessages,
       hideDetails: props.hideDetails,
       loading: props.loading,
+      disabled: props.disabled,
     };
 
     if (props.type === 'select') {
@@ -155,6 +159,7 @@
         max: props.max,
         textFieldProps: props.textFieldProps,
         hideDetails: props.hideDetails,
+        disabled: props.disabled,
       };
     }
 
@@ -173,6 +178,7 @@
         textFieldProps: props.textFieldProps,
         hideDetails: props.hideDetails,
         precision: props.precision,
+        disabled: props.disabled,
       };
     }
 
@@ -192,6 +198,7 @@
         onInput: props.onInput,
         loading: props.loading,
         hideNoData: props.hideNoData,
+        disabled: props.disabled,
       };
     }
 
@@ -210,6 +217,7 @@
         hideDetails: props.hideDetails,
         onInput: props.onInput,
         clearable: props.clearable,
+        disabled: props.disabled,
       };
     }
 

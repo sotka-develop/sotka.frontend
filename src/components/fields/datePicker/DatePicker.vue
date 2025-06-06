@@ -4,6 +4,7 @@
       variant="outlined"
       prepend-icon=""
       append-inner-icon="mdi-calendar"
+      :disabled="disabled"
       v-bind="inputProps"
       :model-value="modelValue"
       @update:modelValue="emitUpdate"
@@ -31,6 +32,9 @@
     rules: {
       type: Array,
       default: () => [],
+    },
+    disabled: {
+      type: Boolean,
     },
     errorMessages: {
       type: Array,

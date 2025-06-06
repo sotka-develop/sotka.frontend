@@ -6,6 +6,7 @@
       :model-value="modelValue"
       :items="items"
       :loading="loading"
+      :disabled="disabled"
       no-data-text="Ничего не найдено"
       :hide-no-data="hideNoData"
       @update:modelValue="emitUpdate"
@@ -55,6 +56,9 @@
   const props = defineProps({
     label: {
       type: String,
+    },
+    disabled: {
+      type: Boolean,
     },
     placeholder: {
       type: String,

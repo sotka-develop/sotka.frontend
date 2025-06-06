@@ -8,6 +8,7 @@
       :model-value="modelValue"
       :readonly="readonly"
       :rules="rules"
+      :disabled="disabled"
       :hide-details="hideDetails"
       :error-messages="errorMessages"
       @update:modelValue="emitUpdate"
@@ -19,6 +20,9 @@
   const props = defineProps({
     label: {
       type: String,
+    },
+    disabled: {
+      type: Boolean,
     },
     placeholder: {
       type: String,
