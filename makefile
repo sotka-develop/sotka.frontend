@@ -11,7 +11,7 @@ build:
 	npm run build
 
 run_via_pm2:
-	pm2 serve dist 80 --name "frontend"
+	pm2 serve dist 3333 --name "frontend"
 
 upgrade_and_run_dev: upgrade install_deps run_dev
 
