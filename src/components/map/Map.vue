@@ -1,7 +1,7 @@
 <template>
   <div class="map" :class="classList" ref="mapRef">
     <div class="map__top">
-      <div class="map__message text-small" :class="{ 'is-active': showMessage }">{{ preventMessage }}</div>
+      <!-- <div class="map__message text-small" :class="{ 'is-active': showMessage }">{{ preventMessage }}</div> -->
       <div class="map__actions">
         <div v-for="(action, idx) in actions" :key="action.name" class="map__action">
           <button class="map__action-button" @click="action.handler" :data-map-action-button="action.name">
@@ -184,7 +184,7 @@
   const centerDefault = [101, 62];
   const prevCenter = ref([101, 62]);
   const isDirty = ref(false);
-  const enabledBehaviors = ref(['drag']);
+  const enabledBehaviors = ref(['drag', 'scrollZoom']);
 
   const actions = [
     // { icon: '24/measuring', name: 'measuring', handler: () => {} },
@@ -304,14 +304,14 @@
     };
   });
 
-  const showMessage = ref(false);
-  const preventMessage = computed(() => {
-    if (isTouchDevice()) {
-      return 'Нажмите на карту два раза, чтобы взаимодействовать с картой';
-    }
+  // const showMessage = ref(false);
+  // const preventMessage = computed(() => {
+  //   if (isTouchDevice()) {
+  //     return 'Нажмите на карту два раза, чтобы взаимодействовать с картой';
+  //   }
 
-    return 'Зажмите Ctrl, чтобы изменить масштаб';
-  });
+  //   return 'Зажмите Ctrl, чтобы изменить масштаб';
+  // });
 
   const syncText = 'Обновить таблицу';
 
@@ -407,21 +407,21 @@
     }
   );
 
-  watch([() => ctrlPressed.value, () => fullscreen.value], ([isCtrl, isFs]) => {
-    if (isFs) {
-      showMessage.value = false;
-      enabledBehaviors.value = ['scrollZoom', 'drag'];
+  // watch([() => ctrlPressed.value, () => fullscreen.value], ([isCtrl, isFs]) => {
+  //   if (isFs) {
+  //     showMessage.value = false;
+  //     enabledBehaviors.value = ['scrollZoom', 'drag'];
 
-      return;
-    }
+  //     return;
+  //   }
 
-    if (isCtrl) {
-      showMessage.value = false;
-      enabledBehaviors.value = ['scrollZoom', 'drag'];
-    } else {
-      enabledBehaviors.value = ['drag'];
-    }
-  });
+  //   if (isCtrl) {
+  //     showMessage.value = false;
+  //     enabledBehaviors.value = ['scrollZoom', 'drag'];
+  //   } else {
+  //     enabledBehaviors.value = ['drag'];
+  //   }
+  // });
 
   const handleClickOutside = (e) => {
     const isLayersButton = e.target.hasAttribute('data-map-action-button') && e.target.getAttribute('data-map-action-button') === 'layers';
@@ -434,31 +434,27 @@
   };
 
   onMounted(() => {
-    mapRef.value.addEventListener('wheel', (e) => {
-      showMessage.value = true;
-
-      if (ctrlPressed.value) {
-        showMessage.value = false;
-        e.preventDefault();
-      }
-    });
-
-    mapRef.value.addEventListener('touchstart', (e) => {
-      // ?
-    });
-
-    mapRef.value.addEventListener('touchend', (e) => {
-      showMessage.value = false;
-    });
-    mapRef.value.addEventListener('mouseleave', (e) => {
-      showMessage.value = false;
-    });
-
-    document.addEventListener('click', handleClickOutside);
+    // mapRef.value.addEventListener('wheel', (e) => {
+    //   showMessage.value = true;
+    //   if (ctrlPressed.value) {
+    //     showMessage.value = false;
+    //     e.preventDefault();
+    //   }
+    // });
+    // mapRef.value.addEventListener('touchstart', (e) => {
+    //   // ?
+    // });
+    // mapRef.value.addEventListener('touchend', (e) => {
+    //   showMessage.value = false;
+    // });
+    // mapRef.value.addEventListener('mouseleave', (e) => {
+    //   showMessage.value = false;
+    // });
+    // document.addEventListener('click', handleClickOutside);
   });
 
   onUnmounted(() => {
-    document.removeEventListener('click', handleClickOutside);
+    // document.removeEventListener('click', handleClickOutside);
   });
 </script>
 

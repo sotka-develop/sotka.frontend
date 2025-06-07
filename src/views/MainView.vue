@@ -193,8 +193,8 @@
       const filtersModel = filtersData.value;
 
       const pagination = {
-        page: 1,
-        page_size: data?.data?.points_count || 10,
+        page: 2,
+        page_size: 10,
       };
 
       if (sortKey.value && sortOrder.value) {
