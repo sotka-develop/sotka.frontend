@@ -193,7 +193,7 @@
       const filtersModel = filtersData.value;
 
       const pagination = {
-        page: 2,
+        page: 1,
         page_size: 10,
       };
 

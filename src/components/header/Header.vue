@@ -23,6 +23,11 @@
                 {{ item.text }}
               </span>
 
+              <!-- external  -->
+              <a v-else-if="item.external" :href="item.href" class="header__link text-lead" target="_blank">
+                {{ item.text }}
+              </a>
+
               <!-- обычная ссылка -->
               <RouterLink v-else :to="item.href" class="header__link text-lead">
                 {{ item.text }}
@@ -74,19 +79,23 @@
     },
     {
       text: 'Вопросы',
-      href: '/questions',
+      href: 'https://s0tka.ru/question',
+      external: true,
     },
     {
       text: 'Видео',
-      href: '/video',
+      href: 'https://s0tka.ru/video',
+      external: true,
     },
     {
       text: 'Тарифы',
-      href: '/tariffs',
+      href: 'https://s0tka.ru/price',
+      external: true,
     },
     {
       text: 'Контакты',
-      href: '/contacts',
+      href: 'https://s0tka.ru/#contact',
+      external: true,
     },
   ];
 

@@ -14,6 +14,11 @@
               {{ item.text }}
             </span>
 
+            <!-- external  -->
+            <a v-else-if="item.external" :href="item.href" class="menu__link h5" target="_blank">
+              {{ item.text }}
+            </a>
+
             <!-- обычная ссылка -->
             <RouterLink v-else :to="item.href" class="menu__link h5">
               {{ item.text }}
