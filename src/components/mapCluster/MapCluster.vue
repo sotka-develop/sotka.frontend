@@ -5,7 +5,7 @@
         <h5 class="map-cluster__title">{{ title }}</h5>
 
         <div class="map-cluster__items">
-          <div v-for="(item, idx) in paginatedItems" :key="idx" class="map-cluster__item">
+          <div v-for="(item, idx) in items" :key="idx" class="map-cluster__item">
             <button type="button" class="map-cluster__button" @click="showPointData(item)">
               <div class="map-cluster__icon">
                 <Icon name="24/house" />
@@ -52,32 +52,28 @@
     },
   });
 
-  const items = computed(() => {
-    return props?.data?.items || [];
+  const emit = defineEmits(['centering', 'changePage']);
+
+  const items = computed(() => props.data.items || []);
+  const totalItems = computed(() => props.data.total || 0);
+  const perPage = computed(() => props.data.pagination?.page_size || 10);
+  const currentPage = ref(props.data.pagination?.page || 1);
+
+  watch(
+    () => props.data.pagination?.page,
+    (newPage) => {
+      currentPage.value = newPage;
+    }
+  );
+
+  watch(currentPage, (newPage) => {
+    if (newPage !== props.data.pagination?.page) {
+      emit('changePage', newPage);
+    }
   });
 
-  // сколько элементов на странице
-  const perPage = 10;
-
-  // текущая страница
-  const currentPage = ref(1);
-
-  // число страниц
-  const pageCount = computed(() => {
-    return Math.ceil(items.value.length / perPage);
-  });
-
-  const showPagination = computed(() => {
-    return items.value.length > 10;
-  });
-
-  // элементы текущей страницы
-  const paginatedItems = computed(() => {
-    const start = (currentPage.value - 1) * perPage;
-    const end = start + perPage;
-
-    return items.value.slice(start, end);
-  });
+  const pageCount = computed(() => Math.ceil(totalItems.value / perPage.value));
+  const showPagination = computed(() => totalItems.value > perPage.value);
 
   const pointData = ref(null);
 
@@ -91,16 +87,9 @@
 
   const backButtonText = 'Объекты';
 
-  const emit = defineEmits(['centering']);
-
   function centeringOnPoint(centerCoords) {
     emit('centering', centerCoords);
   }
-
-  // сброс номера страницы, если меняется количество элементов
-  watch(items, (newArr) => {
-    currentPage.value = 1;
-  });
 </script>
 
 <style lang="scss" scoped>

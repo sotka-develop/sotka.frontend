@@ -83,7 +83,7 @@
 
         <MapPoint v-if="pointData" :data="pointData" @centering="centering" />
 
-        <MapCluster v-if="clusterData" :data="clusterData" @centering="centering" />
+        <MapCluster v-if="clusterDataExist" :data="clusterData" @centering="centering" @changePage="changePage" />
       </div>
     </div>
 
@@ -304,18 +304,13 @@
     };
   });
 
-  // const showMessage = ref(false);
-  // const preventMessage = computed(() => {
-  //   if (isTouchDevice()) {
-  //     return 'Нажмите на карту два раза, чтобы взаимодействовать с картой';
-  //   }
-
-  //   return 'Зажмите Ctrl, чтобы изменить масштаб';
-  // });
+  const clusterDataExist = computed(() => {
+    return props.clusterData && props.clusterData.clusterId;
+  });
 
   const syncText = 'Обновить таблицу';
 
-  const emit = defineEmits(['update:sidebarStatus', 'update:syncStatus', 'sync']);
+  const emit = defineEmits(['update:sidebarStatus', 'update:syncStatus', 'sync', 'changePage']);
 
   function toggleSidebar() {
     emit('update:sidebarStatus', !props.sidebarStatus);
@@ -327,6 +322,10 @@
 
   function sync() {
     emit('sync');
+  }
+
+  function changePage(newPage) {
+    emit('changePage', newPage);
   }
 
   const resetMap = () => {

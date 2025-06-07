@@ -23,11 +23,12 @@
             :onPointClick="onPointClick"
             :loading="mapPending"
             :point-data="mapPointData"
-            :cluster-data="mapClusterData"
+            :cluster-data="clusterState"
             :sidebar-pending="sidebarPending"
             v-model:sidebarStatus="mapSidebarStatus"
             v-model:syncStatus="mapSyncStatus"
             @sync="tableSync"
+            @changePage="handleClusterPageChange"
           />
         </Section>
       </div>
@@ -183,54 +184,74 @@
   // список точек после обновления карты
   const landAreasIds = ref(null);
 
+  const clusterState = ref({
+    clusterId: null,
+    pagination: {
+      page: 1,
+      page_size: 10,
+      sort_by: null,
+    },
+    items: [],
+    total: null,
+  });
+
   // клик по кластеру
   const onClusterClick = async (data) => {
     if (sidebarPending.value) return;
 
     const id = data?.data?.cluster_id;
+    if (!id) return;
 
-    if (id) {
-      const filtersModel = filtersData.value;
+    const total = data?.data?.points_count || 10;
 
-      const pagination = {
-        page: 2,
-        page_size: 10,
+    await fetchClusterPage(id, 1, 10, total);
+
+    mapPointData.value = null;
+  };
+
+  const handleClusterPageChange = async (page) => {
+    await fetchClusterPage(clusterState.value.clusterId, page);
+  };
+
+  const fetchClusterPage = async (clusterId, page = 1, pageSize = 10, total = undefined) => {
+    const filtersModel = filtersData.value;
+
+    const pagination = {
+      page,
+      page_size: pageSize,
+    };
+
+    if (sortKey.value && sortOrder.value) {
+      pagination.sort_by = {
+        field: sortKey.value,
+        sort_type: sortOrder.value.toUpperCase(),
       };
-
-      if (sortKey.value && sortOrder.value) {
-        pagination.sort_by = {
-          field: sortKey.value,
-          sort_type: sortOrder.value.toUpperCase(),
-        };
-      }
-
-      const clusterPayload = {
-        ...currentCoords.value,
-        // ...filtersModel,
-        search_filters: filtersModel,
-        zoom: mapZoom.value,
-        dots_to_cluster: mapDotsToCluster.value,
-        land_ids: null,
-        cluster_id: id,
-      };
-
-      const result = await lotsStore.fetchClusterData({ ...clusterPayload }, pagination);
-
-      if (!result) {
-        console.error('Ошибка при получении данных точки!');
-        return;
-      }
-
-      mapPointData.value = null;
-
-      mapClusterData.value = {
-        items: result?.land_areas || [],
-      };
-
-      mapSidebarStatus.value = true;
-
-      console.log(result);
     }
+
+    const clusterPayload = {
+      ...defaultCoords,
+      search_filters: filtersModel,
+      zoom: mapZoom.value,
+      dots_to_cluster: mapDotsToCluster.value,
+      land_ids: null,
+      cluster_id: clusterId,
+    };
+
+    const result = await lotsStore.fetchClusterData(clusterPayload, pagination);
+
+    if (!result) {
+      console.error('Ошибка при получении данных точки!');
+      return;
+    }
+
+    clusterState.value = {
+      clusterId,
+      pagination,
+      items: result.land_areas || [],
+      total: total || clusterState.value.total || 10,
+    };
+
+    mapSidebarStatus.value = true;
   };
 
   // клик по точке
@@ -247,7 +268,7 @@
         return;
       }
 
-      mapClusterData.value = null;
+      clusterState.value.clusterId = null;
 
       mapPointData.value = preparePointData(result);
 
