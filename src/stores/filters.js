@@ -809,6 +809,28 @@ export const useFiltersStore = defineStore('filters', () => {
     },
   ]);
 
+  async function loadInitialPermittedUses() {
+    permittedUsesPending.value = true;
+
+    try {
+      const result = await searchPermittedUses('', 1000, 0, 'torgi_gov');
+      usesData.value = result.value;
+    } finally {
+      permittedUsesPending.value = false;
+    }
+  }
+
+  async function loadInitialPermittedUsesNspd() {
+    permittedUsesNspdPending.value = true;
+
+    try {
+      const result = await searchPermittedUses('', 1000, 0, 'nspd');
+      usesNspdData.value = result.value;
+    } finally {
+      permittedUsesNspdPending.value = false;
+    }
+  }
+
   // Получение фильтров
   async function loadFilters() {
     const auth = useAuthStore();
@@ -889,6 +911,9 @@ export const useFiltersStore = defineStore('filters', () => {
           return acc;
         }, {})
       );
+
+      // Вызов доп. загрузок после успешной загрузки фильтров
+      await Promise.all([loadInitialPermittedUses(), loadInitialPermittedUsesNspd()]);
     } catch (err) {
       console.error('Ошибка при загрузке фильтров:', err);
       error.value = err.message;
