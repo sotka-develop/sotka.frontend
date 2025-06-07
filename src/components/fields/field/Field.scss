@@ -1,7 +1,16 @@
 .field {
   $root: &;
 
+  &--disabled {
+    cursor: not-allowed;
+  }
+
   &__label {
     margin-bottom: 4px;
+
+    #{$root}--disabled & {
+      color: $color-text-base-1-400;
+      cursor: not-allowed;
+    }
   }
 }

@@ -8,6 +8,7 @@ const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
 export const useFiltersStore = defineStore('filters', () => {
   const isLoading = ref(false);
+  const filtersReadyLoading = ref(false);
   const error = ref(null);
   const permittedUsesPending = ref(false);
   const permittedUsesNspdPending = ref(false);
@@ -902,6 +903,7 @@ export const useFiltersStore = defineStore('filters', () => {
       return;
     }
 
+    filtersReadyLoading.value = true;
     error.value = null;
 
     try {
@@ -917,9 +919,7 @@ export const useFiltersStore = defineStore('filters', () => {
       }
 
       const data = await res.json();
-
       const fields = data?.payload || [];
-      // console.log(fields);
 
       fields.forEach((item) => {
         const name = item.name;
@@ -936,6 +936,8 @@ export const useFiltersStore = defineStore('filters', () => {
     } catch (err) {
       console.error('Ошибка при загрузке фильтров:', err);
       error.value = err.message;
+    } finally {
+      filtersReadyLoading.value = false;
     }
   }
 
@@ -1107,5 +1109,6 @@ export const useFiltersStore = defineStore('filters', () => {
     getFormattedFilters,
     resetFilters,
     isDirty,
+    filtersReadyLoading,
   };
 });

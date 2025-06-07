@@ -193,7 +193,7 @@
       const filtersModel = filtersData.value;
 
       const pagination = {
-        page: 1,
+        page: 2,
         page_size: 10,
       };
 
@@ -206,7 +206,8 @@
 
       const clusterPayload = {
         ...currentCoords.value,
-        ...filtersModel,
+        // ...filtersModel,
+        search_filters: filtersModel,
         zoom: mapZoom.value,
         dots_to_cluster: mapDotsToCluster.value,
         land_ids: null,

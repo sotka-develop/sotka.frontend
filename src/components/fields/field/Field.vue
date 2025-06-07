@@ -1,5 +1,5 @@
 <template>
-  <div class="field">
+  <div class="field" :class="classList">
     <label v-if="label" class="field__label text-lead">{{ label }}</label>
 
     <component :is="componentType" v-bind="passProps" v-model="modelValue" />
@@ -121,6 +121,12 @@
       default:
         return Input;
     }
+  });
+
+  const classList = computed(() => {
+    return {
+      ['field--disabled']: props.disabled,
+    };
   });
 
   const passProps = computed(() => {
