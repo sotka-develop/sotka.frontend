@@ -3,9 +3,14 @@
     <Loader v-if="filtersReadyLoading" size="small" />
 
     <div v-else class="filters-form__content">
-      <div v-for="(field, idx) in fields" :key="idx" class="filters-form__field">
-        <Field v-bind="field" v-model="field.model" />
-      </div>
+      <template v-for="(field, idx) in fields" :key="idx">
+        <div v-if="field.split" class="filters-form__split">
+          <p class="h5">{{ field.split }}</p>
+        </div>
+        <div v-else class="filters-form__field">
+          <Field v-bind="field" v-model="field.model" />
+        </div>
+      </template>
     </div>
   </div>
 </template>

@@ -708,6 +708,9 @@ export const useFiltersStore = defineStore('filters', () => {
       precision: 0,
     },
     {
+      split: 'Характеристики земельного участка (согласно torgi.gov) [TG]',
+    },
+    {
       name: 'categories_ids',
       label: 'Категория',
       hideDetails: true,
@@ -756,6 +759,9 @@ export const useFiltersStore = defineStore('filters', () => {
       items: rubrics,
       placeholder: 'Выбрать значение',
       multiple: true,
+    },
+    {
+      split: 'Характеристики земельного участка (по кадастровому номеру) [КН]',
     },
     {
       name: 'categories_nspd_ids',

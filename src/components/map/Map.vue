@@ -367,13 +367,15 @@
 
   function zoomIn() {
     if (zoom.value < zoomMax) {
-      zoom.value = Math.floor(zoom.value + 1);
+      // zoom.value = Math.floor(zoom.value + 1);
+      zoom.value = zoom.value + 1;
     }
   }
 
   function zoomOut() {
     if (zoom.value > zoomMin) {
-      zoom.value = Math.floor(zoom.value - 1);
+      // zoom.value = Math.floor(zoom.value - 1);
+      zoom.value = zoom.value - 1;
     }
   }
 
