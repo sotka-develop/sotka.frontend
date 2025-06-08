@@ -21,7 +21,7 @@ export const useFiltersStore = defineStore('filters', () => {
   const biddTypes = ref([]);
 
   // 5) Вид сделки
-  const transactionTypes = ref(['Аренда', 'Безвозмездное пользование', 'Иное', 'Продажа']);
+  const transactionTypes = ref(['Аренда', 'Безвозмездное пользование', 'Иное', 'Продажа', 'Доверительное управление']);
 
   // 8) Форма проведения
   const biddForms = ref([]);
@@ -751,7 +751,7 @@ export const useFiltersStore = defineStore('filters', () => {
       onInput: onSearchPermittedUses,
     },
     {
-      name: 'rubrics_ids',
+      name: 'rubric_ids',
       label: 'Рубрика',
       hideDetails: true,
       model: rubricsModel,
@@ -1117,7 +1117,7 @@ export const useFiltersStore = defineStore('filters', () => {
       permitted_uses_id: useModel.value || [],
 
       // 28) Рубрика
-      rubrics_ids: rubricsModel.value || [],
+      rubric_ids: rubricsModel.value || [],
 
       // 29) Категория НСПД
       categories_nspd_ids: categoriesNspdModel.value || [],
