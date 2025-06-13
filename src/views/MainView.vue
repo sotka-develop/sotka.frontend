@@ -182,7 +182,7 @@
   const polygons = ref([]);
 
   // список точек после обновления карты
-  const landAreasIds = ref(null);
+  const clusterIds = ref(null);
 
   const clusterState = ref({
     clusterId: null,
@@ -364,8 +364,8 @@
       };
     }
 
-    const land_ids = sync ? landAreasIds.value : null; // null для получения всех точек
-    const result = await lotsStore.fetchLots({ ...filtersModel, ...pagination, land_ids });
+    const cluster_ids = sync ? clusterIds.value : null; // null для получения всех точек
+    const result = await lotsStore.fetchLots({ ...filtersModel, ...pagination, cluster_ids });
 
     if (!result) {
       console.error('Ошибка при получении лотов!');
@@ -407,7 +407,7 @@
 
     dots.value = mapResult.dots || [];
     polygons.value = mapResult.polygons || [];
-    landAreasIds.value = (mapResult?.land_areas_ids || []).filter((item) => item);
+    clusterIds.value = (mapResult?.cluster_ids || []).filter((item) => item);
   }
 
   // стартовый запрос лотов и точек
