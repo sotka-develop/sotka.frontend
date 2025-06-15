@@ -48,7 +48,7 @@
         </template>
         <template v-else-if="marker?.data?.points_count === 1">
           <div class="map__point" @click="onPointClick(marker)">
-            <Icon />
+            <RubricIcon v-if="marker.data.rubric_image_link" :name="marker.data.rubric_image_link" />
           </div>
         </template>
       </yandex-map-marker>
@@ -119,6 +119,7 @@
   import { computed, shallowRef, ref, watch, onMounted, onUnmounted } from 'vue';
   import Loader from '@/components/loader/Loader.vue';
   import Icon from '@/components/icon/Icon.vue';
+  import RubricIcon from '@/components/icon/RubricIcon.vue';
   import MapPoint from '../mapPoint/MapPoint.vue';
   import MapCluster from '../mapCluster/MapCluster.vue';
 
