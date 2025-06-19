@@ -11,6 +11,7 @@ export const useAuthStore = defineStore('auth', () => {
   const isLoading = ref(true);
   const email = ref('');
   const isCodeSent = ref(false);
+  const showConsentCheckboxes = ref(false);
 
   function setToken(newToken) {
     token.value = newToken;
@@ -70,6 +71,8 @@ export const useAuthStore = defineStore('auth', () => {
     const data = await res.json();
     if (!res.ok || !data?.payload?.ok) throw new Error(data.message || 'Ошибка при отправке кода');
 
+    showConsentCheckboxes.value = data.payload.show_consent_checkboxes;
+
     email.value = emailAddress;
     isCodeSent.value = true;
   }
@@ -103,5 +106,6 @@ export const useAuthStore = defineStore('auth', () => {
     sendCode,
     loginWithCode,
     fetchUserData,
+    showConsentCheckboxes,
   };
 });

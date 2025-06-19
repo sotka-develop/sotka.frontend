@@ -1,0 +1,13 @@
+.checkbox {
+  $root: &;
+
+  &:deep(a) {
+    color: $color-text-accent;
+
+    @include defaultTransition(color);
+
+    @include hover {
+      color: $color-text-accent-200;
+    }
+  }
+}

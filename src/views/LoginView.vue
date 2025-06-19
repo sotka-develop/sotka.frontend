@@ -25,16 +25,85 @@
 
   const required = (v) => !!v || 'Поле обязательно';
   const emailRule = (v) => /.+@.+\..+/.test(v) || 'Введите корректный email';
+  //   isCodeSent.value
+  //     ? [
+  //         { name: 'email', type: 'text', placeholder: 'Email', readonly: true, rules: [required, emailRule] },
+  //         { name: 'password', type: 'text', placeholder: 'Пароль', type: 'password', rules: [required] },
+  //         { name: 'code', type: 'text', placeholder: 'Код', rules: [required] },
+  //         {
+  //           name: 'checkbox1',
+  //           type: 'checkbox',
+  //           label:
+  //             'Я даю согласие на обработку моих персональных данных, указанных в этой веб-форме. А также тех данных, которые будут указаны мной в личном кабинете после регистрации, включая поручения обработки другим лицам, на условиях, изложенных в <a href="https://s0tka.ru/privacy" target="_blank">«Правила защиты информации о пользователях»</a>, с которой я ознакомился.',
+  //           rules: [required],
+  //         },
+  //         {
+  //           name: 'checkbox2',
+  //           type: 'checkbox',
+  //           label: 'Я согласен с <a href="https://s0tka.ru/terms" target="_blank">Правилами пользования Сайтом</a>.',
+  //           rules: [required],
+  //         },
+  //         {
+  //           name: 'checkbox3',
+  //           type: 'checkbox',
+  //           label: 'Я ознакомлен, принимаю <a href="https://s0tka.ru/licence" target="_blank">Лицензионное соглашение</a>.',
+  //           rules: [required],
+  //         },
+  //         {
+  //           name: 'checkbox4',
+  //           type: 'checkbox',
+  //           label:
+  //             'Я согласен на получение информационных и маркетинговых рассылок (вы в любой момент можете отказаться от получения писем в личном кабинете)',
+  //         },
+  //       ]
+  //     : [{ name: 'email', type: 'text', placeholder: 'Email', rules: [required, emailRule] }]
+  // );
 
-  const formFields = computed(() =>
-    isCodeSent.value
-      ? [
-          { name: 'email', type: 'text', placeholder: 'Email', readonly: true, rules: [required, emailRule] },
-          { name: 'password', type: 'text', placeholder: 'Пароль', type: 'password', rules: [required] },
-          { name: 'code', type: 'text', placeholder: 'Код', rules: [required] },
-        ]
-      : [{ name: 'email', type: 'text', placeholder: 'Email', rules: [required, emailRule] }]
-  );
+  const formFields = computed(() => {
+    if (!isCodeSent.value) {
+      return [{ name: 'email', type: 'text', placeholder: 'Email', rules: [required, emailRule] }];
+    }
+
+    const baseFields = [
+      { name: 'email', type: 'text', placeholder: 'Email', readonly: true, rules: [required, emailRule] },
+      { name: 'password', type: 'password', placeholder: 'Пароль', rules: [required] },
+      { name: 'code', type: 'text', placeholder: 'Код', rules: [required] },
+    ];
+
+    if (!auth.showConsentCheckboxes) {
+      return baseFields;
+    }
+
+    const consentCheckboxes = [
+      {
+        name: 'checkbox1',
+        type: 'checkbox',
+        label:
+          'Я даю согласие на обработку моих персональных данных, указанных в этой веб-форме. А также тех данных, которые будут указаны мной в личном кабинете после регистрации, включая поручения обработки другим лицам, на условиях, изложенных в <a href="https://s0tka.ru/privacy" target="_blank">«Правила защиты информации о пользователях»</a>, с которой я ознакомился.',
+        rules: [required],
+      },
+      {
+        name: 'checkbox2',
+        type: 'checkbox',
+        label: 'Я согласен с <a href="https://s0tka.ru/terms" target="_blank">Правилами пользования Сайтом</a>.',
+        rules: [required],
+      },
+      {
+        name: 'checkbox3',
+        type: 'checkbox',
+        label: 'Я ознакомлен, принимаю <a href="https://s0tka.ru/licence" target="_blank">Лицензионное соглашение</a>.',
+        rules: [required],
+      },
+      {
+        name: 'checkbox4',
+        type: 'checkbox',
+        label:
+          'Я согласен на получение информационных и маркетинговых рассылок (вы в любой момент можете отказаться от получения писем в личном кабинете)',
+      },
+    ];
+
+    return [...baseFields, ...consentCheckboxes];
+  });
 
   const formActions = computed(() =>
     isCodeSent.value

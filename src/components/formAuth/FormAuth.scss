@@ -42,6 +42,9 @@
 
   &__side {
     @include media-breakpoint-up(lg) {
+      top: 0;
+      right: 0;
+      position: sticky;
       width: 50%;
       height: 100vh;
       min-height: 800px;
@@ -53,7 +56,7 @@
 
   &__field {
     &:not(:last-child) {
-      margin-bottom: 24px;
+      margin-bottom: 16px;
     }
   }
 

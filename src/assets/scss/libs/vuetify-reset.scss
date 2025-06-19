@@ -118,3 +118,37 @@
 .v-list .v-ripple__container {
   display: none;
 }
+
+.v-checkbox {
+  .v-label {
+    @include text-small;
+  }
+
+  .v-selection-control__wrapper {
+    align-self: flex-start;
+    margin-right: 12px;
+  }
+
+  .v-selection-control__input::before {
+    content: none;
+  }
+
+  .v-selection-control {
+    min-height: auto !important;
+  }
+
+  .v-selection-control__wrapper,
+  .v-selection-control__input {
+    width: 20px;
+    height: 20px;
+  }
+
+  .v-selection-control__input > .v-icon {
+    opacity: 1;
+    color: $color-bg-accent-100;
+  }
+
+  .v-input__details {
+    padding-left: 16px;
+  }
+}

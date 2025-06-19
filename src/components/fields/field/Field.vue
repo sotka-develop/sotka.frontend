@@ -1,6 +1,6 @@
 <template>
   <div class="field" :class="classList">
-    <label v-if="label" class="field__label text-lead">{{ label }}</label>
+    <label v-if="showLabel" class="field__label text-lead">{{ label }}</label>
 
     <component :is="componentType" v-bind="passProps" v-model="modelValue" />
   </div>
@@ -15,6 +15,7 @@
   import InputNumber from '@/components/fields/inputNumber/InputNumber.vue';
   import Autocomplete from '@/components/fields/autocomplete/Autocomplete.vue';
   import TreeSelect from '@/components/fields/treeselect/TreeSelect.vue';
+  import Checkbox from '@/components/fields/checkbox/Checkbox.vue';
 
   const props = defineProps({
     type: {
@@ -118,6 +119,8 @@
         return Autocomplete;
       case 'treeselect':
         return TreeSelect;
+      case 'checkbox':
+        return Checkbox;
       default:
         return Input;
     }
@@ -127,6 +130,12 @@
     return {
       ['field--disabled']: props.disabled,
     };
+  });
+
+  const showLabel = computed(() => {
+    if (props.type === 'checkbox' || !props.label) return false;
+
+    return true;
   });
 
   const passProps = computed(() => {
@@ -150,6 +159,13 @@
         returnObject: props.returnObject,
         itemTitle: props.itemTitle,
         itemValue: props.itemValue,
+      };
+    }
+
+    if (props.type === 'checkbox') {
+      return {
+        ...baseProps,
+        label: props.label,
       };
     }
 
