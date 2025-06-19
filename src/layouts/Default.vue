@@ -9,9 +9,12 @@
     </div>
 
     <div class="default-layout__footer"></div>
+
+    <Cookie />
   </div>
 </template>
 
 <script setup>
+  import Cookie from '@/components/cookie/Cookie.vue';
   import Header from '@/components/header/Header.vue';
 </script>
