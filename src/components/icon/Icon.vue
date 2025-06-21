@@ -1,84 +1,67 @@
 <template>
-  <div class="icon">
-    <!-- logos -->
-    <Logo v-if="name === 'logos/logo'" />
+  <component v-if="isLocal && IconComponent" :is="IconComponent" class="icon" />
 
-    <!-- 20 -->
-    <Eye v-if="name === '20/eye'" />
-    <ChevronLeft v-if="name === '20/chevron-left'" />
-    <ChevronRight v-if="name === '20/chevron-right'" />
-
-    <!-- 24 -->
-    <Close v-if="name === '24/close'" />
-    <Sync v-if="name === '24/sync'" />
-    <Plus v-if="name === '24/plus'" />
-    <Minus v-if="name === '24/minus'" />
-    <House v-if="name === '24/house'" />
-    <ArrowsPointing v-if="name === '24/arrows-pointing'" />
-    <HandDraw v-if="name === '24/hand-draw'" />
-    <Layers v-if="name === '24/layers'" />
-    <Measuring v-if="name === '24/measuring'" />
-    <MapPin v-if="name === '24/map-pin'" />
-    <Menu v-if="name === '24/menu'" />
-    <MenuClose v-if="name === '24/menu-close'" />
-  </div>
+  <div v-else class="icon" v-html="svgContent" />
 </template>
 
 <script setup>
-  import { defineComponent } from 'vue';
+  import { defineAsyncComponent, computed, ref, watchEffect } from 'vue';
 
-  // logos
-  import Logo from '@/assets/icons/logos/logo.svg';
+  // Импорт всех локальных SVG-компонентов
+  const icons = import.meta.glob('@/assets/icons/**/*.svg', { query: '?component', eager: false });
 
-  // 20
-  import Eye from '@/assets/icons/20/eye.svg';
-  import ChevronLeft from '@/assets/icons/20/chevron-left.svg';
-  import ChevronRight from '@/assets/icons/20/chevron-right.svg';
-
-  // 24
-  import Close from '@/assets/icons/24/close.svg';
-  import Sync from '@/assets/icons/24/sync.svg';
-  import Plus from '@/assets/icons/24/plus.svg';
-  import Minus from '@/assets/icons/24/minus.svg';
-  import ArrowsPointing from '@/assets/icons/24/arrows-pointing.svg';
-  import HandDraw from '@/assets/icons/24/hand-draw.svg';
-  import Layers from '@/assets/icons/24/layers.svg';
-  import Measuring from '@/assets/icons/24/measuring.svg';
-  import House from '@/assets/icons/24/house.svg';
-  import MapPin from '@/assets/icons/24/map-pin.svg';
-  import Menu from '@/assets/icons/24/menu.svg';
-  import MenuClose from '@/assets/icons/24/menu-close.svg';
-
-  defineProps({
+  const props = defineProps({
     name: {
       type: String,
+      required: true,
     },
   });
 
-  defineComponent({
-    // logos
-    Logo,
+  // Проверка: является ли иконка локальной
+  const isLocal = computed(() => props.name.includes('/'));
 
-    // 20
-    Eye,
-    ChevronLeft,
-    ChevronRight,
-    //24
-    Close,
-    Sync,
-    Plus,
-    Minus,
-    ArrowsPointing,
-    HandDraw,
-    Layers,
-    Measuring,
-    House,
-    MapPin,
-    Menu,
-    MenuClose,
+  // 🔹 Локальная SVG-компонента
+  const IconComponent = computed(() => {
+    if (!isLocal.value) return null;
+
+    const [size, iconNameWithExt] = props.name.split('/');
+    const iconName = iconNameWithExt.replace(/\.svg$/, '');
+    const path = `/src/assets/icons/${size}/${iconName}.svg`;
+    const loader = icons[path];
+
+    if (!loader) {
+      console.warn(`Локальная иконка "${iconName}" по пути ${path} не найдена!`);
+      return null;
+    }
+
+    return defineAsyncComponent(loader);
+  });
+
+  // 🔸 Внешняя SVG как строка
+  const svgContent = ref('');
+
+  watchEffect(async () => {
+    if (isLocal.value) {
+      svgContent.value = '';
+      return;
+    }
+
+    const iconPath = `${window.location.origin}/rubrics/${props.name}.svg`;
+
+    try {
+      const res = await fetch(iconPath);
+      const svg = await res.text();
+      if (svg.trim().startsWith('<svg')) {
+        svgContent.value = svg;
+      } else {
+        console.warn(`Файл по пути ${iconPath} не является SVG`);
+      }
+    } catch (err) {
+      console.warn(`Не удалось загрузить внешнюю SVG ${iconPath}:`, err);
+    }
   });
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
   @import 'Icon';
 </style>
