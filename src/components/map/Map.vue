@@ -262,11 +262,11 @@
     style: {
       stroke: [
         {
-          color: '#0469FF',
+          color: '#FF1B1F',
           width: 1,
         },
       ],
-      fill: 'rgba(4, 105, 255, 0.1)',
+      fill: 'rgba(255, 27, 31, 0.1)',
     },
   };
 
