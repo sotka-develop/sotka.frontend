@@ -11,6 +11,7 @@
       loading-text="Загрузка"
       no-results-text="Ничего не найдено"
       no-data-text="Данных нет"
+      must-sort
       @update:page="(val) => emit('update:page', val)"
       @update:items-per-page="(val) => emit('update:itemsPerPage', val)"
       @update:options="onUpdateOptions"
