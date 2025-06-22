@@ -7,7 +7,7 @@
         <div v-if="field.split" class="filters-form__split">
           <p class="h5">{{ field.split }}</p>
         </div>
-        <div v-else class="filters-form__field">
+        <div v-else class="filters-form__field" :class="{ 'filters-form__field--fill': field.fill }">
           <Field v-bind="field" v-model="field.model" />
         </div>
       </template>

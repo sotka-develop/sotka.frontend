@@ -737,6 +737,7 @@ export const useFiltersStore = defineStore('filters', () => {
       placeholder: 'Например, 12345',
     },
     {
+      fill: true,
       name: 'permitted_uses_id',
       label: 'ВРИ',
       hideDetails: true,
@@ -790,6 +791,7 @@ export const useFiltersStore = defineStore('filters', () => {
       placeholder: 'Например, 12345',
     },
     {
+      fill: true,
       name: 'permitted_uses_nspd_id',
       label: 'ВРИ [КН]',
       hideDetails: true,
