@@ -508,7 +508,7 @@ export const useFiltersStore = defineStore('filters', () => {
       type: 'treeselect',
       items: regionsByDistricts,
       clearable: false,
-      placeholder: 'Регион, область, город',
+      placeholder: 'Субъект РФ',
       multiple: true,
     },
     {
@@ -593,7 +593,7 @@ export const useFiltersStore = defineStore('filters', () => {
       hideDetails: true,
       model: lotModel,
       type: 'text',
-      placeholder: 'Например, 1111',
+      placeholder: 'Например, 21000004710000017906_1',
     },
     {
       name: 'cadaster_number',
@@ -601,7 +601,7 @@ export const useFiltersStore = defineStore('filters', () => {
       hideDetails: true,
       model: cadasterNumberModel,
       type: 'text',
-      placeholder: 'Например, 1111',
+      placeholder: 'Например, 77:03:0010007:5286',
     },
     {
       name: 'tg_to_kn_area_ratio',
@@ -629,7 +629,7 @@ export const useFiltersStore = defineStore('filters', () => {
       hideDetails: true,
       model: priceRatioFromModel,
       type: 'number',
-      placeholder: 'Например, 1111',
+      placeholder: 'Например, 50',
       precision: 0,
     },
     {
@@ -638,7 +638,7 @@ export const useFiltersStore = defineStore('filters', () => {
       hideDetails: true,
       model: priceRatioToModel,
       type: 'number',
-      placeholder: 'Например, 1111',
+      placeholder: 'Например, 77',
       precision: 0,
     },
     {
@@ -647,7 +647,7 @@ export const useFiltersStore = defineStore('filters', () => {
       hideDetails: true,
       model: priceMinFromModel,
       type: 'number',
-      placeholder: 'Например, 1111',
+      placeholder: 'Например, 1234',
     },
     {
       name: 'price_min_to',
@@ -655,7 +655,7 @@ export const useFiltersStore = defineStore('filters', () => {
       hideDetails: true,
       model: priceMinToModel,
       type: 'number',
-      placeholder: 'Например, 1111',
+      placeholder: 'Например, 1234',
     },
     {
       name: 'cadastral_cost_from',
@@ -663,7 +663,7 @@ export const useFiltersStore = defineStore('filters', () => {
       hideDetails: true,
       model: cadastralCostFromModel,
       type: 'number',
-      placeholder: 'Например, 1111',
+      placeholder: 'Например, 10000',
     },
     {
       name: 'cadastral_cost_to',
@@ -671,7 +671,7 @@ export const useFiltersStore = defineStore('filters', () => {
       hideDetails: true,
       model: cadastralCostToModel,
       type: 'number',
-      placeholder: 'Например, 1111',
+      placeholder: 'Например, 100000',
     },
     {
       name: 'deposit_from',
@@ -679,7 +679,7 @@ export const useFiltersStore = defineStore('filters', () => {
       hideDetails: true,
       model: depositFromModel,
       type: 'number',
-      placeholder: 'Например, 1111',
+      placeholder: 'Например, 123',
     },
     {
       name: 'deposit_to',
@@ -687,7 +687,7 @@ export const useFiltersStore = defineStore('filters', () => {
       hideDetails: true,
       model: depositToModel,
       type: 'number',
-      placeholder: 'Например, 1111',
+      placeholder: 'Например, 1234',
     },
     {
       name: 'deposit_percent_from',
@@ -695,7 +695,7 @@ export const useFiltersStore = defineStore('filters', () => {
       hideDetails: true,
       model: depositPercentFromModel,
       type: 'number',
-      placeholder: 'Например, 1111',
+      placeholder: 'Например, 1',
       precision: 0,
     },
     {
@@ -704,7 +704,7 @@ export const useFiltersStore = defineStore('filters', () => {
       hideDetails: true,
       model: depositPercentToModel,
       type: 'number',
-      placeholder: 'Например, 1111',
+      placeholder: 'Например, 50',
       precision: 0,
     },
     {
@@ -726,7 +726,7 @@ export const useFiltersStore = defineStore('filters', () => {
       hideDetails: true,
       model: areaFromModel,
       type: 'number',
-      placeholder: 'Например, 1111',
+      placeholder: 'Например, 1234',
     },
     {
       name: 'area_to',
@@ -734,7 +734,7 @@ export const useFiltersStore = defineStore('filters', () => {
       hideDetails: true,
       model: areaToModel,
       type: 'number',
-      placeholder: 'Например, 1111',
+      placeholder: 'Например, 12345',
     },
     {
       name: 'permitted_uses_id',
@@ -779,7 +779,7 @@ export const useFiltersStore = defineStore('filters', () => {
       hideDetails: true,
       model: areaFromNspdModel,
       type: 'number',
-      placeholder: 'Например, 1111',
+      placeholder: 'Например, 1234',
     },
     {
       name: 'area_from_nspd_to',
@@ -787,7 +787,7 @@ export const useFiltersStore = defineStore('filters', () => {
       hideDetails: true,
       model: areaToNspdModel,
       type: 'number',
-      placeholder: 'Например, 1111',
+      placeholder: 'Например, 12345',
     },
     {
       name: 'permitted_uses_nspd_id',
