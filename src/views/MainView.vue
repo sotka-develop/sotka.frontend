@@ -421,7 +421,7 @@
 
     filtersData.value = filtersStore.getFormattedFilters();
     page.value = pageDefaultValue;
-    pageSize.value = pageSizeDefaultValue;
+    // pageSize.value = pageSizeDefaultValue;
 
     mapSidebarStatus.value = false;
 

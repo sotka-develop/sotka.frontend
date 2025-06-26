@@ -655,7 +655,7 @@ export const useFiltersStore = defineStore('filters', () => {
       hideDetails: true,
       model: priceMinToModel,
       type: 'number',
-      placeholder: 'Например, 1234',
+      placeholder: 'Например, 12345',
     },
     {
       name: 'cadastral_cost_from',
@@ -663,7 +663,7 @@ export const useFiltersStore = defineStore('filters', () => {
       hideDetails: true,
       model: cadastralCostFromModel,
       type: 'number',
-      placeholder: 'Например, 10000',
+      placeholder: 'Например, 10 000',
     },
     {
       name: 'cadastral_cost_to',
@@ -671,7 +671,7 @@ export const useFiltersStore = defineStore('filters', () => {
       hideDetails: true,
       model: cadastralCostToModel,
       type: 'number',
-      placeholder: 'Например, 100000',
+      placeholder: 'Например, 100 000',
     },
     {
       name: 'deposit_from',
