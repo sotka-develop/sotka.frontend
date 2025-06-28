@@ -22,21 +22,6 @@
         </div>
       </template>
 
-      <!-- <template #value-label="{ node }">
-        <div
-          class="treeselect__item"
-          :class="{ 'treeselect__item--first': node.id === firstSelectedId, 'treeselect__item--last': node.id === lastSelectedId }"
-        >
-          <div class="treeselect__text">{{ node.label }}</div>
-
-          <button v-if="showCounter" type="button" class="treeselect__toggle" @click="toggleShowAll">{{ counterValue }}</button>
-
-          <button v-if="showAll && node.id === lastSelectedId" type="button" class="treeselect__toggle" @click="toggleShowAll">
-            {{ hideButtonText }}
-          </button>
-        </div>
-      </template> -->
-
       <template #option-label="{ node, shouldShowCount, count, labelClassName, countClassName }">
         <label :class="labelClassName">
           <div :title="node.label" class="treeselect__label">{{ node.label }}</div>

@@ -1,0 +1,20 @@
+.tippy-box {
+  background-color: $color-white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  box-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.1);
+
+  @include text-small;
+}
+
+.tippy-content {
+  a {
+    color: $color-text-accent;
+
+    @include hover {
+      color: $color-text-accent-200;
+    }
+
+    @include defaultTransition(color);
+  }
+}

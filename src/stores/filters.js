@@ -750,6 +750,11 @@ export const useFiltersStore = defineStore('filters', () => {
       returnObject: false,
       loading: permittedUsesPending,
       onInput: onSearchPermittedUses,
+      tooltip: {
+        text: 'Вид разрешенного использования земельного участка согласно кадастровому номеру',
+        icon: '20/info',
+        interactive: true,
+      },
     },
     {
       name: 'rubric_ids',

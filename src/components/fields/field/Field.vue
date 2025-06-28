@@ -1,6 +1,14 @@
 <template>
   <div class="field" :class="classList">
-    <label v-if="showLabel" class="field__label text-lead">{{ label }}</label>
+    <div v-if="showLabel || tooltip" class="field__top">
+      <p v-if="showLabel" class="field__label text-lead">
+        {{ label }}
+      </p>
+
+      <div v-if="tooltip" class="field__tooltip">
+        <Tooltip v-bind="tooltip" />
+      </div>
+    </div>
 
     <component :is="componentType" v-bind="passProps" v-model="modelValue" />
   </div>
@@ -16,6 +24,8 @@
   import Autocomplete from '@/components/fields/autocomplete/Autocomplete.vue';
   import TreeSelect from '@/components/fields/treeselect/TreeSelect.vue';
   import Checkbox from '@/components/fields/checkbox/Checkbox.vue';
+
+  import Tooltip from '@/components/tooltip/Tooltip.vue';
 
   const props = defineProps({
     type: {
@@ -97,6 +107,9 @@
     textFieldProps: {
       type: Object,
       default: () => ({}),
+    },
+    tooltip: {
+      type: Object,
     },
     precision: {
       type: [Number, String],

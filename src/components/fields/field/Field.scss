@@ -5,6 +5,13 @@
     cursor: not-allowed;
   }
 
+  &__top {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
   &__label {
     margin-bottom: 4px;
 

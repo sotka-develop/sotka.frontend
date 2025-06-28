@@ -13,11 +13,13 @@ import App from './App.vue';
 import router from './router';
 import { vuetify } from './plugins/vuetify';
 import SimpleBar from 'simplebar-vue';
+import VueTippy from 'vue-tippy';
 
 const app = createApp(App);
 const pinia = createPinia();
 
 app.use(pinia);
+app.use(VueTippy);
 
 import { useAuthStore } from '@/stores/auth';
 
