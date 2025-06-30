@@ -47,7 +47,11 @@
           </div>
         </template>
         <template v-else-if="marker?.data?.points_count === 1">
-          <div class="map__point" @click="onPointClick(marker)">
+          <div
+            class="map__point"
+            @click="onPointClick(marker)"
+            :style="marker?.data?.bg_color ? { color: marker.data.bg_color } : { color: '#199719' }"
+          >
             <Icon v-if="marker.data.rubric_image_link" :name="marker.data.rubric_image_link" />
           </div>
         </template>
@@ -289,6 +293,8 @@
     if (!props.polygons || !props.polygons.length) return [[]];
 
     return props.polygons.map((item) => {
+      if (!item[0] || !item.length) return [];
+
       return [...item[0].map((coords) => [coords[0], coords[1]])];
     });
   });
