@@ -7,7 +7,7 @@
         <div v-if="field.split" class="filters-form__split">
           <p class="h5">{{ field.split }}</p>
         </div>
-        <div v-else class="filters-form__field" :class="{ 'filters-form__field--fill': field.fill }">
+        <div v-else class="filters-form__field" :class="field.size ? 'filters-form__field--' + field.size : ''">
           <template v-if="!field.disabled">
             <Field v-bind="field" v-model="field.model" />
           </template>
@@ -37,18 +37,11 @@
 
   import { storeToRefs } from 'pinia';
   import { useFiltersStore } from '@/stores/filters';
-  import { onMounted } from 'vue';
 
   const filtersStore = useFiltersStore();
   const { filtersReadyLoading } = storeToRefs(filtersStore);
 
   const fields = filtersStore.fieldsData || [];
-
-  onMounted(() => {
-    setTimeout(() => {
-      console.log(fields);
-    }, 200);
-  });
 </script>
 
 <style lang="scss" scoped>

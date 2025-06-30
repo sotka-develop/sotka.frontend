@@ -510,6 +510,7 @@ export const useFiltersStore = defineStore('filters', () => {
       clearable: false,
       placeholder: 'Субъект РФ',
       multiple: true,
+      size: 'half',
     },
     {
       name: 'bidd_start_time_from',
@@ -719,6 +720,7 @@ export const useFiltersStore = defineStore('filters', () => {
       items: categories,
       placeholder: 'Выбрать значение',
       multiple: true,
+      size: 'half-lg',
     },
     {
       name: 'area_from',
@@ -737,7 +739,7 @@ export const useFiltersStore = defineStore('filters', () => {
       placeholder: 'Например, 12345',
     },
     {
-      fill: true,
+      size: 'fill',
       name: 'permitted_uses_id',
       label: 'ВРИ',
       hideDetails: true,
@@ -757,6 +759,7 @@ export const useFiltersStore = defineStore('filters', () => {
       },
     },
     {
+      size: 'fill',
       name: 'rubric_ids',
       label: 'Рубрика',
       hideDetails: true,
@@ -770,6 +773,7 @@ export const useFiltersStore = defineStore('filters', () => {
       split: 'Характеристики земельного участка (по кадастровому номеру) [КН]',
     },
     {
+      size: 'half-lg',
       name: 'categories_nspd_ids',
       label: 'Категория [КН]',
       hideDetails: true,
@@ -796,7 +800,7 @@ export const useFiltersStore = defineStore('filters', () => {
       placeholder: 'Например, 12345',
     },
     {
-      fill: true,
+      size: 'fill',
       name: 'permitted_uses_nspd_id',
       label: 'ВРИ [КН]',
       hideDetails: true,
@@ -811,6 +815,7 @@ export const useFiltersStore = defineStore('filters', () => {
       onInput: onSearchPermittedUsesNspd,
     },
     {
+      size: 'fill',
       name: 'rubric_nspd_ids',
       label: 'Рубрика [КН]',
       hideDetails: true,
