@@ -511,6 +511,11 @@ export const useFiltersStore = defineStore('filters', () => {
       placeholder: 'Субъект РФ',
       multiple: true,
       size: 'half',
+      tooltip: {
+        text: 'Субъект местонахождения имущества',
+        icon: '20/info',
+        interactive: true,
+      },
     },
     {
       name: 'bidd_start_time_from',
@@ -520,6 +525,11 @@ export const useFiltersStore = defineStore('filters', () => {
       model: biddStartTimeFromModel,
       type: 'date',
       placeholder: '--.--.--',
+      tooltip: {
+        text: 'Дата начала подачи заявок для участия в Процедуре. Позднее чем',
+        icon: '20/info',
+        interactive: true,
+      },
     },
     {
       name: 'bidd_start_time_to',
@@ -529,6 +539,11 @@ export const useFiltersStore = defineStore('filters', () => {
       model: biddStartTimeToModel,
       type: 'date',
       placeholder: '--.--.--',
+      tooltip: {
+        text: 'Дата начала подачи заявок для участия в Процедуре. Ранее чем',
+        icon: '20/info',
+        interactive: true,
+      },
     },
     {
       name: 'bidd_type_ids',
@@ -539,6 +554,11 @@ export const useFiltersStore = defineStore('filters', () => {
       items: biddTypes,
       placeholder: 'Выбрать значение',
       multiple: true,
+      tooltip: {
+        text: 'Можно выбрать один или несколько вариантов предусмотренных текущим Законодательством, например: Аренда и продажа земельных участков, Публичные торги по продаже земельных участков, Аренда лесных участков и продажа лесных насаждений, Комплексное развитие территорий и т.д.',
+        icon: '20/info',
+        interactive: true,
+      },
     },
     {
       name: 'transaction_types',
@@ -549,6 +569,11 @@ export const useFiltersStore = defineStore('filters', () => {
       items: transactionTypes,
       placeholder: 'Выбрать значение',
       multiple: true,
+      tooltip: {
+        text: 'Можно выбрать один или несколько вариантов предусмотренных текущим Законодательством, например: Продажа, Аренда и другие.',
+        icon: '20/info',
+        interactive: true,
+      },
     },
     {
       name: 'bidd_end_time_from',
@@ -558,6 +583,11 @@ export const useFiltersStore = defineStore('filters', () => {
       model: biddEndTimeFromModel,
       type: 'date',
       placeholder: '--.--.--',
+      tooltip: {
+        text: 'Дата окончания подачи заявок для участия в Процедуре. Позднее чем',
+        icon: '20/info',
+        interactive: true,
+      },
     },
     {
       name: 'bidd_end_time_to',
@@ -567,6 +597,11 @@ export const useFiltersStore = defineStore('filters', () => {
       model: biddEndTimeToModel,
       type: 'date',
       placeholder: '--.--.--',
+      tooltip: {
+        text: 'Дата окончания подачи заявок для участия в Процедуре. Ранее чем',
+        icon: '20/info',
+        interactive: true,
+      },
     },
     {
       name: 'bidd_form_ids',
@@ -577,6 +612,11 @@ export const useFiltersStore = defineStore('filters', () => {
       items: biddForms,
       placeholder: 'Выбрать значение',
       multiple: true,
+      tooltip: {
+        text: 'Можно выбрать один или несколько вариантов предусмотренных текущим Законодательством, например: Аукцион, Конкурс, Электронный аукцион, Электронный конкурс, Сообщение о представлении (реализации) и т.д.',
+        icon: '20/info',
+        interactive: true,
+      },
     },
     {
       name: 'etp_codes_ids',
@@ -587,6 +627,11 @@ export const useFiltersStore = defineStore('filters', () => {
       items: etpCodes,
       placeholder: 'Выбрать значение',
       multiple: true,
+      tooltip: {
+        text: 'Электронно-торговая площадка',
+        icon: '20/info',
+        interactive: true,
+      },
     },
     {
       name: 'lot',
@@ -595,6 +640,11 @@ export const useFiltersStore = defineStore('filters', () => {
       model: lotModel,
       type: 'text',
       placeholder: 'Например, 21000004710000017906_1',
+      tooltip: {
+        text: 'Идентификационный номер Процедуры. Поиск осуществляется в т.ч. по неполному совпадению',
+        icon: '20/info',
+        interactive: true,
+      },
     },
     {
       name: 'cadaster_number',
@@ -603,6 +653,11 @@ export const useFiltersStore = defineStore('filters', () => {
       model: cadasterNumberModel,
       type: 'text',
       placeholder: 'Например, 77:03:0010007:5286',
+      tooltip: {
+        text: 'Кадастровый номер - уникальный идентификационный номер, присваиваемый объекту недвижимости (земельному участку, зданию, сооружению, помещению) при его постановке на кадастровый учет. Служит для однозначной идентификации объекта в государственном кадастре недвижимости и используется при совершении различных операций с недвижимостью. Поиск осуществляется в т.ч. по неполному совпадению',
+        icon: '20/info',
+        interactive: true,
+      },
     },
     {
       name: 'tg_to_kn_area_ratio',
@@ -613,6 +668,11 @@ export const useFiltersStore = defineStore('filters', () => {
       items: tgToKn,
       placeholder: 'Выбрать значение',
       multiple: true,
+      tooltip: {
+        text: 'Сравнение площади земельного участка полученных из документации Процедуры и Кадастрового номера. Если они не отличаются более чем на 5%, то значение фильтра "норма". Если отличия более 5%, то следует быть аккуратным с Процедурой - могут быть нюансы',
+        icon: '20/info',
+        interactive: true,
+      },
     },
     {
       name: 'compositions',
@@ -623,6 +683,11 @@ export const useFiltersStore = defineStore('filters', () => {
       items: compositions,
       placeholder: 'Выбрать значение',
       multiple: true,
+      tooltip: {
+        text: 'Кадастровое деление земельного участка как правило представлено в формате AA:BB:CCCCCCC:DDDD, состоит из четырех частей и состоит из: Кадастрового округа, Кадастрового района, Кадастрового квартала, Кадастрового номера земельного участка. В случае если в Процедуре не указан (или указан не верно) кадастровый номер земельного участка, а значит определение его местоположения на карте не возможно, будут отображаться "Координаты не определены"',
+        icon: '20/info',
+        interactive: true,
+      },
     },
     {
       name: 'price_min_cadastral_cost_ratio_percent_from',
@@ -632,6 +697,11 @@ export const useFiltersStore = defineStore('filters', () => {
       type: 'number',
       placeholder: 'Например, 50',
       precision: 0,
+      tooltip: {
+        text: 'Отношение Начальной цены Процедуры к Кадастровой стоимости в процентах. Более чем',
+        icon: '20/info',
+        interactive: true,
+      },
     },
     {
       name: 'price_min_cadastral_cost_ratio_percent_to',
@@ -641,6 +711,11 @@ export const useFiltersStore = defineStore('filters', () => {
       type: 'number',
       placeholder: 'Например, 77',
       precision: 0,
+      tooltip: {
+        text: 'Отношение Начальной цены Процедуры к Кадастровой стоимости в процентах. Менее чем',
+        icon: '20/info',
+        interactive: true,
+      },
     },
     {
       name: 'price_min_from',
@@ -649,6 +724,11 @@ export const useFiltersStore = defineStore('filters', () => {
       model: priceMinFromModel,
       type: 'number',
       placeholder: 'Например, 1234',
+      tooltip: {
+        text: 'Начальная цена Процедуры. Более чем',
+        icon: '20/info',
+        interactive: true,
+      },
     },
     {
       name: 'price_min_to',
@@ -657,6 +737,11 @@ export const useFiltersStore = defineStore('filters', () => {
       model: priceMinToModel,
       type: 'number',
       placeholder: 'Например, 12345',
+      tooltip: {
+        text: 'Начальная цена Процедуры. Менее чем',
+        icon: '20/info',
+        interactive: true,
+      },
     },
     {
       name: 'cadastral_cost_from',
@@ -665,6 +750,11 @@ export const useFiltersStore = defineStore('filters', () => {
       model: cadastralCostFromModel,
       type: 'number',
       placeholder: 'Например, 10 000',
+      tooltip: {
+        text: 'Кадастровая стоимость - результат выполненной в соответствии с законодательством оценки стоимости объекта недвижимости на определённую дату, зафиксированный в Едином государственном реестре недвижимости (ЕГРН) и используемый, в частности, для целей налогообложения. Менее чем',
+        icon: '20/info',
+        interactive: true,
+      },
     },
     {
       name: 'cadastral_cost_to',
@@ -673,6 +763,11 @@ export const useFiltersStore = defineStore('filters', () => {
       model: cadastralCostToModel,
       type: 'number',
       placeholder: 'Например, 100 000',
+      tooltip: {
+        text: 'Кадастровая стоимость - результат выполненной в соответствии с законодательством оценки стоимости объекта недвижимости на определённую дату, зафиксированный в Едином государственном реестре недвижимости (ЕГРН) и используемый, в частности, для целей налогообложения. Менее чем',
+        icon: '20/info',
+        interactive: true,
+      },
     },
     {
       name: 'deposit_from',
@@ -681,6 +776,11 @@ export const useFiltersStore = defineStore('filters', () => {
       model: depositFromModel,
       type: 'number',
       placeholder: 'Например, 123',
+      tooltip: {
+        text: 'Задаток - денежная сумма, которую участник торгов вносит для подтверждения своих намерений заключить договор купли-продажи (или аренды) в случае победы, а также для обеспечения исполнения этого договора. Это своего рода гарантия того, что победитель торгов действительно намерен приобрести имущество и не откажется от сделки. Более чем',
+        icon: '20/info',
+        interactive: true,
+      },
     },
     {
       name: 'deposit_to',
@@ -689,6 +789,11 @@ export const useFiltersStore = defineStore('filters', () => {
       model: depositToModel,
       type: 'number',
       placeholder: 'Например, 1234',
+      tooltip: {
+        text: 'Задаток - денежная сумма, которую участник торгов вносит для подтверждения своих намерений заключить договор купли-продажи (или аренды) в случае победы, а также для обеспечения исполнения этого договора. Это своего рода гарантия того, что победитель торгов действительно намерен приобрести имущество и не откажется от сделки. Менее чем',
+        icon: '20/info',
+        interactive: true,
+      },
     },
     {
       name: 'deposit_percent_from',
@@ -698,6 +803,11 @@ export const useFiltersStore = defineStore('filters', () => {
       type: 'number',
       placeholder: 'Например, 1',
       precision: 0,
+      tooltip: {
+        text: 'Отношение Задатка к Начальной цене Процедуры в процентах. Более чем',
+        icon: '20/info',
+        interactive: true,
+      },
     },
     {
       name: 'deposit_percent_to',
@@ -707,6 +817,11 @@ export const useFiltersStore = defineStore('filters', () => {
       type: 'number',
       placeholder: 'Например, 50',
       precision: 0,
+      tooltip: {
+        text: 'Отношение Задатка к Начальной цене Процедуры в процентах. Менее чем',
+        icon: '20/info',
+        interactive: true,
+      },
     },
     {
       split: 'Характеристики земельного участка (согласно torgi.gov) [TG]',
@@ -721,6 +836,11 @@ export const useFiltersStore = defineStore('filters', () => {
       placeholder: 'Выбрать значение',
       multiple: true,
       size: 'half-lg',
+      tooltip: {
+        text: 'Категория земельного участка - это характеристика, определяющая целевое назначение земли и правовой режим ее использования. Категория устанавливается для каждого участка и указывает, как его можно использовать в соответствии с Законодательством. Сведения согласно документации Процедуры torgi.gov',
+        icon: '20/info',
+        interactive: true,
+      },
     },
     {
       name: 'area_from',
@@ -729,6 +849,11 @@ export const useFiltersStore = defineStore('filters', () => {
       model: areaFromModel,
       type: 'number',
       placeholder: 'Например, 1234',
+      tooltip: {
+        text: 'Площадь земельного участка. Сведения согласно документации Процедуры torgi.gov. Более чем',
+        icon: '20/info',
+        interactive: true,
+      },
     },
     {
       name: 'area_to',
@@ -737,6 +862,11 @@ export const useFiltersStore = defineStore('filters', () => {
       model: areaToModel,
       type: 'number',
       placeholder: 'Например, 12345',
+      tooltip: {
+        text: 'Площадь земельного участка. Сведения согласно документации Процедуры torgi.gov. Менее чем',
+        icon: '20/info',
+        interactive: true,
+      },
     },
     {
       size: 'fill',
@@ -753,7 +883,7 @@ export const useFiltersStore = defineStore('filters', () => {
       loading: permittedUsesPending,
       onInput: onSearchPermittedUses,
       tooltip: {
-        text: 'Вид разрешенного использования земельного участка согласно кадастровому номеру',
+        text: 'Вид разрешённого использования земельного участка (ВРИ) - это установленный законом перечень видов деятельности, которые могут осуществляться на конкретном земельном участке. Он определяет, для каких целей можно использовать землю, например, для жилищного строительства, ведения сельского хозяйства, размещения промышленных объектов и т.д. Поиск осуществляется в т.ч. по неполному совпадению. Сведения согласно документации Процедуры torgi.gov',
         icon: '20/info',
         interactive: true,
       },
@@ -768,6 +898,11 @@ export const useFiltersStore = defineStore('filters', () => {
       items: rubrics,
       placeholder: 'Выбрать значение',
       multiple: true,
+      tooltip: {
+        text: 'Классификатор повышающий удобство использования. Позволяет обойти многочисленные варианты написания ВРИ и ошибок в них. Приводит всё к небольшому но функциональному перечню вариантов использованию земельного участка - для жилья, предпринимательства и т.д. Сведения согласно анализу ВРИ из документации Процедуры torgi.gov',
+        icon: '20/info',
+        interactive: true,
+      },
     },
     {
       split: 'Характеристики земельного участка (по кадастровому номеру) [КН]',
@@ -782,6 +917,11 @@ export const useFiltersStore = defineStore('filters', () => {
       items: categories,
       placeholder: 'Выбрать значение',
       multiple: true,
+      tooltip: {
+        text: 'Категория земельного участка - это характеристика, определяющая целевое назначение земли и правовой режим ее использования. Категория устанавливается для каждого участка и указывает, как его можно использовать в соответствии с Законодательством. Сведения согласно Кадастровому номеру',
+        icon: '20/info',
+        interactive: true,
+      },
     },
     {
       name: 'area_from_nspd_from',
@@ -790,6 +930,11 @@ export const useFiltersStore = defineStore('filters', () => {
       model: areaFromNspdModel,
       type: 'number',
       placeholder: 'Например, 1234',
+      tooltip: {
+        text: 'Площадь земельного участка. Сведения согласно Кадастровому номеру. Более чем',
+        icon: '20/info',
+        interactive: true,
+      },
     },
     {
       name: 'area_from_nspd_to',
@@ -798,6 +943,11 @@ export const useFiltersStore = defineStore('filters', () => {
       model: areaToNspdModel,
       type: 'number',
       placeholder: 'Например, 12345',
+      tooltip: {
+        text: 'Площадь земельного участка. Сведения согласно Кадастровому номеру. Менее чем',
+        icon: '20/info',
+        interactive: true,
+      },
     },
     {
       size: 'fill',
@@ -813,6 +963,11 @@ export const useFiltersStore = defineStore('filters', () => {
       returnObject: false,
       loading: permittedUsesNspdPending,
       onInput: onSearchPermittedUsesNspd,
+      tooltip: {
+        text: 'Вид разрешённого использования земельного участка (ВРИ) - это установленный законом перечень видов деятельности, которые могут осуществляться на конкретном земельном участке. Он определяет, для каких целей можно использовать землю, например, для жилищного строительства, ведения сельского хозяйства, размещения промышленных объектов и т.д. Поиск осуществляется в т.ч. по неполному совпадению. Сведения согласно Кадастровому номеру',
+        icon: '20/info',
+        interactive: true,
+      },
     },
     {
       size: 'fill',
@@ -824,6 +979,11 @@ export const useFiltersStore = defineStore('filters', () => {
       items: rubrics,
       placeholder: 'Выбрать значение',
       multiple: true,
+      tooltip: {
+        text: 'Классификатор повышающий удобство использования. Позволяет обойти многочисленные варианты написания ВРИ и ошибок в них. Приводит всё к небольшому но функциональному перечню вариантов использованию земельного участка - для жилья, предпринимательства и т.д. Сведения согласно анализу ВРИ из Кадастрового номера',
+        icon: '20/info',
+        interactive: true,
+      },
     },
   ]);
 
