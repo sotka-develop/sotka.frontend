@@ -5,6 +5,7 @@ import vue from '@vitejs/plugin-vue';
 import vueDevTools from 'vite-plugin-vue-devtools';
 import vuetify from 'vite-plugin-vuetify';
 import svgLoader from 'vite-svg-loader';
+import { viteStaticCopy } from 'vite-plugin-static-copy';
 
 export default defineConfig({
   base: '/',
@@ -20,6 +21,14 @@ export default defineConfig({
     svgLoader({
       defaultImport: 'component',
       svgo: false,
+    }),
+    viteStaticCopy({
+      targets: [
+        {
+          src: 'rubrics',
+          dest: '',
+        },
+      ],
     }),
   ],
   resolve: {
