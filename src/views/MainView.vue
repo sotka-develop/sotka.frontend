@@ -34,7 +34,7 @@
       </div>
 
       <div class="mb-24">
-        <Section title="Таблица">
+        <Section title="Таблица Лотов">
           <Table
             :page="page"
             :items-per-page="pageSize"

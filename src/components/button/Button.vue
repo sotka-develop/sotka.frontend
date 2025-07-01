@@ -54,6 +54,10 @@
       type: String,
       default: 'primary',
     },
+    small: {
+      type: Boolean,
+      default: false,
+    },
     disabled: {
       type: Boolean,
     },
@@ -75,6 +79,7 @@
     return {
       [`button--${props.theme}`]: props.theme,
       ['button--fit']: props.fit,
+      ['button--small']: props.small,
       ['button--disabled']: props.disabled,
       ['button--loading']: props.loading,
     };

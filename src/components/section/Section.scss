@@ -14,8 +14,22 @@
     box-shadow: none;
   }
 
+  &__top {
+    display: flex;
+  }
+
   &__title {
-    margin-bottom: 28px;
+    // margin-bottom: 28px;
+  }
+
+  &__body {
+    overflow: hidden;
+    height: auto;
+    transition: height 0.3s ease;
+  }
+
+  &__content {
+    margin-top: 28px;
   }
 
   &__actions {
@@ -26,5 +40,28 @@
     margin-top: 44px;
     padding-top: 24px;
     border-top: 1px solid $color-border-base-1-400;
+  }
+
+  &__controls {
+    display: flex;
+    gap: 8px;
+    margin-left: auto;
+  }
+
+  &__control {
+    &--toggle {
+      &:deep(.button) {
+        .icon {
+          @include defaultTransition(transform);
+        }
+      }
+    }
+    #{$root}--hidden &--toggle {
+      &:deep(.button) {
+        .icon {
+          transform: rotate(180deg);
+        }
+      }
+    }
   }
 }

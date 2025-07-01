@@ -113,6 +113,12 @@
     width: 100%;
   }
 
+  &--small {
+    min-width: 0;
+    width: 40px;
+    height: 40px;
+  }
+
   &--loading {
     pointer-events: none;
 
@@ -142,6 +148,10 @@
     #{$root}--loading & {
       opacity: 0;
     }
+
+    #{$root}--small & {
+      margin: 0;
+    }
   }
 
   &__text {
@@ -152,6 +162,10 @@
 
     #{$root}--loading & {
       opacity: 0;
+    }
+
+    #{$root}--small & {
+      display: none;
     }
   }
 }
