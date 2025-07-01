@@ -114,7 +114,7 @@
     { title: 'Субъект РФ', key: 'region', sortable: true },
     { title: 'Федеральный округ', key: 'federal_district', sortable: true },
     { title: 'Ссылка', key: 'link', sortable: true },
-    { title: 'Составность', key: 'compositions', sortable: true },
+    { title: 'Составность', key: 'composition', sortable: true },
   ];
 
   function formatCadastralRatio(value) {
@@ -137,10 +137,10 @@
       deposit_in_rub: safeValue(lot?.deposit_in_rub),
       deposit_percent: safeValue(lot?.deposit_percent),
       price_min_cadastral_cost_ratio_percent: formatCadastralRatio(safeValue(lot?.price_min_cadastral_cost_ratio_percent)),
-      coords: `${safeValue(lot?.latitude)}, ${safeValue(lot?.longitude)}`,
+      coords: `${safeValue(lot?.coords?.latitude)}, ${safeValue(lot?.coords?.longitude)}`,
       bidd_end_time: safeValue(lot?.bidd_end_time),
       auction_start_date: safeValue(lot?.auction_start_date),
-      biddForm: safeValue(lot?.bidd_form?.bidd_form),
+      bidd_form: safeValue(lot?.bidd_form?.bidd_form),
       type_transaction_rus: safeValue(lot?.type_transaction_rus),
       etp_code: safeValue(lot?.etp_code?.etp_code),
       category_purpose_or_category_from_torgigov_processed: safeValue(lot?.category_purpose_or_category_from_torgigov_processed),
@@ -150,7 +150,7 @@
       region: safeValue(lot?.region?.region),
       federal_district: safeValue(lot?.federal_district?.federal_district),
       link: safeValue(lot?.link),
-      compositions: safeValue(lot?.compositions),
+      composition: safeValue(lot?.composition),
     }));
   }
   //#endregion
@@ -421,7 +421,6 @@
 
     filtersData.value = filtersStore.getFormattedFilters();
     page.value = pageDefaultValue;
-    // pageSize.value = pageSizeDefaultValue;
 
     mapSidebarStatus.value = false;
 
