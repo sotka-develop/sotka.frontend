@@ -188,7 +188,7 @@
   const centerDefault = [101, 62];
   const prevCenter = ref([101, 62]);
   const isDirty = ref(false);
-  const enabledBehaviors = ref(['drag', 'scrollZoom']);
+  const enabledBehaviors = ref(['drag', 'scrollZoom', 'pinchZoom']);
 
   const actions = [
     // { icon: '24/measuring', name: 'measuring', handler: () => {} },
