@@ -4,7 +4,7 @@
       <div class="form-auth__base">
         <div class="form-auth__content">
           <div class="form-auth__logo">
-            <Icon name="logos/logo" />
+            <Image v-bind="logoData" />
           </div>
 
           <h2 v-if="title" class="form-auth__title">{{ title }}</h2>
@@ -36,7 +36,6 @@
   import Field from '@/components/fields/field/Field.vue';
   import Button from '@/components/button/Button.vue';
   import Image from '@/components/image/Image.vue';
-  import Icon from '@/components/icon/Icon.vue';
 
   const props = defineProps({
     title: {
@@ -52,6 +51,11 @@
       type: Object,
     },
   });
+
+  const logoData = {
+    src: 'images/logo/logo.png',
+    alt: '',
+  };
 
   // события для родителя
   const emit = defineEmits(['update:modelValue', 'submit']);

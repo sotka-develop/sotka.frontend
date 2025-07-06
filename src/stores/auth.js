@@ -1,6 +1,8 @@
 // stores/auth.js
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
+import { toast } from 'vue3-toastify';
+import Toast from '@/components/toast/Toast.vue';
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
@@ -69,7 +71,25 @@ export const useAuthStore = defineStore('auth', () => {
     });
 
     const data = await res.json();
-    if (!res.ok || !data?.payload?.ok) throw new Error(data.message || 'Ошибка при отправке кода');
+    if (!res.ok || !data?.payload?.ok) {
+      const warning = data?.warning?.warning;
+
+      const message = warning || data?.error?.error_data?.['exception.detail'] || 'Ошибка при отправке кода';
+
+      toast(Toast, {
+        type: warning ? 'warning' : 'error',
+        expandCustomProps: true,
+        contentProps: {
+          title: message,
+        },
+        autoClose: 5000,
+        closeOnClick: false,
+        draggable: true,
+        position: toast.POSITION.BOTTOM_RIGHT,
+      });
+
+      throw new Error(message);
+    }
 
     showConsentCheckboxes.value = data.payload.show_consent_checkboxes;
 
@@ -85,7 +105,23 @@ export const useAuthStore = defineStore('auth', () => {
     });
 
     const data = await res.json();
-    if (!res.ok) throw new Error(data.message || 'Ошибка авторизации');
+    if (!res.ok) {
+      const message = data?.error?.error_data?.['exception.detail'] || 'Ошибка авторизации';
+
+      toast(Toast, {
+        type: 'error',
+        expandCustomProps: true,
+        contentProps: {
+          title: message,
+        },
+        autoClose: 5000,
+        closeOnClick: false,
+        draggable: true,
+        position: toast.POSITION.BOTTOM_RIGHT,
+      });
+
+      throw new Error(message);
+    }
 
     if (data?.payload?.token) setToken(data.payload.token);
 

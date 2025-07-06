@@ -1,0 +1,17 @@
+.Toastify {
+  &__toast-icon {
+    // display: none !important;
+  }
+}
+
+.Toastify__toast-icon {
+  display: none !important;
+}
+
+.Toastify__progress-bar--success {
+  background-color: $color-border-accent-2-100 !important;
+}
+
+.Toastify__progress-bar--error {
+  background-color: $color-border-error;
+}

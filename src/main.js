@@ -4,6 +4,7 @@ import 'vuetify/styles';
 import '@mdi/font/css/materialdesignicons.css';
 import 'simplebar-vue/dist/simplebar.min.css';
 import '@/assets/scss/main.scss';
+import 'vue3-toastify/dist/index.css';
 
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
@@ -14,12 +15,14 @@ import router from './router';
 import { vuetify } from './plugins/vuetify';
 import SimpleBar from 'simplebar-vue';
 import VueTippy from 'vue-tippy';
+import Vue3Toastify from 'vue3-toastify';
 
 const app = createApp(App);
 const pinia = createPinia();
 
 app.use(pinia);
 app.use(VueTippy);
+app.use(Vue3Toastify);
 
 import { useAuthStore } from '@/stores/auth';
 
