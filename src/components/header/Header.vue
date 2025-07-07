@@ -37,7 +37,7 @@
         </nav>
 
         <div class="header__actions">
-          <div class="header__action">
+          <div class="header__action" v-if="!auth">
             <Button v-bind="buttonData" @click="logout" />
           </div>
         </div>
@@ -61,6 +61,13 @@
   import Button from '@/components/button/Button.vue';
   import Menu from '@/components/menu/Menu.vue';
   import Icon from '@/components/icon/Icon.vue';
+
+  const props = defineProps({
+    auth: {
+      type: Boolean,
+      default: false,
+    },
+  });
 
   const logoData = {
     src: 'images/logo/logo.png',

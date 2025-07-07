@@ -17,28 +17,6 @@
         <div v-if="selectedCount && index === 0">{{ selectedCount }}</div>
       </template>
 
-      <!-- <template #selection="{ item, index }"> -->
-      <!-- Всегда отображается первый выбранный элемент -->
-      <!-- <div v-if="index === 0" class="autocomplete__item text-body">{{ item.title }}</div> -->
-
-      <!-- Отображается все, если showAll = true и index > 0 -->
-      <!-- <div v-else-if="index > 0 && showAll" class="autocomplete__item text-body">
-          {{ item.title }}
-        </div> -->
-      <!-- </template> -->
-
-      <!-- <template #append-inner> -->
-      <!-- Если выбрано больше одного элемента и showAll = false -->
-      <!-- <button v-if="itemsCount > 1 && !showAll" class="autocomplete__toggle text-body" @click="toggleShowAll">
-          {{ counterValue }}
-        </button> -->
-
-      <!-- Если showAll = true, то кнопка "Свернуть" -->
-      <!-- <button v-if="itemsCount > 1 && showAll" class="autocomplete__toggle text-body" @click="toggleShowAll">
-          {{ hideButtonText }}
-        </button> -->
-      <!-- </template> -->
-
       <template v-slot:item="{ item, props }">
         <v-list-item v-bind="props" :title="item.name">
           <v-list-item-title :title="item.title">

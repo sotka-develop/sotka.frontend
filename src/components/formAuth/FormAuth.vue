@@ -3,9 +3,9 @@
     <div class="form-auth__container">
       <div class="form-auth__base">
         <div class="form-auth__content">
-          <div class="form-auth__logo">
+          <!-- <div class="form-auth__logo">
             <Image v-bind="logoData" />
-          </div>
+          </div> -->
 
           <h2 v-if="title" class="form-auth__title">{{ title }}</h2>
 
@@ -65,7 +65,7 @@
   const formData = reactive({ ...props.modelValue });
 
   const imageData = {
-    src: 'images/formAUth/image-1.jpg',
+    src: 'images/formAUth/image-2.jpg',
     alt: '',
   };
 

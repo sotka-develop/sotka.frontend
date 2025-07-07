@@ -18,25 +18,25 @@
     }
   }
 
-  &__logo {
-    width: 64px;
-    height: 64px;
-    margin-bottom: 24px;
-  }
+  // &__logo {
+  //   width: 64px;
+  //   height: 64px;
+  //   margin-bottom: 24px;
+  // }
 
   &__title {
     margin-bottom: 48px;
   }
 
   &__content {
-    padding: 0 16px;
+    padding: 80px 16px 0;
     max-width: 480px;
     width: 100%;
     margin-left: auto;
     margin-right: auto;
 
     @include media-breakpoint-up(lg) {
-      padding: 0 24px;
+      padding: 80px 24px 0;
     }
   }
 
