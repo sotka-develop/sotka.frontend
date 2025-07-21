@@ -7,8 +7,8 @@
         <div class="map-cluster__items">
           <div v-for="(item, idx) in items" :key="idx" class="map-cluster__item">
             <button type="button" class="map-cluster__button" @click="showPointData(item)">
-              <div class="map-cluster__icon">
-                <Icon name="24/house" />
+              <div class="map-cluster__icon" :style="item?.bg_color ? { color: item.bg_color } : { color: '#199719' }">
+                <Icon v-if="item.rubric_image_link" :name="item.rubric_image_link" />
               </div>
 
               <span>{{ item.lot || 'Нет данных' }}</span>
