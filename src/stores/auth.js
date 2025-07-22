@@ -18,12 +18,14 @@ export const useAuthStore = defineStore('auth', () => {
   function setToken(newToken) {
     token.value = newToken;
     localStorage.setItem('token', newToken);
+
     isAuthenticated.value = true;
   }
 
   function clearToken() {
     token.value = null;
     localStorage.removeItem('token');
+
     isAuthenticated.value = false;
   }
 
