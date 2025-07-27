@@ -41,6 +41,8 @@
   }
 
   &__side {
+    pointer-events: none;
+
     @include media-breakpoint-up(lg) {
       top: 0;
       right: 0;
