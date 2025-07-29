@@ -88,9 +88,37 @@ export const useAuthStore = defineStore('auth', () => {
         closeOnClick: false,
         draggable: true,
         position: toast.POSITION.BOTTOM_RIGHT,
+        transition: 'slide',
       });
 
       throw new Error(message);
+    }
+
+    if (data?.payload?.code_sended_to) {
+      const code_sended_to = data?.payload?.code_sended_to;
+
+      let message = '';
+
+      if (code_sended_to === 'tg') {
+        message = 'На ваш Telegram отправлен код';
+      } else if (code_sended_to === 'email') {
+        message = 'На ваш электроный адрес отправлен пароль';
+      }
+
+      if (message) {
+        toast(Toast, {
+          type: 'success',
+          expandCustomProps: true,
+          contentProps: {
+            title: message,
+          },
+          autoClose: 5000,
+          closeOnClick: false,
+          draggable: true,
+          position: toast.POSITION.BOTTOM_RIGHT,
+          transition: 'slide',
+        });
+      }
     }
 
     showConsentCheckboxes.value = data.payload.show_consent_checkboxes;
@@ -120,6 +148,7 @@ export const useAuthStore = defineStore('auth', () => {
         closeOnClick: false,
         draggable: true,
         position: toast.POSITION.BOTTOM_RIGHT,
+        transition: 'slide',
       });
 
       throw new Error(message);
