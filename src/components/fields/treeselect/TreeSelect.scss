@@ -51,6 +51,17 @@
     }
   }
 
+  &__select-all {
+    padding: 10px 22px;
+    cursor: pointer;
+
+    @include defaultTransition(background-color);
+
+    @include hover {
+      background-color: $color-bg-base-1-400;
+    }
+  }
+
   &:deep(.vue3-treeselect__placeholder) {
     @include text-body;
   }

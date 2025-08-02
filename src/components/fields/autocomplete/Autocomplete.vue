@@ -13,6 +13,17 @@
       @input="handleInput"
       :menu-props="{ maxWidth: '400' }"
     >
+      <template #prepend-item>
+        <v-list-item
+          v-if="multiple && items.length"
+          class="autocomplete__select-all"
+          :class="{ 'autocomplete__select-all--active': allSelected }"
+          @click="toggleSelectAll"
+        >
+          <span>{{ allSelected ? 'Снять выбор' : 'Выбрать все' }}</span>
+        </v-list-item>
+      </template>
+
       <template #selection="{ item, index }">
         <div v-if="selectedCount && index === 0">{{ selectedCount }}</div>
       </template>
@@ -149,6 +160,33 @@
 
     return props.modelValue.length;
   });
+
+  const allSelected = computed(() => {
+    if (!props.multiple) return true;
+
+    if (!Array.isArray(props.modelValue)) return false;
+
+    const allValues = props.items.map((el) => (typeof el === 'object' && el !== null ? el[props.itemValue] : el));
+
+    if (props.returnObject) {
+      return props.modelValue.length === props.items.length;
+    }
+
+    return allValues.every((val) => props.modelValue.includes(val));
+  });
+
+  function toggleSelectAll() {
+    if (!props.multiple) return;
+
+    if (allSelected.value) {
+      emitUpdate([]);
+    } else {
+      const allItems = props.returnObject
+        ? props.items
+        : props.items.map((el) => (typeof el === 'object' && el !== null ? el[props.itemValue] : el));
+      emitUpdate(allItems);
+    }
+  }
 </script>
 
 <style lang="scss" scoped>

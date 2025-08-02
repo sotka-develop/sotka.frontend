@@ -12,6 +12,17 @@
       value-consists-of="LEAF_PRIORITY"
       @input="handleInput"
     >
+      <template #before-list>
+        <div
+          v-if="showSelectAll"
+          class="treeselect__select-all"
+          :class="{ 'treeselect__select-all--active': allSelected }"
+          @click="toggleSelectAll"
+        >
+          <span>{{ allSelected ? 'Снять выбор' : 'Выбрать все' }}</span>
+        </div>
+      </template>
+
       <template #no-results-options-tip>
         <div class="treeselect__no-result">{{ noResultText }}</div>
       </template>
@@ -84,6 +95,23 @@
   function handleInput(value) {
     if (props.onInput) {
       props.onInput(value);
+    }
+  }
+
+  const showSelectAll = computed(() => props.multiple && props.items.length > 0);
+
+  const allLeafIds = computed(() => props.items.flatMap((group) => group.items.map((item) => item.value)));
+
+  const allSelected = computed(() => {
+    if (!selected.value?.length) return false;
+    return allLeafIds.value.every((id) => selected.value.includes(id));
+  });
+
+  function toggleSelectAll() {
+    if (allSelected.value) {
+      selected.value = [];
+    } else {
+      selected.value = [...allLeafIds.value];
     }
   }
 
