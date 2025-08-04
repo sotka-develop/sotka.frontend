@@ -2,7 +2,7 @@
 import { defineStore } from 'pinia';
 import { ref, watch } from 'vue';
 import { useAuthStore } from './auth';
-import { debounce } from 'lodash';
+import { debounce, filter } from 'lodash';
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
@@ -488,6 +488,7 @@ export const useFiltersStore = defineStore('filters', () => {
 
     permittedUsesPending.value = true;
     const result = await searchPermittedUses(value, 1000, 0, 'torgi_gov');
+
     usesData.value = result.value;
   }, 800);
 
@@ -1148,55 +1149,6 @@ export const useFiltersStore = defineStore('filters', () => {
     }
   }
 
-  // ВРИ
-  async function searchPermittedUses(query = '', limit = 10, offset = 0, source = 'torgi_gov') {
-    const auth = useAuthStore();
-    const result = ref([]);
-
-    if (!auth.token) {
-      console.warn('Нет токена для запроса permitted uses');
-      return result;
-    }
-
-    try {
-      const url = `${baseUrl}/client/filters/search_permitted_use`;
-
-      const res = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `${auth.token}`,
-        },
-        body: JSON.stringify({
-          query,
-          limit,
-          offset,
-          source,
-        }),
-      });
-
-      if (!res.ok) {
-        throw new Error(`Ошибка поиска ВРИ: ${res.statusText}`);
-      }
-
-      const data = await res.json();
-
-      if (!data.payload) return result;
-
-      result.value = (data.payload || []).map((item) => ({
-        text: item.permitted_use,
-        value: item.id,
-      }));
-    } catch (err) {
-      console.error('Ошибка при поиске ВРИ:', err);
-    } finally {
-      permittedUsesPending.value = false;
-      permittedUsesNspdPending.value = false;
-    }
-
-    return result;
-  }
-
   function formatDate(model) {
     if (!model?.value) return null;
 
@@ -1306,6 +1258,58 @@ export const useFiltersStore = defineStore('filters', () => {
       // 33) Рубрика НСПД
       rubric_nspd_ids: rubricsNspdModel.value || [],
     };
+  }
+
+  // ВРИ
+  async function searchPermittedUses(query = '', limit = 10, offset = 0, source = 'torgi_gov') {
+    const auth = useAuthStore();
+    const result = ref([]);
+
+    if (!auth.token) {
+      console.warn('Нет токена для запроса permitted uses');
+      return result;
+    }
+
+    try {
+      const url = `${baseUrl}/client/filters/search_permitted_use`;
+
+      const filtersData = getFormattedFilters();
+
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `${auth.token}`,
+        },
+        body: JSON.stringify({
+          query,
+          limit,
+          offset,
+          source,
+          ...filtersData,
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error(`Ошибка поиска ВРИ: ${res.statusText}`);
+      }
+
+      const data = await res.json();
+
+      if (!data.payload) return result;
+
+      result.value = (data.payload || []).map((item) => ({
+        text: item.permitted_use,
+        value: item.id,
+      }));
+    } catch (err) {
+      console.error('Ошибка при поиске ВРИ:', err);
+    } finally {
+      permittedUsesPending.value = false;
+      permittedUsesNspdPending.value = false;
+    }
+
+    return result;
   }
 
   return {
