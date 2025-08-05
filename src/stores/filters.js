@@ -1132,12 +1132,52 @@ export const useFiltersStore = defineStore('filters', () => {
       fields.forEach((item) => {
         const name = item.name;
         const isAvailable = item.is_available;
+        const defaultValue = item.default;
 
         if (name && !isAvailable) {
           const field = fieldsData.value.find((item) => item.name === name);
 
           if (field) {
             field.disabled = true;
+          }
+        }
+
+        if (name && defaultValue) {
+          if (name === 'bidd_end_time_from') {
+            biddEndTimeFromModel.value = defaultValue;
+          }
+          if (name === 'bidd_end_time_to') {
+            biddEndTimeToModel.value = defaultValue;
+          }
+          if (name === 'bidd_start_time_from') {
+            biddStartTimeFromModel.value = defaultValue;
+          }
+          if (name === 'bidd_start_time_to') {
+            biddStartTimeToModel.value = defaultValue;
+          }
+          if (name === 'price_min_cadastral_cost_ratio_percent_from') {
+            priceRatioFromModel.value = defaultValue;
+          }
+          if (name === 'price_min_cadastral_cost_ratio_percent_to') {
+            priceRatioToModel.value = defaultValue;
+          }
+          if (name === 'deposit_from') {
+            depositFromModel.value = defaultValue;
+          }
+          if (name === 'deposit_to') {
+            depositToModel.value = defaultValue;
+          }
+          if (name === 'rubric_ids') {
+            rubricsModel.value = defaultValue;
+          }
+          if (name === 'rubric_nspd_ids') {
+            rubricsNspdModel.value = defaultValue;
+          }
+          if (name === 'transaction_types') {
+            transactionTypesModel.value = defaultValue;
+          }
+          if (name === 'bidd_form_ids') {
+            biddFormsModel.value = defaultValue;
           }
         }
       });
