@@ -1275,19 +1275,20 @@ export const useFiltersStore = defineStore('filters', () => {
 
       const filtersData = getFormattedFilters();
 
-      const res = await fetch(url, {
+      const params = new URLSearchParams({
+        query,
+        limit,
+        offset,
+        source,
+      }).toString();
+
+      const res = await fetch(`${url}?${params}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `${auth.token}`,
         },
-        body: JSON.stringify({
-          query,
-          limit,
-          offset,
-          source,
-          ...filtersData,
-        }),
+        body: JSON.stringify(filtersData),
       });
 
       if (!res.ok) {
