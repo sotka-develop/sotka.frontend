@@ -14,6 +14,10 @@ export const useFiltersStore = defineStore('filters', () => {
   const permittedUsesNspdPending = ref(false);
   const permittedUseshideNoData = ref(true);
 
+  const searchRubricsPending = ref(false);
+  const searchRubricsNspdPending = ref(false);
+  const searchRubricshideNoData = ref(true);
+
   // 1) Регион
   const regionsByDistricts = ref([]);
 
@@ -42,6 +46,12 @@ export const useFiltersStore = defineStore('filters', () => {
 
   // ВРИ
   const usesData = ref([]);
+
+  // rubrics
+  const rubricsData = ref([]);
+
+  // rubrics Nspd
+  const rubricsNspdData = ref([]);
 
   // ВРИ НСДП
   const usesNspdData = ref([]);
@@ -497,7 +507,26 @@ export const useFiltersStore = defineStore('filters', () => {
 
     permittedUsesNspdPending.value = true;
     const result = await searchPermittedUses(value, 1000, 0, 'nspd');
+
     usesNspdData.value = result.value;
+  }, 800);
+
+  const onSearchRubrics = debounce(async (event) => {
+    const value = event?.target?.value || '';
+
+    searchRubricsPending.value = true;
+    const result = await searchRubrics(value, 1000, 0, 'torgi_gov');
+
+    rubricsData.value = result.value;
+  }, 800);
+
+  const onSearchRubricsNspd = debounce(async (event) => {
+    const value = event?.target?.value || '';
+
+    searchRubricsNspdPending.value = true;
+    const result = await searchRubrics(value, 1000, 0, 'nspd');
+
+    rubricsNspdData.value = result.value;
   }, 800);
 
   const fieldsData = ref([
@@ -894,11 +923,14 @@ export const useFiltersStore = defineStore('filters', () => {
       name: 'rubric_ids',
       label: 'Рубрика',
       hideDetails: true,
+      hideNoData: searchRubricshideNoData,
       model: rubricsModel,
       type: 'autocomplete',
-      items: rubrics,
+      items: rubricsData,
       placeholder: 'Выбрать значение',
       multiple: true,
+      loading: searchRubricsPending,
+      onInput: onSearchRubrics,
       tooltip: {
         text: 'Классификатор повышающий удобство использования. Позволяет обойти многочисленные варианты написания ВРИ и ошибок в них. Приводит всё к небольшому но функциональному перечню вариантов использованию земельного участка - для жилья, предпринимательства и т.д. Сведения согласно анализу <i>ВРИ</i> из <u>документации Процедуры torgi.gov</u>',
         icon: '20/info',
@@ -975,11 +1007,14 @@ export const useFiltersStore = defineStore('filters', () => {
       name: 'rubric_nspd_ids',
       label: 'Рубрика [КН]',
       hideDetails: true,
+      hideNoData: searchRubricshideNoData,
       model: rubricsNspdModel,
       type: 'autocomplete',
-      items: rubrics,
+      items: rubricsNspdData,
       placeholder: 'Выбрать значение',
       multiple: true,
+      loading: searchRubricsNspdPending,
+      onInput: onSearchRubricsNspd,
       tooltip: {
         text: '<i>Классификатор повышающий удобство использования. Позволяет обойти многочисленные варианты написания ВРИ</i> и ошибок в них. Приводит всё к небольшому но функциональному перечню вариантов использованию земельного участка - для жилья, предпринимательства и т.д. Сведения согласно анализу ВРИ из <u>Кадастрового номера</u>',
         icon: '20/info',
@@ -988,6 +1023,7 @@ export const useFiltersStore = defineStore('filters', () => {
     },
   ]);
 
+  // ВРИ
   async function loadInitialPermittedUses() {
     permittedUsesPending.value = true;
 
@@ -999,6 +1035,7 @@ export const useFiltersStore = defineStore('filters', () => {
     }
   }
 
+  // ВРИ
   async function loadInitialPermittedUsesNspd() {
     permittedUsesNspdPending.value = true;
 
@@ -1007,6 +1044,30 @@ export const useFiltersStore = defineStore('filters', () => {
       usesNspdData.value = result.value;
     } finally {
       permittedUsesNspdPending.value = false;
+    }
+  }
+
+  // search_rubrics
+  async function loadInitialRubrics() {
+    searchRubricsPending.value = true;
+
+    try {
+      const result = await searchRubrics('', 1000, 0, 'torgi_gov');
+      rubricsData.value = result.value;
+    } finally {
+      searchRubricsPending.value = false;
+    }
+  }
+
+  // search_rubrics
+  async function loadInitialRubricsNspd() {
+    searchRubricsNspdPending.value = true;
+
+    try {
+      const result = await searchRubrics('', 1000, 0, 'nspd');
+      rubricsNspdData.value = result.value;
+    } finally {
+      searchRubricsNspdPending.value = false;
     }
   }
 
@@ -1092,7 +1153,7 @@ export const useFiltersStore = defineStore('filters', () => {
       );
 
       // Вызов доп. загрузок после успешной загрузки фильтров
-      await Promise.all([loadInitialPermittedUses(), loadInitialPermittedUsesNspd()]);
+      await Promise.all([loadInitialPermittedUses(), loadInitialPermittedUsesNspd(), loadInitialRubrics(), loadInitialRubricsNspd()]);
     } catch (err) {
       console.error('Ошибка при загрузке фильтров:', err);
       error.value = err.message;
@@ -1348,6 +1409,59 @@ export const useFiltersStore = defineStore('filters', () => {
     } finally {
       permittedUsesPending.value = false;
       permittedUsesNspdPending.value = false;
+    }
+
+    return result;
+  }
+
+  // search_rubrics
+  async function searchRubrics(query = '', limit = 10, offset = 0, source = 'torgi_gov') {
+    const auth = useAuthStore();
+    const result = ref([]);
+
+    if (!auth.token) {
+      console.warn('Нет токена для запроса search rubrics');
+      return result;
+    }
+
+    try {
+      const url = `${baseUrl}/client/filters/search_rubrics`;
+
+      const filtersData = getFormattedFilters();
+
+      const params = new URLSearchParams({
+        query,
+        limit,
+        offset,
+        source,
+      }).toString();
+
+      const res = await fetch(`${url}?${params}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `${auth.token}`,
+        },
+        body: JSON.stringify(filtersData),
+      });
+
+      if (!res.ok) {
+        throw new Error(`Ошибка поиска search rubrics: ${res.statusText}`);
+      }
+
+      const data = await res.json();
+
+      if (!data.payload) return result;
+
+      result.value = (data.payload || []).map((item) => ({
+        text: item.permitted_use,
+        value: item.id,
+      }));
+    } catch (err) {
+      console.error('Ошибка при поиске search rubrics:', err);
+    } finally {
+      searchRubricsPending.value = false;
+      searchRubricsNspdPending.value = false;
     }
 
     return result;
