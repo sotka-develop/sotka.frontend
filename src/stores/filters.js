@@ -18,8 +18,15 @@ export const useFiltersStore = defineStore('filters', () => {
   const searchRubricsNspdPending = ref(false);
   const searchRubricshideNoData = ref(true);
 
+  const searchCategoriesPending = ref(false);
+  const searchCategoriesNspdPending = ref(false);
+  const searchCategorieshideNoData = ref(true);
+
+  const searchRegionsPending = ref(false);
+
   // 1) Регион
   const regionsByDistricts = ref([]);
+  const regionsData = ref([]);
 
   // 4) Вид торгов
   const biddTypes = ref([]);
@@ -41,6 +48,8 @@ export const useFiltersStore = defineStore('filters', () => {
 
   // 24) Категория
   const categories = ref([]);
+  const categoriesData = ref([]);
+  const categoriesNspdData = ref([]);
 
   const rubrics = ref([]);
 
@@ -529,6 +538,33 @@ export const useFiltersStore = defineStore('filters', () => {
     rubricsNspdData.value = result.value;
   }, 800);
 
+  const onSearchCategories = debounce(async (event) => {
+    const value = event?.target?.value || '';
+
+    searchCategoriesPending.value = true;
+    const result = await searchCategories(value, 1000, 0, 'torgi_gov');
+
+    categoriesData.value = result.value;
+  }, 800);
+
+  const onSearchCategoriesNspd = debounce(async (event) => {
+    const value = event?.target?.value || '';
+
+    searchCategoriesNspdPending.value = true;
+    const result = await searchCategories(value, 1000, 0, 'torgi_gov_purpose');
+
+    categoriesNspdData.value = result.value;
+  }, 800);
+
+  const onSearchRegions = debounce(async (event) => {
+    const value = event?.target?.value || '';
+
+    searchRegionsPending.value = true;
+    const result = await searchCategories(value, 1000, 0);
+
+    regionsData.value = result.value;
+  }, 800);
+
   const fieldsData = ref([
     {
       name: 'region_ids',
@@ -536,10 +572,12 @@ export const useFiltersStore = defineStore('filters', () => {
       hideDetails: true,
       model: regionsByDistrictsModel,
       type: 'treeselect',
-      items: regionsByDistricts,
+      items: regionsData,
       clearable: false,
       placeholder: 'Субъект РФ',
       multiple: true,
+      // loading: searchRegionsPending,
+      // onInput: onSearchRegions,
       size: 'half',
       tooltip: {
         text: 'Субъект местонахождения имущества',
@@ -860,12 +898,15 @@ export const useFiltersStore = defineStore('filters', () => {
       name: 'categories_ids',
       label: 'Категория',
       hideDetails: true,
+      hideNoData: searchCategorieshideNoData,
       model: categoriesModel,
       type: 'autocomplete',
-      items: categories,
+      items: categoriesData,
       placeholder: 'Выбрать значение',
       multiple: true,
       size: 'half-lg',
+      loading: searchCategoriesPending,
+      onInput: onSearchCategories,
       tooltip: {
         text: '<i>Категория земельного участка</i> - это характеристика, определяющая целевое назначение земли и правовой режим ее использования. Категория устанавливается для каждого участка и указывает, как его можно использовать в соответствии с Законодательством. <u>Сведения согласно документации Процедуры torgi.gov<u/>',
         icon: '20/info',
@@ -945,11 +986,14 @@ export const useFiltersStore = defineStore('filters', () => {
       name: 'categories_nspd_ids',
       label: 'Категория [КН]',
       hideDetails: true,
+      hideNoData: searchCategorieshideNoData,
       model: categoriesNspdModel,
       type: 'autocomplete',
-      items: categories,
+      items: categoriesNspdData,
       placeholder: 'Выбрать значение',
       multiple: true,
+      loading: searchCategoriesNspdPending,
+      onInput: onSearchCategoriesNspd,
       tooltip: {
         text: '<i>Категория земельного участка</i> - это характеристика, определяющая целевое назначение земли и правовой режим ее использования. Категория устанавливается для каждого участка и указывает, как его можно использовать в соответствии с Законодательством. <u>Сведения согласно Кадастровому номеру</u>',
         icon: '20/info',
@@ -1071,6 +1115,42 @@ export const useFiltersStore = defineStore('filters', () => {
     }
   }
 
+  // search_categories
+  async function loadInitialCategories() {
+    searchCategoriesPending.value = true;
+
+    try {
+      const result = await searchCategories('', 1000, 0, 'torgi_gov');
+      categoriesData.value = result.value;
+    } finally {
+      searchCategoriesPending.value = false;
+    }
+  }
+
+  // search_rubrics
+  async function loadInitialCategoriesNspd() {
+    searchCategoriesNspdPending.value = true;
+
+    try {
+      const result = await searchCategories('', 1000, 0, 'torgi_gov_purpose');
+      categoriesNspdData.value = result.value;
+    } finally {
+      searchCategoriesNspdPending.value = false;
+    }
+  }
+
+  // search_regions
+  async function loadInitialRegions() {
+    searchRegionsPending.value = true;
+
+    try {
+      const result = await searchRegions('', 1000, 0);
+      regionsData.value = result.value;
+    } finally {
+      searchRegionsPending.value = false;
+    }
+  }
+
   // Получение фильтров
   async function loadFilters() {
     const auth = useAuthStore();
@@ -1153,7 +1233,15 @@ export const useFiltersStore = defineStore('filters', () => {
       );
 
       // Вызов доп. загрузок после успешной загрузки фильтров
-      await Promise.all([loadInitialPermittedUses(), loadInitialPermittedUsesNspd(), loadInitialRubrics(), loadInitialRubricsNspd()]);
+      await Promise.all([
+        loadInitialPermittedUses(),
+        loadInitialPermittedUsesNspd(),
+        loadInitialRubrics(),
+        loadInitialRubricsNspd(),
+        loadInitialCategories(),
+        loadInitialCategoriesNspd(),
+        loadInitialRegions(),
+      ]);
     } catch (err) {
       console.error('Ошибка при загрузке фильтров:', err);
       error.value = err.message;
@@ -1454,7 +1542,7 @@ export const useFiltersStore = defineStore('filters', () => {
       if (!data.payload) return result;
 
       result.value = (data.payload || []).map((item) => ({
-        text: item.permitted_use,
+        text: item.rubric,
         value: item.id,
       }));
     } catch (err) {
@@ -1467,10 +1555,134 @@ export const useFiltersStore = defineStore('filters', () => {
     return result;
   }
 
+  // search_categories
+  async function searchCategories(query = '', limit = 10, offset = 0, source = 'torgi_gov') {
+    const auth = useAuthStore();
+    const result = ref([]);
+
+    if (!auth.token) {
+      console.warn('Нет токена для запроса search categories');
+      return result;
+    }
+
+    try {
+      const url = `${baseUrl}/client/filters/search_categories`;
+
+      const filtersData = getFormattedFilters();
+
+      const params = new URLSearchParams({
+        query,
+        limit,
+        offset,
+        source,
+      }).toString();
+
+      const res = await fetch(`${url}?${params}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `${auth.token}`,
+        },
+        body: JSON.stringify(filtersData),
+      });
+
+      if (!res.ok) {
+        throw new Error(`Ошибка поиска search categories: ${res.statusText}`);
+      }
+
+      const data = await res.json();
+
+      if (!data.payload) return result;
+
+      result.value = (data.payload || []).map((item) => ({
+        text: item.category,
+        value: item.id,
+      }));
+    } catch (err) {
+      console.error('Ошибка при поиске search rubrics:', err);
+    } finally {
+      searchCategoriesPending.value = false;
+      searchCategoriesNspdPending.value = false;
+    }
+
+    return result;
+  }
+
+  // regions
+  async function searchRegions(query = '', limit = 10, offset = 0) {
+    const auth = useAuthStore();
+    const result = ref([]);
+
+    if (!auth.token) {
+      console.warn('Нет токена для запроса search regions');
+      return result;
+    }
+
+    try {
+      const url = `${baseUrl}/client/filters/search_regions`;
+
+      const filtersData = getFormattedFilters();
+
+      const params = new URLSearchParams({
+        query,
+        limit,
+        offset,
+      }).toString();
+
+      const res = await fetch(`${url}?${params}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `${auth.token}`,
+        },
+        body: JSON.stringify(filtersData),
+      });
+
+      if (!res.ok) {
+        throw new Error(`Ошибка поиска search regions: ${res.statusText}`);
+      }
+
+      const data = await res.json();
+
+      if (!data.payload) return result;
+
+      result.value = Object.values(
+        (data?.payload || []).reduce((acc, { id, region, federal_district_id, federal_district }) => {
+          const districtId = federal_district_id;
+          const districtName = federal_district.federal_district;
+
+          if (!acc[districtId]) {
+            acc[districtId] = {
+              name: districtName,
+              id: districtId,
+              items: [],
+            };
+          }
+
+          acc[districtId].items.push({
+            text: region,
+            value: id,
+          });
+
+          return acc;
+        }, {})
+      );
+    } catch (err) {
+      console.error('Ошибка при поиске search regions:', err);
+    } finally {
+      searchRegionsPending.value = false;
+    }
+
+    return result;
+  }
+
   return {
     loadFilters,
     baseFilters,
     searchPermittedUses,
+    searchRubrics,
+    searchCategories,
+    searchRegions,
     fieldsData,
     getFormattedFilters,
     resetFilters,
