@@ -2,76 +2,14 @@
 import { defineStore } from 'pinia';
 import { ref, watch } from 'vue';
 import { useAuthStore } from './auth';
-import { debounce, filter } from 'lodash';
+import { debounce } from 'lodash';
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
 export const useFiltersStore = defineStore('filters', () => {
-  const isLoading = ref(false);
-  const filtersReadyLoading = ref(false);
-  const error = ref(null);
-  const permittedUsesPending = ref(false);
-  const permittedUsesNspdPending = ref(false);
-  const permittedUseshideNoData = ref(true);
-
-  const searchRubricsPending = ref(false);
-  const searchRubricsNspdPending = ref(false);
-  const searchRubricshideNoData = ref(true);
-
-  const searchCategoriesPending = ref(false);
-  const searchCategoriesNspdPending = ref(false);
-  const searchCategorieshideNoData = ref(true);
-
-  const searchRegionsPending = ref(false);
-
   // 1) Регион
-  const regionsByDistricts = ref([]);
-  const regionsData = ref([]);
-
-  // 4) Вид торгов
-  const biddTypes = ref([]);
-
-  // 5) Вид сделки
-  const transactionTypes = ref(['Аренда', 'Безвозмездное пользование', 'Иное', 'Продажа', 'Доверительное управление']);
-
-  // 8) Форма проведения
-  const biddForms = ref([]);
-
-  // 9) ЭТП
-  const etpCodes = ref([]);
-
-  // 12) Сравн. S (TG и КН)
-  const tgToKn = ref(['норма', 'нюанс <95%', 'нюанс >105%']);
-
-  // 13) Составность
-  const compositions = ref(['Кад. номер', 'Кад. квартал', 'Кад. район', 'Коорд. не определены']);
-
-  // 24) Категория
-  const categories = ref([]);
-  const categoriesData = ref([]);
-  const categoriesNspdData = ref([]);
-
-  const rubrics = ref([]);
-
-  // ВРИ
-  const usesData = ref([]);
-
-  // rubrics
-  const rubricsData = ref([]);
-
-  // rubrics Nspd
-  const rubricsNspdData = ref([]);
-
-  // ВРИ НСДП
-  const usesNspdData = ref([]);
-
-  // Флаг для отслеживания изменений
-  const isDirty = ref(false);
-
-  // v-model
-
-  // 1) Регион
-  const regionsByDistrictsModel = ref([]);
+  const filtersDataRegions = ref([]);
+  const regionsModel = ref(null);
 
   // 2) Начало пдч.заяв. от
   const biddStartTimeFromModel = ref(null);
@@ -80,9 +18,12 @@ export const useFiltersStore = defineStore('filters', () => {
   const biddStartTimeToModel = ref(null);
 
   // 4) Вид торгов
+  const filtersDataBiddTypes = ref([]);
   const biddTypesModel = ref([]);
+  const biddTypesPeinding = ref(false);
 
   // 5) Вид сделки
+  const transactionTypes = ref(['Аренда', 'Безвозмездное пользование', 'Иное', 'Продажа', 'Доверительное управление']);
   const transactionTypesModel = ref([]);
 
   // 6) Окнч.пдч.заяв. от
@@ -92,9 +33,12 @@ export const useFiltersStore = defineStore('filters', () => {
   const biddEndTimeToModel = ref(null);
 
   // 8) Форма проведения
+  const filtersDataBiddForms = ref([]);
   const biddFormsModel = ref([]);
+  const biddFormsPending = ref(false);
 
   // 9) ЭТП
+  const etpCodes = ref([]);
   const etpCodesModel = ref([]);
 
   // 10) Извещение, лот
@@ -103,10 +47,12 @@ export const useFiltersStore = defineStore('filters', () => {
   // 11) Кадастр. номер
   const cadasterNumberModel = ref('');
 
-  // 12 Сравн. S (TG и КН)
+  // 12) Сравн. S (TG и КН)
+  const tgToKn = ref(['норма', 'нюанс <95%', 'нюанс >105%']);
   const tgToKnModel = ref([]);
 
   // 13) Составность
+  const compositions = ref(['Кад. номер', 'Кад. квартал', 'Кад. район', 'Коорд. не определены']);
   const compositionsModel = ref(['Кад. квартал', 'Кад. район', 'Кад. номер']);
 
   // 14) % НЦ /КС (более)
@@ -140,7 +86,9 @@ export const useFiltersStore = defineStore('filters', () => {
   const depositPercentToModel = ref(null);
 
   // 24) Категория
+  const filtersDataCategories = ref([]);
   const categoriesModel = ref([]);
+  const categoriesPending = ref(false);
 
   // 25) Площадь, м2 (более)
   const areaFromModel = ref(null);
@@ -149,13 +97,19 @@ export const useFiltersStore = defineStore('filters', () => {
   const areaToModel = ref(null);
 
   // 27) ВРИ
-  const useModel = ref([]);
+  const filtersDataPermittedUses = ref([]);
+  const permittedUsesModel = ref([]);
+  const permittedUsesPending = ref(false);
 
   // 28) Рубрика
+  const filtersDataRubrics = ref([]);
   const rubricsModel = ref([]);
+  const rubricsPending = ref(false);
 
   // 29) Категория НСПД
+  const filtersDataCategoriesNspd = ref([]);
   const categoriesNspdModel = ref([]);
+  const categoriesNspdPending = ref(false);
 
   // 30) Площадь, м2 (более) НСПД
   const areaFromNspdModel = ref(null);
@@ -164,15 +118,26 @@ export const useFiltersStore = defineStore('filters', () => {
   const areaToNspdModel = ref(null);
 
   // 32) ВРИ
-  const useNspdModel = ref([]);
+  const filtersDataPermittedUsesNspd = ref([]);
+  const permittedUsesNspdModel = ref([]);
+  const permittedUsesNspdPending = ref(false);
 
   // 33) Рубрика
+  const filtersDataRubricsNspd = ref([]);
   const rubricsNspdModel = ref([]);
+  const rubricsNspdPending = ref(false);
+
+  const isLoading = ref(false);
+  const filtersReadyLoading = ref(false);
+  const error = ref(null);
+
+  // Флаг для отслеживания изменений
+  const isDirty = ref(false);
 
   // Дефолтные значения для сравнения
   const defaultValues = {
     // 1) Регион
-    regionsByDistrictsModel: [],
+    regionsModel: null,
 
     // 2) Начало пдч.заяв. от
     biddStartTimeFromModel: null,
@@ -250,7 +215,7 @@ export const useFiltersStore = defineStore('filters', () => {
     areaToModel: null,
 
     // 27) ВРИ
-    useModel: [],
+    permittedUsesModel: [],
 
     // 28) Рубрика
     rubricsModel: [],
@@ -265,7 +230,7 @@ export const useFiltersStore = defineStore('filters', () => {
     areaToNspdModel: null,
 
     // 32) ВРИ
-    useNspdModel: [],
+    permittedUsesNspdModel: [],
 
     // 33) Рубрика
     rubricsNspdModel: [],
@@ -274,7 +239,7 @@ export const useFiltersStore = defineStore('filters', () => {
   // Список моделей для отслеживания
   const models = [
     // 1) Регион
-    regionsByDistrictsModel,
+    regionsModel,
 
     // 2) Начало пдч.заяв. от
     biddStartTimeFromModel,
@@ -352,7 +317,7 @@ export const useFiltersStore = defineStore('filters', () => {
     areaToModel,
 
     // 27) ВРИ
-    useModel,
+    permittedUsesModel,
 
     // 28) Рубрика
     rubricsModel,
@@ -367,7 +332,7 @@ export const useFiltersStore = defineStore('filters', () => {
     areaToNspdModel,
 
     // 32) ВРИ
-    useNspdModel,
+    permittedUsesNspdModel,
 
     // 33) Рубрика
     rubricsNspdModel,
@@ -380,8 +345,10 @@ export const useFiltersStore = defineStore('filters', () => {
       const setA = new Set(a);
       const setB = new Set(b);
       if (setA.size !== setB.size) return false;
+
       return [...setA].every((item) => setB.has(item));
     }
+
     return a === b;
   };
 
@@ -399,9 +366,9 @@ export const useFiltersStore = defineStore('filters', () => {
   );
 
   // Сброс фильтров до дефолтных значений
-  function resetFilters() {
+  async function resetFilters() {
     // 1) Регион
-    regionsByDistrictsModel.value = defaultValues.regionsByDistrictsModel;
+    regionsModel.value = defaultValues.regionsModel;
 
     // 2) Начало пдч.заяв. от
     biddStartTimeFromModel.value = defaultValues.biddStartTimeFromModel;
@@ -479,7 +446,7 @@ export const useFiltersStore = defineStore('filters', () => {
     areaToModel.value = defaultValues.areaToModel;
 
     // 27) ВРИ
-    useModel.value = defaultValues.useModel;
+    permittedUsesModel.value = defaultValues.permittedUsesModel;
 
     // 28) Рубрика
     rubricsModel.value = defaultValues.rubricsModel;
@@ -494,75 +461,68 @@ export const useFiltersStore = defineStore('filters', () => {
     areaToNspdModel.value = defaultValues.areaFromNspdModel;
 
     // 32) ВРИ НСПД
-    useNspdModel.value = defaultValues.useNspdModel;
+    permittedUsesNspdModel.value = defaultValues.permittedUsesNspdModel;
 
     // 33) Рубрика НСПД
     rubricsNspdModel.value = defaultValues.rubricsNspdModel;
 
     isDirty.value = false;
+
+    await loadAdditionalFilters();
   }
 
   const onSearchPermittedUses = debounce(async (event) => {
     const value = event?.target?.value || '';
 
     permittedUsesPending.value = true;
-    const result = await searchPermittedUses(value, 1000, 0, 'torgi_gov');
 
-    usesData.value = result.value;
+    await fetchFilterData('permittedUses', 'search_permitted_use', value, 1000, 0, ['torgi_gov']);
+    await loadAdditionalFilters();
   }, 800);
 
   const onSearchPermittedUsesNspd = debounce(async (event) => {
     const value = event?.target?.value || '';
 
     permittedUsesNspdPending.value = true;
-    const result = await searchPermittedUses(value, 1000, 0, 'nspd');
 
-    usesNspdData.value = result.value;
+    await fetchFilterData('permittedUsesNspd', 'search_permitted_use', value, 1000, 0, ['nspd']);
+    await loadAdditionalFilters();
   }, 800);
 
   const onSearchRubrics = debounce(async (event) => {
     const value = event?.target?.value || '';
 
-    searchRubricsPending.value = true;
-    const result = await searchRubrics(value, 1000, 0, 'torgi_gov');
+    rubricsPending.value = true;
 
-    rubricsData.value = result.value;
+    await fetchFilterData('rubrics', 'search_rubrics', value, 100, 0, ['torgi_gov']);
+    await loadAdditionalFilters();
   }, 800);
 
   const onSearchRubricsNspd = debounce(async (event) => {
     const value = event?.target?.value || '';
 
-    searchRubricsNspdPending.value = true;
-    const result = await searchRubrics(value, 1000, 0, 'nspd');
+    rubricsNspdPending.value = true;
 
-    rubricsNspdData.value = result.value;
+    await fetchFilterData('rubricsNspd', 'search_rubrics', value, 100, 0, ['nspd']);
+    await loadAdditionalFilters();
   }, 800);
 
   const onSearchCategories = debounce(async (event) => {
     const value = event?.target?.value || '';
 
-    searchCategoriesPending.value = true;
-    const result = await searchCategories(value, 1000, 0, 'torgi_gov');
+    categoriesPending.value = true;
 
-    categoriesData.value = result.value;
+    await fetchFilterData('categories', 'search_categories', value, 100, 0, ['torgi_gov']);
+    await loadAdditionalFilters();
   }, 800);
 
   const onSearchCategoriesNspd = debounce(async (event) => {
     const value = event?.target?.value || '';
 
-    searchCategoriesNspdPending.value = true;
-    const result = await searchCategories(value, 1000, 0, 'torgi_gov_purpose');
+    categoriesNspdPending.value = true;
 
-    categoriesNspdData.value = result.value;
-  }, 800);
-
-  const onSearchRegions = debounce(async (event) => {
-    const value = event?.target?.value || '';
-
-    searchRegionsPending.value = true;
-    const result = await searchCategories(value, 1000, 0);
-
-    regionsData.value = result.value;
+    await fetchFilterData('categories', 'search_categories', value, 100, 0, ['nspd']);
+    await loadAdditionalFilters();
   }, 800);
 
   const fieldsData = ref([
@@ -570,13 +530,12 @@ export const useFiltersStore = defineStore('filters', () => {
       name: 'region_ids',
       label: 'Регион',
       hideDetails: true,
-      model: regionsByDistrictsModel,
+      model: regionsModel,
       type: 'treeselect',
-      items: regionsData,
+      items: filtersDataRegions,
       clearable: false,
       placeholder: 'Субъект РФ',
       multiple: true,
-      // loading: searchRegionsPending,
       // onInput: onSearchRegions,
       size: 'half',
       tooltip: {
@@ -619,7 +578,7 @@ export const useFiltersStore = defineStore('filters', () => {
       hideDetails: true,
       model: biddTypesModel,
       type: 'autocomplete',
-      items: biddTypes,
+      items: filtersDataBiddTypes,
       placeholder: 'Выбрать значение',
       multiple: true,
       tooltip: {
@@ -677,7 +636,7 @@ export const useFiltersStore = defineStore('filters', () => {
       hideDetails: true,
       model: biddFormsModel,
       type: 'autocomplete',
-      items: biddForms,
+      items: filtersDataBiddForms,
       placeholder: 'Выбрать значение',
       multiple: true,
       tooltip: {
@@ -898,14 +857,14 @@ export const useFiltersStore = defineStore('filters', () => {
       name: 'categories_ids',
       label: 'Категория',
       hideDetails: true,
-      hideNoData: searchCategorieshideNoData,
+      hideNoData: true,
       model: categoriesModel,
       type: 'autocomplete',
-      items: categoriesData,
+      items: filtersDataCategories,
       placeholder: 'Выбрать значение',
       multiple: true,
       size: 'half-lg',
-      loading: searchCategoriesPending,
+      // loading: categoriesPending,
       onInput: onSearchCategories,
       tooltip: {
         text: '<i>Категория земельного участка</i> - это характеристика, определяющая целевое назначение земли и правовой режим ее использования. Категория устанавливается для каждого участка и указывает, как его можно использовать в соответствии с Законодательством. <u>Сведения согласно документации Процедуры torgi.gov<u/>',
@@ -944,10 +903,10 @@ export const useFiltersStore = defineStore('filters', () => {
       name: 'permitted_uses_id',
       label: 'ВРИ',
       hideDetails: true,
-      hideNoData: permittedUseshideNoData,
-      model: useModel,
+      hideNoData: true,
+      model: permittedUsesModel,
       type: 'autocomplete',
-      items: usesData,
+      items: filtersDataPermittedUses,
       placeholder: 'Выбрать значение',
       multiple: true,
       returnObject: false,
@@ -964,13 +923,13 @@ export const useFiltersStore = defineStore('filters', () => {
       name: 'rubric_ids',
       label: 'Рубрика',
       hideDetails: true,
-      hideNoData: searchRubricshideNoData,
+      hideNoData: true,
       model: rubricsModel,
       type: 'autocomplete',
-      items: rubricsData,
+      items: filtersDataRubrics,
       placeholder: 'Выбрать значение',
       multiple: true,
-      loading: searchRubricsPending,
+      // loading: rubricsPending,
       onInput: onSearchRubrics,
       tooltip: {
         text: 'Классификатор повышающий удобство использования. Позволяет обойти многочисленные варианты написания ВРИ и ошибок в них. Приводит всё к небольшому но функциональному перечню вариантов использованию земельного участка - для жилья, предпринимательства и т.д. Сведения согласно анализу <i>ВРИ</i> из <u>документации Процедуры torgi.gov</u>',
@@ -986,13 +945,13 @@ export const useFiltersStore = defineStore('filters', () => {
       name: 'categories_nspd_ids',
       label: 'Категория [КН]',
       hideDetails: true,
-      hideNoData: searchCategorieshideNoData,
+      hideNoData: true,
       model: categoriesNspdModel,
       type: 'autocomplete',
-      items: categoriesNspdData,
+      items: filtersDataCategoriesNspd,
       placeholder: 'Выбрать значение',
       multiple: true,
-      loading: searchCategoriesNspdPending,
+      // loading: categoriesNspdPending,
       onInput: onSearchCategoriesNspd,
       tooltip: {
         text: '<i>Категория земельного участка</i> - это характеристика, определяющая целевое назначение земли и правовой режим ее использования. Категория устанавливается для каждого участка и указывает, как его можно использовать в соответствии с Законодательством. <u>Сведения согласно Кадастровому номеру</u>',
@@ -1031,10 +990,10 @@ export const useFiltersStore = defineStore('filters', () => {
       name: 'permitted_uses_nspd_id',
       label: 'ВРИ [КН]',
       hideDetails: true,
-      hideNoData: permittedUseshideNoData,
-      model: useNspdModel,
+      hideNoData: true,
+      model: permittedUsesNspdModel,
       type: 'autocomplete',
-      items: usesNspdData,
+      items: filtersDataPermittedUsesNspd,
       placeholder: 'Выбрать значение',
       multiple: true,
       returnObject: false,
@@ -1051,13 +1010,13 @@ export const useFiltersStore = defineStore('filters', () => {
       name: 'rubric_nspd_ids',
       label: 'Рубрика [КН]',
       hideDetails: true,
-      hideNoData: searchRubricshideNoData,
+      hideNoData: true,
       model: rubricsNspdModel,
       type: 'autocomplete',
-      items: rubricsNspdData,
+      items: filtersDataRubricsNspd,
       placeholder: 'Выбрать значение',
       multiple: true,
-      loading: searchRubricsNspdPending,
+      // loading: rubricsNspdPending,
       onInput: onSearchRubricsNspd,
       tooltip: {
         text: '<i>Классификатор повышающий удобство использования. Позволяет обойти многочисленные варианты написания ВРИ</i> и ошибок в них. Приводит всё к небольшому но функциональному перечню вариантов использованию земельного участка - для жилья, предпринимательства и т.д. Сведения согласно анализу ВРИ из <u>Кадастрового номера</u>',
@@ -1067,88 +1026,18 @@ export const useFiltersStore = defineStore('filters', () => {
     },
   ]);
 
-  // ВРИ
-  async function loadInitialPermittedUses() {
-    permittedUsesPending.value = true;
-
-    try {
-      const result = await searchPermittedUses('', 1000, 0, 'torgi_gov');
-      usesData.value = result.value;
-    } finally {
-      permittedUsesPending.value = false;
-    }
-  }
-
-  // ВРИ
-  async function loadInitialPermittedUsesNspd() {
-    permittedUsesNspdPending.value = true;
-
-    try {
-      const result = await searchPermittedUses('', 1000, 0, 'nspd');
-      usesNspdData.value = result.value;
-    } finally {
-      permittedUsesNspdPending.value = false;
-    }
-  }
-
-  // search_rubrics
-  async function loadInitialRubrics() {
-    searchRubricsPending.value = true;
-
-    try {
-      const result = await searchRubrics('', 1000, 0, 'torgi_gov');
-      rubricsData.value = result.value;
-    } finally {
-      searchRubricsPending.value = false;
-    }
-  }
-
-  // search_rubrics
-  async function loadInitialRubricsNspd() {
-    searchRubricsNspdPending.value = true;
-
-    try {
-      const result = await searchRubrics('', 1000, 0, 'nspd');
-      rubricsNspdData.value = result.value;
-    } finally {
-      searchRubricsNspdPending.value = false;
-    }
-  }
-
-  // search_categories
-  async function loadInitialCategories() {
-    searchCategoriesPending.value = true;
-
-    try {
-      const result = await searchCategories('', 1000, 0, 'torgi_gov');
-      categoriesData.value = result.value;
-    } finally {
-      searchCategoriesPending.value = false;
-    }
-  }
-
-  // search_rubrics
-  async function loadInitialCategoriesNspd() {
-    searchCategoriesNspdPending.value = true;
-
-    try {
-      const result = await searchCategories('', 1000, 0, 'torgi_gov_purpose');
-      categoriesNspdData.value = result.value;
-    } finally {
-      searchCategoriesNspdPending.value = false;
-    }
-  }
-
-  // search_regions
-  async function loadInitialRegions() {
-    searchRegionsPending.value = true;
-
-    try {
-      const result = await searchRegions('', 1000, 0);
-      regionsData.value = result.value;
-    } finally {
-      searchRegionsPending.value = false;
-    }
+  async function loadAdditionalFilters() {
+    await Promise.all([
+      fetchFilterData('permittedUses', 'search_permitted_use', '', 1000, 0, ['torgi_gov']),
+      fetchFilterData('permittedUsesNspd', 'search_permitted_use', '', 1000, 0, ['nspd']),
+      fetchFilterData('rubrics', 'search_rubrics', '', 100, 0, ['torgi_gov']),
+      fetchFilterData('rubricsNspd', 'search_rubrics', '', 100, 0, ['nspd']),
+      fetchFilterData('categories', 'search_categories', '', 100, 0, ['torgi_gov', 'torgi_gov_purpose']),
+      fetchFilterData('categoriesNspd', 'search_categories', '', 100, 0, ['nspd']),
+      fetchFilterData('regions', 'search_regions', '', 100, 0),
+      fetchFilterData('biddForms', 'search_bidd_forms', '', 100, 0),
+      fetchFilterData('biddTypes', 'search_bidd_types', '', 100, 0),
+    ]);
   }
 
   // Получение фильтров
@@ -1178,70 +1067,14 @@ export const useFiltersStore = defineStore('filters', () => {
 
       const data = await res.json();
 
-      biddForms.value = (data?.payload?.bidd_forms || []).map((item) => {
-        return {
-          text: item.bidd_form,
-          value: item.id,
-        };
-      });
-      biddTypes.value = (data?.payload?.bidd_types || []).map((item) => {
-        return {
-          text: item.bidd_type,
-          value: item.id,
-        };
-      });
-      categories.value = (data?.payload?.categories || []).map((item) => {
-        return {
-          text: item.category,
-          value: item.id,
-        };
-      });
       etpCodes.value = (data?.payload?.etp_codes || []).map((item) => {
         return {
           text: item.etp_code,
           value: item.id,
         };
       });
-      rubrics.value = (data?.payload?.rubrics || []).map((item) => {
-        return {
-          text: item.rubric,
-          value: item.id,
-        };
-      });
 
-      // регион
-      regionsByDistricts.value = Object.values(
-        (data?.payload?.regions || []).reduce((acc, { id, region, federal_district_id, federal_district }) => {
-          const districtId = federal_district_id;
-          const districtName = federal_district.federal_district;
-
-          if (!acc[districtId]) {
-            acc[districtId] = {
-              name: districtName,
-              id: districtId,
-              items: [],
-            };
-          }
-
-          acc[districtId].items.push({
-            text: region,
-            value: id,
-          });
-
-          return acc;
-        }, {})
-      );
-
-      // Вызов доп. загрузок после успешной загрузки фильтров
-      await Promise.all([
-        loadInitialPermittedUses(),
-        loadInitialPermittedUsesNspd(),
-        loadInitialRubrics(),
-        loadInitialRubricsNspd(),
-        loadInitialCategories(),
-        loadInitialCategoriesNspd(),
-        loadInitialRegions(),
-      ]);
+      await loadAdditionalFilters();
     } catch (err) {
       console.error('Ошибка при загрузке фильтров:', err);
       error.value = err.message;
@@ -1349,7 +1182,7 @@ export const useFiltersStore = defineStore('filters', () => {
   function getFormattedFilters() {
     return {
       // 1) Регион
-      region_ids: regionsByDistrictsModel.value || [],
+      region_ids: regionsModel.value || null,
 
       // 2) Начало пдч.заяв. от
       bidd_start_time_from: formatDate(biddStartTimeFromModel),
@@ -1427,7 +1260,7 @@ export const useFiltersStore = defineStore('filters', () => {
       area_to: areaToModel.value || null,
 
       // 27) ВРИ
-      permitted_uses_id: useModel.value || [],
+      permitted_uses_id: permittedUsesModel.value || [],
 
       // 28) Рубрика
       rubric_ids: rubricsModel.value || [],
@@ -1442,211 +1275,58 @@ export const useFiltersStore = defineStore('filters', () => {
       area_from_nspd_to: areaToNspdModel.value || null,
 
       // 32) ВРИ НСПД
-      permitted_uses_nspd_id: useNspdModel.value || [],
+      permitted_uses_nspd_id: permittedUsesNspdModel.value || [],
 
       // 33) Рубрика НСПД
       rubric_nspd_ids: rubricsNspdModel.value || [],
     };
   }
 
-  // ВРИ
-  async function searchPermittedUses(query = '', limit = 10, offset = 0, source = 'torgi_gov') {
-    const auth = useAuthStore();
-    const result = ref([]);
-
-    if (!auth.token) {
-      console.warn('Нет токена для запроса permitted uses');
-      return result;
-    }
-
-    try {
-      const url = `${baseUrl}/client/filters/search_permitted_use`;
-
-      const filtersData = getFormattedFilters();
-
-      const params = new URLSearchParams({
-        query,
-        limit,
-        offset,
-        source,
-      }).toString();
-
-      const res = await fetch(`${url}?${params}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `${auth.token}`,
-        },
-        body: JSON.stringify(filtersData),
-      });
-
-      if (!res.ok) {
-        throw new Error(`Ошибка поиска ВРИ: ${res.statusText}`);
-      }
-
-      const data = await res.json();
-
-      if (!data.payload) return result;
-
-      result.value = (data.payload || []).map((item) => ({
+  function normalizeFilterData(name, data) {
+    if (name === 'permittedUses') {
+      filtersDataPermittedUses.value = (data.payload || []).map((item) => ({
         text: item.permitted_use,
         value: item.id,
       }));
-    } catch (err) {
-      console.error('Ошибка при поиске ВРИ:', err);
-    } finally {
-      permittedUsesPending.value = false;
-      permittedUsesNspdPending.value = false;
     }
 
-    return result;
-  }
-
-  // search_rubrics
-  async function searchRubrics(query = '', limit = 10, offset = 0, source = 'torgi_gov') {
-    const auth = useAuthStore();
-    const result = ref([]);
-
-    if (!auth.token) {
-      console.warn('Нет токена для запроса search rubrics');
-      return result;
+    if (name === 'permittedUsesNspd') {
+      filtersDataPermittedUsesNspd.value = (data.payload || []).map((item) => ({
+        text: item.permitted_use,
+        value: item.id,
+      }));
     }
 
-    try {
-      const url = `${baseUrl}/client/filters/search_rubrics`;
-
-      const filtersData = getFormattedFilters();
-
-      const params = new URLSearchParams({
-        query,
-        limit,
-        offset,
-        source,
-      }).toString();
-
-      const res = await fetch(`${url}?${params}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `${auth.token}`,
-        },
-        body: JSON.stringify(filtersData),
-      });
-
-      if (!res.ok) {
-        throw new Error(`Ошибка поиска search rubrics: ${res.statusText}`);
-      }
-
-      const data = await res.json();
-
-      if (!data.payload) return result;
-
-      result.value = (data.payload || []).map((item) => ({
+    if (name === 'rubrics') {
+      filtersDataRubrics.value = (data.payload || []).map((item) => ({
         text: item.rubric,
         value: item.id,
       }));
-    } catch (err) {
-      console.error('Ошибка при поиске search rubrics:', err);
-    } finally {
-      searchRubricsPending.value = false;
-      searchRubricsNspdPending.value = false;
     }
 
-    return result;
-  }
-
-  // search_categories
-  async function searchCategories(query = '', limit = 10, offset = 0, source = 'torgi_gov') {
-    const auth = useAuthStore();
-    const result = ref([]);
-
-    if (!auth.token) {
-      console.warn('Нет токена для запроса search categories');
-      return result;
+    if (name === 'rubricsNspd') {
+      filtersDataRubricsNspd.value = (data.payload || []).map((item) => ({
+        text: item.rubric,
+        value: item.id,
+      }));
     }
 
-    try {
-      const url = `${baseUrl}/client/filters/search_categories`;
-
-      const filtersData = getFormattedFilters();
-
-      const params = new URLSearchParams({
-        query,
-        limit,
-        offset,
-        source,
-      }).toString();
-
-      const res = await fetch(`${url}?${params}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `${auth.token}`,
-        },
-        body: JSON.stringify(filtersData),
-      });
-
-      if (!res.ok) {
-        throw new Error(`Ошибка поиска search categories: ${res.statusText}`);
-      }
-
-      const data = await res.json();
-
-      if (!data.payload) return result;
-
-      result.value = (data.payload || []).map((item) => ({
+    if (name === 'categories') {
+      filtersDataCategories.value = (data.payload || []).map((item) => ({
         text: item.category,
         value: item.id,
       }));
-    } catch (err) {
-      console.error('Ошибка при поиске search rubrics:', err);
-    } finally {
-      searchCategoriesPending.value = false;
-      searchCategoriesNspdPending.value = false;
     }
 
-    return result;
-  }
-
-  // regions
-  async function searchRegions(query = '', limit = 10, offset = 0) {
-    const auth = useAuthStore();
-    const result = ref([]);
-
-    if (!auth.token) {
-      console.warn('Нет токена для запроса search regions');
-      return result;
+    if (name === 'categoriesNspd') {
+      filtersDataCategoriesNspd.value = (data.payload || []).map((item) => ({
+        text: item.category,
+        value: item.id,
+      }));
     }
 
-    try {
-      const url = `${baseUrl}/client/filters/search_regions`;
-
-      const filtersData = getFormattedFilters();
-
-      const params = new URLSearchParams({
-        query,
-        limit,
-        offset,
-      }).toString();
-
-      const res = await fetch(`${url}?${params}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `${auth.token}`,
-        },
-        body: JSON.stringify(filtersData),
-      });
-
-      if (!res.ok) {
-        throw new Error(`Ошибка поиска search regions: ${res.statusText}`);
-      }
-
-      const data = await res.json();
-
-      if (!data.payload) return result;
-
-      result.value = Object.values(
+    if (name === 'regions') {
+      filtersDataRegions.value = Object.values(
         (data?.payload || []).reduce((acc, { id, region, federal_district_id, federal_district }) => {
           const districtId = federal_district_id;
           const districtName = federal_district.federal_district;
@@ -1667,22 +1347,79 @@ export const useFiltersStore = defineStore('filters', () => {
           return acc;
         }, {})
       );
-    } catch (err) {
-      console.error('Ошибка при поиске search regions:', err);
-    } finally {
-      searchRegionsPending.value = false;
     }
 
-    return result;
+    if (name === 'biddForms') {
+      filtersDataBiddForms.value = (data.payload || []).map((item) => ({
+        text: item.bidd_form,
+        value: item.id,
+      }));
+    }
+
+    if (name === 'biddTypes') {
+      filtersDataBiddTypes.value = (data.payload || []).map((item) => ({
+        text: item.bidd_type,
+        value: item.id,
+      }));
+    }
+  }
+
+  async function fetchFilterData(name, url, query = '', limit = 10, offset = 0, sources = []) {
+    const auth = useAuthStore();
+    let result = [];
+
+    if (!auth.token) {
+      console.warn(`Нет токена для запроса ${name}`);
+
+      return result;
+    }
+
+    try {
+      const urlData = `${baseUrl}/client/filters/${url}`;
+      const filtersData = getFormattedFilters();
+
+      const params = new URLSearchParams({
+        query,
+        limit,
+        offset,
+      });
+
+      sources.forEach((s) => params.append('sources', s));
+
+      const res = await fetch(`${urlData}?${params}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `${auth.token}`,
+        },
+        body: JSON.stringify(filtersData),
+      });
+
+      if (!res.ok) {
+        throw new Error(`Ошибка поиска ${name}: ${res.statusText}`);
+      }
+
+      const data = await res.json();
+      if (!data.payload) return result;
+
+      normalizeFilterData(name, data);
+    } catch (err) {
+      console.error(`Ошибка при поиске ${name}`, err);
+    } finally {
+      biddTypesPeinding.value = false;
+      biddFormsPending.value = false;
+      categoriesPending.value = false;
+      permittedUsesPending.value = false;
+      rubricsPending.value = false;
+      categoriesNspdPending.value = false;
+      permittedUsesNspdPending.value = false;
+      rubricsNspdPending.value = false;
+    }
   }
 
   return {
     loadFilters,
     baseFilters,
-    searchPermittedUses,
-    searchRubrics,
-    searchCategories,
-    searchRegions,
     fieldsData,
     getFormattedFilters,
     resetFilters,
