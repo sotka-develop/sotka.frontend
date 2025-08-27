@@ -1127,6 +1127,7 @@ export const useFiltersStore = defineStore('filters', () => {
         if (name && defaultValue) {
           if (name === 'bidd_end_time_from') {
             biddEndTimeFromModel.value = defaultValue;
+            defaultValues.biddEndTimeFromModel = defaultValue;
           }
           if (name === 'bidd_end_time_to') {
             biddEndTimeToModel.value = defaultValue;
