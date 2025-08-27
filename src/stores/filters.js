@@ -359,6 +359,8 @@ export const useFiltersStore = defineStore('filters', () => {
       isDirty.value = models.some((model, index) => {
         const key = Object.keys(defaultValues)[index];
 
+        console.log(`${key}: ${(model.value, defaultValues[key])}: ${!isEqual(model.value, defaultValues[key])}`);
+
         return !isEqual(model.value, defaultValues[key]);
       });
     },
@@ -466,9 +468,9 @@ export const useFiltersStore = defineStore('filters', () => {
     // 33) Рубрика НСПД
     rubricsNspdModel.value = defaultValues.rubricsNspdModel;
 
-    isDirty.value = false;
-
     await loadAdditionalFilters();
+
+    isDirty.value = false;
   }
 
   const onSearchPermittedUses = debounce(async (event) => {
