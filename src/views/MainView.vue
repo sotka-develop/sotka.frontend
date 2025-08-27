@@ -6,7 +6,6 @@
           <FiltersForm />
 
           <template #actions>
-            {{ isDirty }}
             <Button v-if="isDirty" text="Сбросить фильтры" theme="light" prepend-icon="24/close" @click="reset" />
             <Button text="Применить" @click="filter" />
           </template>
