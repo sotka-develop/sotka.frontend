@@ -57,12 +57,17 @@
       type: Object,
       default: () => ({}),
     },
+    onChange: Function,
   });
 
   const emit = defineEmits(['update:modelValue']);
 
   function emitUpdate(val) {
     emit('update:modelValue', val);
+
+    if (props.onChange) {
+      props.onChange(val);
+    }
   }
 
   const inputProps = computed(() => ({

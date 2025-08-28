@@ -103,12 +103,17 @@
       default: () => [],
     },
     onInput: Function,
+    onChange: Function,
   });
 
   const emit = defineEmits(['update:modelValue']);
 
   function emitUpdate(val) {
     emit('update:modelValue', val);
+
+    if (props.onChange) {
+      props.onChange(val);
+    }
   }
 
   function handleInput(val) {

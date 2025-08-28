@@ -116,6 +116,7 @@
       default: () => null,
     },
     onInput: Function,
+    onChange: Function,
   });
 
   const emit = defineEmits(['update:modelValue']);
@@ -162,6 +163,8 @@
       hideDetails: props.hideDetails,
       loading: props.loading,
       disabled: props.disabled,
+      onInput: props.onInput,
+      onChange: props.onChange,
     };
 
     if (props.type === 'select') {
@@ -195,6 +198,8 @@
         textFieldProps: props.textFieldProps,
         hideDetails: props.hideDetails,
         disabled: props.disabled,
+        onInput: props.onInput,
+        onChange: props.onChange,
       };
     }
 
@@ -214,6 +219,7 @@
         hideDetails: props.hideDetails,
         precision: props.precision,
         disabled: props.disabled,
+        onInput: props.onInput,
       };
     }
 
@@ -231,6 +237,7 @@
         itemValue: props.itemValue,
         hideDetails: props.hideDetails,
         onInput: props.onInput,
+        onChange: props.onChange,
         loading: props.loading,
         hideNoData: props.hideNoData,
         disabled: props.disabled,
@@ -251,6 +258,7 @@
         itemValue: props.itemValue,
         hideDetails: props.hideDetails,
         onInput: props.onInput,
+        onChange: props.onChange,
         clearable: props.clearable,
         disabled: props.disabled,
       };

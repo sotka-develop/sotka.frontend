@@ -9,6 +9,7 @@
       :searchable="true"
       :disabled="disabled"
       :noResultsText="noResultText"
+      noOptionsText="Нет данных"
       value-consists-of="LEAF_PRIORITY"
       @input="handleInput"
     >
@@ -67,10 +68,8 @@
       type: Boolean,
       default: false,
     },
-    onInput: {
-      type: Function,
-      default: null,
-    },
+    onInput: Function,
+    onChange: Function,
   });
 
   const noResultText = 'Ничего не найдено';
@@ -166,6 +165,10 @@
     () => props.modelValue,
     (newValue) => {
       selected.value = newValue;
+
+      if (props.onChange) {
+        props.onChange();
+      }
     }
   );
 </script>

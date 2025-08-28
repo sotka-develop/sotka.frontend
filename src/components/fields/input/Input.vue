@@ -49,12 +49,17 @@
       type: Array,
       default: () => [],
     },
+    onInput: Function,
   });
 
   const emit = defineEmits(['update:modelValue']);
 
   function emitUpdate(val) {
     emit('update:modelValue', val);
+
+    if (props.onInput) {
+      props.onInput(val);
+    }
   }
 </script>
 

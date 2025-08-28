@@ -359,8 +359,6 @@ export const useFiltersStore = defineStore('filters', () => {
       isDirty.value = models.some((model, index) => {
         const key = Object.keys(defaultValues)[index];
 
-        console.log(`${key}: ${(model.value, defaultValues[key])}: ${!isEqual(model.value, defaultValues[key])}`);
-
         return !isEqual(model.value, defaultValues[key]);
       });
     },
@@ -527,6 +525,10 @@ export const useFiltersStore = defineStore('filters', () => {
     await loadAdditionalFilters();
   }, 800);
 
+  const updateFilters = debounce(async (event) => {
+    await loadAdditionalFilters();
+  }, 800);
+
   const fieldsData = ref([
     {
       name: 'region_ids',
@@ -538,7 +540,7 @@ export const useFiltersStore = defineStore('filters', () => {
       clearable: false,
       placeholder: 'Субъект РФ',
       multiple: true,
-      // onInput: onSearchRegions,
+      onChange: updateFilters,
       size: 'half',
       tooltip: {
         text: 'Субъект местонахождения имущества',
@@ -552,6 +554,7 @@ export const useFiltersStore = defineStore('filters', () => {
       hideDetails: true,
       clearable: true,
       model: biddStartTimeFromModel,
+      onChange: updateFilters,
       type: 'date',
       placeholder: '--.--.--',
       tooltip: {
@@ -566,6 +569,7 @@ export const useFiltersStore = defineStore('filters', () => {
       hideDetails: true,
       clearable: true,
       model: biddStartTimeToModel,
+      onChange: updateFilters,
       type: 'date',
       placeholder: '--.--.--',
       tooltip: {
@@ -581,6 +585,7 @@ export const useFiltersStore = defineStore('filters', () => {
       model: biddTypesModel,
       type: 'autocomplete',
       items: filtersDataBiddTypes,
+      onChange: updateFilters,
       placeholder: 'Выбрать значение',
       multiple: true,
       tooltip: {
@@ -597,6 +602,7 @@ export const useFiltersStore = defineStore('filters', () => {
       type: 'autocomplete',
       items: transactionTypes,
       placeholder: 'Выбрать значение',
+      onChange: updateFilters,
       multiple: true,
       tooltip: {
         text: 'Можно выбрать один или несколько вариантов предусмотренных текущим Законодательством, например: <i>Продажа, Аренда<i> и другие.',
@@ -610,6 +616,7 @@ export const useFiltersStore = defineStore('filters', () => {
       hideDetails: true,
       clearable: true,
       model: biddEndTimeFromModel,
+      onChange: updateFilters,
       type: 'date',
       placeholder: '--.--.--',
       tooltip: {
@@ -624,6 +631,7 @@ export const useFiltersStore = defineStore('filters', () => {
       hideDetails: true,
       clearable: true,
       model: biddEndTimeToModel,
+      onChange: updateFilters,
       type: 'date',
       placeholder: '--.--.--',
       tooltip: {
@@ -639,6 +647,7 @@ export const useFiltersStore = defineStore('filters', () => {
       model: biddFormsModel,
       type: 'autocomplete',
       items: filtersDataBiddForms,
+      onChange: updateFilters,
       placeholder: 'Выбрать значение',
       multiple: true,
       tooltip: {
@@ -654,6 +663,7 @@ export const useFiltersStore = defineStore('filters', () => {
       model: etpCodesModel,
       type: 'autocomplete',
       items: etpCodes,
+      onChange: updateFilters,
       placeholder: 'Выбрать значение',
       multiple: true,
       tooltip: {
@@ -667,6 +677,7 @@ export const useFiltersStore = defineStore('filters', () => {
       label: 'Извещение, лот',
       hideDetails: true,
       model: lotModel,
+      onInput: updateFilters,
       type: 'text',
       placeholder: 'Например, 21000004710000017906_1',
       tooltip: {
@@ -680,6 +691,7 @@ export const useFiltersStore = defineStore('filters', () => {
       label: 'Кадастровый номер',
       hideDetails: true,
       model: cadasterNumberModel,
+      onInput: updateFilters,
       type: 'text',
       placeholder: 'Например, 77:03:0010007:5286',
       tooltip: {
@@ -693,6 +705,7 @@ export const useFiltersStore = defineStore('filters', () => {
       label: 'Сравн. S (TG и КН)',
       hideDetails: true,
       model: tgToKnModel,
+      onChange: updateFilters,
       type: 'autocomplete',
       items: tgToKn,
       placeholder: 'Выбрать значение',
@@ -708,6 +721,7 @@ export const useFiltersStore = defineStore('filters', () => {
       label: 'Составность',
       hideDetails: true,
       model: compositionsModel,
+      onChange: updateFilters,
       type: 'autocomplete',
       items: compositions,
       placeholder: 'Выбрать значение',
@@ -723,6 +737,7 @@ export const useFiltersStore = defineStore('filters', () => {
       label: '% НЦ /КС (более)',
       hideDetails: true,
       model: priceRatioFromModel,
+      onInput: updateFilters,
       type: 'number',
       placeholder: 'Например, 50',
       precision: 0,
@@ -737,6 +752,7 @@ export const useFiltersStore = defineStore('filters', () => {
       label: '% НЦ /КС (менее)',
       hideDetails: true,
       model: priceRatioToModel,
+      onInput: updateFilters,
       type: 'number',
       placeholder: 'Например, 77',
       precision: 0,
@@ -751,6 +767,7 @@ export const useFiltersStore = defineStore('filters', () => {
       label: 'Нач. цена, р (более)',
       hideDetails: true,
       model: priceMinFromModel,
+      onInput: updateFilters,
       type: 'number',
       placeholder: 'Например, 1234',
       tooltip: {
@@ -764,6 +781,7 @@ export const useFiltersStore = defineStore('filters', () => {
       label: 'Нач. цена, р (менее)',
       hideDetails: true,
       model: priceMinToModel,
+      onInput: updateFilters,
       type: 'number',
       placeholder: 'Например, 12345',
       tooltip: {
@@ -777,6 +795,7 @@ export const useFiltersStore = defineStore('filters', () => {
       label: 'К. стоим-ть (более)',
       hideDetails: true,
       model: cadastralCostFromModel,
+      onInput: updateFilters,
       type: 'number',
       placeholder: 'Например, 10 000',
       tooltip: {
@@ -790,6 +809,7 @@ export const useFiltersStore = defineStore('filters', () => {
       label: 'К. стоим-ть (менее)',
       hideDetails: true,
       model: cadastralCostToModel,
+      onInput: updateFilters,
       type: 'number',
       placeholder: 'Например, 100 000',
       tooltip: {
@@ -803,6 +823,7 @@ export const useFiltersStore = defineStore('filters', () => {
       label: 'Задаток, р (более)',
       hideDetails: true,
       model: depositFromModel,
+      onInput: updateFilters,
       type: 'number',
       placeholder: 'Например, 123',
       tooltip: {
@@ -816,6 +837,7 @@ export const useFiltersStore = defineStore('filters', () => {
       label: 'Задаток, р (менее)',
       hideDetails: true,
       model: depositToModel,
+      onInput: updateFilters,
       type: 'number',
       placeholder: 'Например, 1234',
       tooltip: {
@@ -829,6 +851,7 @@ export const useFiltersStore = defineStore('filters', () => {
       label: 'Задаток, % (более)',
       hideDetails: true,
       model: depositPercentFromModel,
+      onInput: updateFilters,
       type: 'number',
       placeholder: 'Например, 1',
       precision: 0,
@@ -843,6 +866,7 @@ export const useFiltersStore = defineStore('filters', () => {
       label: 'Задаток, % (менее)',
       hideDetails: true,
       model: depositPercentToModel,
+      onInput: updateFilters,
       type: 'number',
       placeholder: 'Например, 50',
       precision: 0,
@@ -861,6 +885,7 @@ export const useFiltersStore = defineStore('filters', () => {
       hideDetails: true,
       hideNoData: true,
       model: categoriesModel,
+      onChange: updateFilters,
       type: 'autocomplete',
       items: filtersDataCategories,
       placeholder: 'Выбрать значение',
@@ -879,6 +904,7 @@ export const useFiltersStore = defineStore('filters', () => {
       label: 'Площадь от',
       hideDetails: true,
       model: areaFromModel,
+      onInput: updateFilters,
       type: 'number',
       placeholder: 'Например, 1234',
       tooltip: {
@@ -892,6 +918,7 @@ export const useFiltersStore = defineStore('filters', () => {
       label: 'Площадь до',
       hideDetails: true,
       model: areaToModel,
+      onInput: updateFilters,
       type: 'number',
       placeholder: 'Например, 12345',
       tooltip: {
@@ -907,6 +934,7 @@ export const useFiltersStore = defineStore('filters', () => {
       hideDetails: true,
       hideNoData: true,
       model: permittedUsesModel,
+      onChange: updateFilters,
       type: 'autocomplete',
       items: filtersDataPermittedUses,
       placeholder: 'Выбрать значение',
@@ -927,6 +955,7 @@ export const useFiltersStore = defineStore('filters', () => {
       hideDetails: true,
       hideNoData: true,
       model: rubricsModel,
+      onChange: updateFilters,
       type: 'autocomplete',
       items: filtersDataRubrics,
       placeholder: 'Выбрать значение',
@@ -949,6 +978,7 @@ export const useFiltersStore = defineStore('filters', () => {
       hideDetails: true,
       hideNoData: true,
       model: categoriesNspdModel,
+      onChange: updateFilters,
       type: 'autocomplete',
       items: filtersDataCategoriesNspd,
       placeholder: 'Выбрать значение',
@@ -966,6 +996,7 @@ export const useFiltersStore = defineStore('filters', () => {
       label: 'Площадь от [КН]',
       hideDetails: true,
       model: areaFromNspdModel,
+      onInput: updateFilters,
       type: 'number',
       placeholder: 'Например, 1234',
       tooltip: {
@@ -979,6 +1010,7 @@ export const useFiltersStore = defineStore('filters', () => {
       label: 'Площадь до [КН]',
       hideDetails: true,
       model: areaToNspdModel,
+      onInput: updateFilters,
       type: 'number',
       placeholder: 'Например, 12345',
       tooltip: {
@@ -994,6 +1026,7 @@ export const useFiltersStore = defineStore('filters', () => {
       hideDetails: true,
       hideNoData: true,
       model: permittedUsesNspdModel,
+      onChange: updateFilters,
       type: 'autocomplete',
       items: filtersDataPermittedUsesNspd,
       placeholder: 'Выбрать значение',
@@ -1014,6 +1047,7 @@ export const useFiltersStore = defineStore('filters', () => {
       hideDetails: true,
       hideNoData: true,
       model: rubricsNspdModel,
+      onChange: updateFilters,
       type: 'autocomplete',
       items: filtersDataRubricsNspd,
       placeholder: 'Выбрать значение',
