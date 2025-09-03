@@ -476,7 +476,7 @@ export const useFiltersStore = defineStore('filters', () => {
 
     permittedUsesPending.value = true;
 
-    await fetchFilterData('permittedUses', 'search_permitted_use', value, 1000, 0, ['torgi_gov']);
+    await fetchFilterData('permittedUses', 'search_permitted_use', value, 1000, 0, 'torgi_gov');
     await loadAdditionalFilters();
   }, 800);
 
@@ -485,7 +485,7 @@ export const useFiltersStore = defineStore('filters', () => {
 
     permittedUsesNspdPending.value = true;
 
-    await fetchFilterData('permittedUsesNspd', 'search_permitted_use', value, 1000, 0, ['nspd']);
+    await fetchFilterData('permittedUsesNspd', 'search_permitted_use', value, 1000, 0, 'nspd');
     await loadAdditionalFilters();
   }, 800);
 
@@ -494,7 +494,7 @@ export const useFiltersStore = defineStore('filters', () => {
 
     rubricsPending.value = true;
 
-    await fetchFilterData('rubrics', 'search_rubrics', value, 100, 0, ['torgi_gov']);
+    await fetchFilterData('rubrics', 'search_rubrics', value, 100, 0, 'torgi_gov');
     await loadAdditionalFilters();
   }, 800);
 
@@ -503,7 +503,7 @@ export const useFiltersStore = defineStore('filters', () => {
 
     rubricsNspdPending.value = true;
 
-    await fetchFilterData('rubricsNspd', 'search_rubrics', value, 100, 0, ['nspd']);
+    await fetchFilterData('rubricsNspd', 'search_rubrics', value, 100, 0, 'nspd');
     await loadAdditionalFilters();
   }, 800);
 
@@ -512,7 +512,7 @@ export const useFiltersStore = defineStore('filters', () => {
 
     categoriesPending.value = true;
 
-    await fetchFilterData('categories', 'search_categories', value, 100, 0, ['torgi_gov']);
+    await fetchFilterData('categories', 'search_categories', value, 100, 0, ['torgi_gov', 'torgi_gov_purpose']);
     await loadAdditionalFilters();
   }, 800);
 
@@ -1064,10 +1064,10 @@ export const useFiltersStore = defineStore('filters', () => {
 
   async function loadAdditionalFilters() {
     await Promise.all([
-      fetchFilterData('permittedUses', 'search_permitted_use', '', 1000, 0, ['torgi_gov']),
-      fetchFilterData('permittedUsesNspd', 'search_permitted_use', '', 1000, 0, ['nspd']),
-      fetchFilterData('rubrics', 'search_rubrics', '', 100, 0, ['torgi_gov']),
-      fetchFilterData('rubricsNspd', 'search_rubrics', '', 100, 0, ['nspd']),
+      fetchFilterData('permittedUses', 'search_permitted_use', '', 1000, 0, 'torgi_gov'),
+      fetchFilterData('permittedUsesNspd', 'search_permitted_use', '', 1000, 0, 'nspd'),
+      fetchFilterData('rubrics', 'search_rubrics', '', 100, 0, 'torgi_gov'),
+      fetchFilterData('rubricsNspd', 'search_rubrics', '', 100, 0, 'nspd'),
       fetchFilterData('categories', 'search_categories', '', 100, 0, ['torgi_gov', 'torgi_gov_purpose']),
       fetchFilterData('categoriesNspd', 'search_categories', '', 100, 0, ['nspd']),
       fetchFilterData('regions', 'search_regions', '', 100, 0),
@@ -1421,7 +1421,13 @@ export const useFiltersStore = defineStore('filters', () => {
         offset,
       });
 
-      sources.forEach((s) => params.append('sources', s));
+      if (Array.isArray(sources)) {
+        sources.forEach((s) => params.append('sources', s));
+      } else {
+        params.append('source', sources);
+      }
+
+      console.log(`${url}: ${sources}`);
 
       const res = await fetch(`${urlData}?${params}`, {
         method: 'POST',
