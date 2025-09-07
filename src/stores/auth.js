@@ -66,6 +66,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function checkSession() {
     if (!token.value) return;
+
     console.log('checkSession');
 
     try {
@@ -80,7 +81,7 @@ export const useAuthStore = defineStore('auth', () => {
       const data = await res.json();
       console.log(data);
 
-      if (!res.ok || data?.payload || data.error) {
+      if (!res.ok || !data?.payload || data.error) {
         await logout();
       }
     } catch (e) {
@@ -91,6 +92,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   function startSessionChecker() {
     stopSessionChecker();
+
     if (!token.value) return;
 
     sessionIntervalId = setInterval(() => {
