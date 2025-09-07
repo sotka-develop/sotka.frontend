@@ -67,8 +67,6 @@ export const useAuthStore = defineStore('auth', () => {
   async function checkSession() {
     if (!token.value) return;
 
-    console.log('checkSession');
-
     try {
       const res = await fetch(`${baseUrl}/general/session`, {
         method: 'GET',
@@ -79,14 +77,17 @@ export const useAuthStore = defineStore('auth', () => {
       });
 
       const data = await res.json();
-      console.log(data);
 
       if (!res.ok || !data?.payload || data.error) {
         await logout();
+
+        window.location.reload();
       }
     } catch (e) {
       console.error('Ошибка проверки сессии', e);
       await logout();
+
+      window.location.reload();
     }
   }
 
@@ -97,7 +98,7 @@ export const useAuthStore = defineStore('auth', () => {
 
     sessionIntervalId = setInterval(() => {
       checkSession();
-    }, 30000); // каждые 30 секунд
+    }, 30000);
   }
 
   function stopSessionChecker() {
