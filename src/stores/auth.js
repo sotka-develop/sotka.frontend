@@ -1,6 +1,6 @@
 // stores/auth.js
 import { defineStore } from 'pinia';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { toast } from 'vue3-toastify';
 import Toast from '@/components/toast/Toast.vue';
 
@@ -14,6 +14,8 @@ export const useAuthStore = defineStore('auth', () => {
   const email = ref('');
   const isCodeSent = ref(false);
   const showConsentCheckboxes = ref(false);
+
+  let sessionIntervalId = null;
 
   function setToken(newToken) {
     token.value = newToken;
@@ -61,6 +63,56 @@ export const useAuthStore = defineStore('auth', () => {
     isAuthenticated.value = true;
     isLoading.value = false;
   }
+
+  async function checkSession() {
+    if (!token.value) return;
+    console.log('checkSession');
+
+    try {
+      const res = await fetch(`${baseUrl}/general/session`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `${token.value}`,
+        },
+      });
+
+      const data = await res.json();
+      console.log(data);
+
+      if (!res.ok || data?.payload || data.error) {
+        await logout();
+      }
+    } catch (e) {
+      console.error('Ошибка проверки сессии', e);
+      await logout();
+    }
+  }
+
+  function startSessionChecker() {
+    stopSessionChecker();
+    if (!token.value) return;
+
+    sessionIntervalId = setInterval(() => {
+      checkSession();
+    }, 30000); // каждые 30 секунд
+  }
+
+  function stopSessionChecker() {
+    if (sessionIntervalId) {
+      clearInterval(sessionIntervalId);
+      sessionIntervalId = null;
+    }
+  }
+
+  watch(
+    token,
+    (newVal) => {
+      if (newVal) startSessionChecker();
+      else stopSessionChecker();
+    },
+    { immediate: true }
+  );
 
   async function sendCode(emailAddress) {
     const url = new URL(`${baseUrl}/general/auth/send_code`);
@@ -174,5 +226,6 @@ export const useAuthStore = defineStore('auth', () => {
     loginWithCode,
     fetchUserData,
     showConsentCheckboxes,
+    checkSession,
   };
 });

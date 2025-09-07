@@ -1427,8 +1427,6 @@ export const useFiltersStore = defineStore('filters', () => {
         params.append('source', sources);
       }
 
-      console.log(`${url}: ${sources}`);
-
       const res = await fetch(`${urlData}?${params}`, {
         method: 'POST',
         headers: {
