@@ -1,10 +1,13 @@
 // stores/auth.js
 import { defineStore } from 'pinia';
 import { ref, watch } from 'vue';
+import { useRouter } from 'vue-router';
 import { toast } from 'vue3-toastify';
 import Toast from '@/components/toast/Toast.vue';
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
+const router = useRouter();
 
 export const useAuthStore = defineStore('auth', () => {
   const token = ref(localStorage.getItem('token') || null);
@@ -81,13 +84,13 @@ export const useAuthStore = defineStore('auth', () => {
       if (!res.ok || !data?.payload || data.error) {
         await logout();
 
-        window.location.reload();
+        router.replace('/login');
       }
     } catch (e) {
       console.error('Ошибка проверки сессии', e);
       await logout();
 
-      window.location.reload();
+      router.replace('/login');
     }
   }
 
