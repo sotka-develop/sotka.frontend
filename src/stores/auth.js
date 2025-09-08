@@ -83,12 +83,38 @@ export const useAuthStore = defineStore('auth', () => {
         await logout();
 
         router.replace({ name: 'login' });
+
+        toast(Toast, {
+          type: 'error',
+          expandCustomProps: true,
+          contentProps: {
+            title: 'Одновременный вход с разных устройств запрещён',
+          },
+          autoClose: 5000,
+          closeOnClick: false,
+          draggable: true,
+          position: toast.POSITION.BOTTOM_RIGHT,
+          transition: 'slide',
+        });
       }
     } catch (e) {
       console.error('Ошибка проверки сессии', e);
       await logout();
 
       router.replace({ name: 'login' });
+
+      toast(Toast, {
+        type: 'error',
+        expandCustomProps: true,
+        contentProps: {
+          title: 'Одновременный вход с разных устройств запрещён',
+        },
+        autoClose: 5000,
+        closeOnClick: false,
+        draggable: true,
+        position: toast.POSITION.BOTTOM_RIGHT,
+        transition: 'slide',
+      });
     }
   }
 
@@ -191,6 +217,7 @@ export const useAuthStore = defineStore('auth', () => {
     });
 
     const data = await res.json();
+
     if (!res.ok) {
       const message = data?.error?.error_data?.['exception.detail'] || 'Ошибка авторизации';
 
