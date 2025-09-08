@@ -2,6 +2,7 @@
   <component :is="$route.meta.layout || 'div'">
     <RouterView />
   </component>
+
   <Loader v-if="auth.isLoading" />
 </template>
 

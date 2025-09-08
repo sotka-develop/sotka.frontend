@@ -84,7 +84,31 @@ export const useAuthStore = defineStore('auth', () => {
 
         router.replace({ name: 'login' });
 
+        setTimeout(() => {
+          toast(Toast, {
+            containerId: 'global',
+            type: 'error',
+            expandCustomProps: true,
+            contentProps: {
+              title: 'Одновременный вход с разных устройств запрещён',
+            },
+            autoClose: 5000,
+            closeOnClick: false,
+            draggable: true,
+            position: toast.POSITION.BOTTOM_RIGHT,
+            transition: 'slide',
+          });
+        }, 500);
+      }
+    } catch (e) {
+      console.error('Ошибка проверки сессии', e);
+      await logout();
+
+      router.replace({ name: 'login' });
+
+      setTimeout(() => {
         toast(Toast, {
+          containerId: 'global',
           type: 'error',
           expandCustomProps: true,
           contentProps: {
@@ -96,25 +120,7 @@ export const useAuthStore = defineStore('auth', () => {
           position: toast.POSITION.BOTTOM_RIGHT,
           transition: 'slide',
         });
-      }
-    } catch (e) {
-      console.error('Ошибка проверки сессии', e);
-      await logout();
-
-      router.replace({ name: 'login' });
-
-      toast(Toast, {
-        type: 'error',
-        expandCustomProps: true,
-        contentProps: {
-          title: 'Одновременный вход с разных устройств запрещён',
-        },
-        autoClose: 5000,
-        closeOnClick: false,
-        draggable: true,
-        position: toast.POSITION.BOTTOM_RIGHT,
-        transition: 'slide',
-      });
+      }, 500);
     }
   }
 
