@@ -214,7 +214,8 @@
   };
 
   const fetchClusterPage = async (clusterId, page = 1, pageSize = 10, total = undefined) => {
-    const filtersModel = filtersData.value;
+    // const filtersModel = filtersData.value;
+    const filtersModel = filtersStore.getFormattedFilters(); // данные всех фильтров
 
     const pagination = {
       page,
@@ -296,7 +297,8 @@
       return;
     }
 
-    const filtersModel = filtersData.value;
+    // const filtersModel = filtersData.value;
+    const filtersModel = filtersStore.getFormattedFilters(); // данные всех фильтров
 
     mapZoom.value = (event?.location?.zoom || mapDefaultZoom.value).toFixed(2);
     const bounds = event?.location?.bounds;
