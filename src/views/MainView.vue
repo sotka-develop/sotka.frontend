@@ -349,8 +349,8 @@
 
   // получение лотов в таблице
   async function fetchLotsData(sync = false) {
-    //const filtersModel = filtersStore.getFormattedFilters(); // данные всех фильтров
-    const filtersModel = filtersData.value;
+    const filtersModel = filtersStore.getFormattedFilters(); // данные всех фильтров
+    // const filtersModel = filtersData.value;
 
     const pagination = {
       page: page.value, // текущая страница
@@ -380,7 +380,8 @@
 
   // получение точек на карте
   async function loadMapData(payload = null) {
-    const filtersModel = filtersData.value;
+    const filtersModel = filtersStore.getFormattedFilters(); // данные всех фильтров
+    // const filtersModel = filtersData.value;
 
     const coords = defaultCoords; // координаты
     const zoom = mapZoomDefault; // масштаб
