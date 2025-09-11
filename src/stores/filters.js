@@ -23,8 +23,11 @@ export const useFiltersStore = defineStore('filters', () => {
   const biddTypesPeinding = ref(false);
 
   // 5) Вид сделки
-  const transactionTypes = ref(['Аренда', 'Безвозмездное пользование', 'Иное', 'Продажа', 'Доверительное управление']);
-  const transactionTypesModel = ref([]);
+  // const transactionTypes = ref(['Аренда', 'Безвозмездное пользование', 'Иное', 'Продажа', 'Доверительное управление']);
+  // const transactionTypesModel = ref([]);
+
+  const transactionTypes = ref([]);
+  const transactionTypesModel = ref(null);
 
   // 6) Окнч.пдч.заяв. от
   const biddEndTimeFromModel = ref(null);
@@ -52,8 +55,11 @@ export const useFiltersStore = defineStore('filters', () => {
   const tgToKnModel = ref([]);
 
   // 13) Составность
-  const compositions = ref(['Кад. номер', 'Кад. квартал', 'Кад. район', 'Коорд. не определены']);
-  const compositionsModel = ref(['Кад. квартал', 'Кад. район', 'Кад. номер']);
+  const compositions = ref([]);
+  const compositionsModel = ref(null);
+
+  // const compositions = ref(['Кад. номер', 'Кад. квартал', 'Кад. район', 'Коорд. не определены']);
+  // const compositionsModel = ref(['Кад. квартал', 'Кад. район', 'Кад. номер']);
 
   // 14) % НЦ /КС (более)
   const priceRatioFromModel = ref(null);
@@ -173,7 +179,8 @@ export const useFiltersStore = defineStore('filters', () => {
     tgToKnModel: [],
 
     // 13) Составность
-    compositionsModel: ['Кад. квартал', 'Кад. район', 'Кад. номер'],
+    compositionsModel: [],
+    // compositionsModel: ['Кад. квартал', 'Кад. район', 'Кад. номер'],
 
     // 14) % НЦ /КС (более)
     priceRatioFromModel: null,
@@ -474,7 +481,7 @@ export const useFiltersStore = defineStore('filters', () => {
   const onSearchPermittedUses = debounce(async (event) => {
     const value = event?.target?.value || '';
 
-    permittedUsesPending.value = true;
+    // permittedUsesPending.value = true;
 
     await fetchFilterData('permittedUses', 'search_permitted_use', value, 1000, 0, 'torgi_gov');
     await loadAdditionalFilters();
@@ -483,7 +490,7 @@ export const useFiltersStore = defineStore('filters', () => {
   const onSearchPermittedUsesNspd = debounce(async (event) => {
     const value = event?.target?.value || '';
 
-    permittedUsesNspdPending.value = true;
+    // permittedUsesNspdPending.value = true;
 
     await fetchFilterData('permittedUsesNspd', 'search_permitted_use', value, 1000, 0, 'nspd');
     await loadAdditionalFilters();
@@ -492,7 +499,7 @@ export const useFiltersStore = defineStore('filters', () => {
   const onSearchRubrics = debounce(async (event) => {
     const value = event?.target?.value || '';
 
-    rubricsPending.value = true;
+    // rubricsPending.value = true;
 
     await fetchFilterData('rubrics', 'search_rubrics', value, 100, 0, 'torgi_gov');
     await loadAdditionalFilters();
@@ -501,7 +508,7 @@ export const useFiltersStore = defineStore('filters', () => {
   const onSearchRubricsNspd = debounce(async (event) => {
     const value = event?.target?.value || '';
 
-    rubricsNspdPending.value = true;
+    // rubricsNspdPending.value = true;
 
     await fetchFilterData('rubricsNspd', 'search_rubrics', value, 100, 0, 'nspd');
     await loadAdditionalFilters();
@@ -510,7 +517,7 @@ export const useFiltersStore = defineStore('filters', () => {
   const onSearchCategories = debounce(async (event) => {
     const value = event?.target?.value || '';
 
-    categoriesPending.value = true;
+    // categoriesPending.value = true;
 
     await fetchFilterData('categories', 'search_categories', value, 100, 0, ['torgi_gov', 'torgi_gov_purpose']);
     await loadAdditionalFilters();
@@ -519,7 +526,7 @@ export const useFiltersStore = defineStore('filters', () => {
   const onSearchCategoriesNspd = debounce(async (event) => {
     const value = event?.target?.value || '';
 
-    categoriesNspdPending.value = true;
+    // categoriesNspdPending.value = true;
 
     await fetchFilterData('categories', 'search_categories', value, 100, 0, ['nspd']);
     await loadAdditionalFilters();
@@ -1073,6 +1080,8 @@ export const useFiltersStore = defineStore('filters', () => {
       fetchFilterData('regions', 'search_regions', '', 100, 0),
       fetchFilterData('biddForms', 'search_bidd_forms', '', 100, 0),
       fetchFilterData('biddTypes', 'search_bidd_types', '', 100, 0),
+      fetchFilterData('compositions', 'search_compositions', '', 100, 0),
+      fetchFilterData('transactionTypes', 'search_transaction_types', '', 100, 0),
     ]);
   }
 
@@ -1194,6 +1203,9 @@ export const useFiltersStore = defineStore('filters', () => {
           }
           if (name === 'transaction_types') {
             transactionTypesModel.value = defaultValue;
+          }
+          if (name === 'compositions') {
+            compositionsModel.value = defaultValue;
           }
           if (name === 'bidd_form_ids') {
             biddFormsModel.value = defaultValue;
@@ -1399,6 +1411,20 @@ export const useFiltersStore = defineStore('filters', () => {
         value: item.id,
       }));
     }
+
+    if (name === 'compositions') {
+      compositions.value = (data.payload || []).map((item) => ({
+        text: item.composition,
+        value: item.id,
+      }));
+    }
+
+    if (name === 'transactionTypes') {
+      transactionTypes.value = (data.payload || []).map((item) => ({
+        text: item.type_transaction_rus,
+        value: item.id,
+      }));
+    }
   }
 
   async function fetchFilterData(name, url, query = '', limit = 10, offset = 0, sources = []) {
@@ -1447,14 +1473,14 @@ export const useFiltersStore = defineStore('filters', () => {
     } catch (err) {
       console.error(`Ошибка при поиске ${name}`, err);
     } finally {
-      biddTypesPeinding.value = false;
-      biddFormsPending.value = false;
-      categoriesPending.value = false;
-      permittedUsesPending.value = false;
-      rubricsPending.value = false;
-      categoriesNspdPending.value = false;
-      permittedUsesNspdPending.value = false;
-      rubricsNspdPending.value = false;
+      // biddTypesPeinding.value = false;
+      // biddFormsPending.value = false;
+      // categoriesPending.value = false;
+      // permittedUsesPending.value = false;
+      // rubricsPending.value = false;
+      // categoriesNspdPending.value = false;
+      // permittedUsesNspdPending.value = false;
+      // rubricsNspdPending.value = false;
     }
   }
 
