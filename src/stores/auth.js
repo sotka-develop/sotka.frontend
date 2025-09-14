@@ -101,7 +101,7 @@ export const useAuthStore = defineStore('auth', () => {
         }, 500);
       }
     } catch (e) {
-      console.error('Ошибка проверки сессии', e);
+      // console.error('Ошибка проверки сессии', e);
       await logout();
 
       router.replace({ name: 'login' });
@@ -112,7 +112,7 @@ export const useAuthStore = defineStore('auth', () => {
           type: 'error',
           expandCustomProps: true,
           contentProps: {
-            title: 'Одновременный вход с разных устройств запрещён',
+            title: 'Сервер недоступен',
           },
           autoClose: 5000,
           closeOnClick: false,

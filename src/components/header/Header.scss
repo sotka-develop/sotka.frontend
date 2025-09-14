@@ -20,20 +20,24 @@
     height: 76px;
   }
 
+  &__logo-wrapper {
+    @include media-breakpoint-up(lg) {
+      width: calc(100% / 12 * 2);
+    }
+  }
+
   &__logo {
     display: block;
     width: 64px;
     height: 64px;
-
-    @include media-breakpoint-up(xl) {
-      margin-right: 22.75%;
-    }
-    @include media-breakpoint-only(lg) {
-      margin-right: 17.5%;
-    }
   }
 
   &__navigation {
+    @include media-breakpoint-up(md) {
+      display: flex;
+      justify-content: center;
+      width: calc(100% / 12 * 8);
+    }
     @include media-breakpoint-down(md) {
       display: none;
     }

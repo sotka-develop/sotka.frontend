@@ -2,12 +2,16 @@
   <header class="header header--fixed" ref="headerRef">
     <div class="header__container container">
       <div class="header__content">
-        <RouterLink v-if="route.name !== 'main'" class="header__logo" to="/">
-          <Image v-bind="logoData" />
-        </RouterLink>
+        <div v-if="route.name !== 'main'" class="header__logo-wrapper">
+          <RouterLink class="header__logo" to="/">
+            <Image v-bind="logoData" />
+          </RouterLink>
+        </div>
 
-        <div v-else class="header__logo">
-          <Image v-bind="logoData" />
+        <div v-else class="header__logo-wrapper">
+          <div class="header__logo">
+            <Image v-bind="logoData" />
+          </div>
         </div>
 
         <nav class="header__navigation">
