@@ -469,16 +469,12 @@ export const useFiltersStore = defineStore('filters', () => {
   const onSearchPermittedUses = debounce(async (event) => {
     const value = event?.target?.value || '';
 
-    // permittedUsesPending.value = true;
-
     await fetchFilterData('permittedUses', 'search_permitted_use', value, 1000, 0, 'torgi_gov');
     await loadAdditionalFilters();
   }, 800);
 
   const onSearchPermittedUsesNspd = debounce(async (event) => {
     const value = event?.target?.value || '';
-
-    // permittedUsesNspdPending.value = true;
 
     await fetchFilterData('permittedUsesNspd', 'search_permitted_use', value, 1000, 0, 'nspd');
     await loadAdditionalFilters();
@@ -487,16 +483,12 @@ export const useFiltersStore = defineStore('filters', () => {
   const onSearchRubrics = debounce(async (event) => {
     const value = event?.target?.value || '';
 
-    // rubricsPending.value = true;
-
     await fetchFilterData('rubrics', 'search_rubrics', value, 100, 0, 'torgi_gov');
     await loadAdditionalFilters();
   }, 800);
 
   const onSearchRubricsNspd = debounce(async (event) => {
     const value = event?.target?.value || '';
-
-    // rubricsNspdPending.value = true;
 
     await fetchFilterData('rubricsNspd', 'search_rubrics', value, 100, 0, 'nspd');
     await loadAdditionalFilters();
@@ -505,16 +497,12 @@ export const useFiltersStore = defineStore('filters', () => {
   const onSearchCategories = debounce(async (event) => {
     const value = event?.target?.value || '';
 
-    // categoriesPending.value = true;
-
     await fetchFilterData('categories', 'search_categories', value, 100, 0, ['torgi_gov', 'torgi_gov_purpose']);
     await loadAdditionalFilters();
   }, 800);
 
   const onSearchCategoriesNspd = debounce(async (event) => {
     const value = event?.target?.value || '';
-
-    // categoriesNspdPending.value = true;
 
     await fetchFilterData('categories', 'search_categories', value, 100, 0, ['nspd']);
     await loadAdditionalFilters();
@@ -951,12 +939,10 @@ export const useFiltersStore = defineStore('filters', () => {
       hideNoData: true,
       model: rubricsModel,
       onChange: updateFilters,
-      type: 'autocomplete',
+      type: 'treeselect',
       items: filtersDataRubrics,
       placeholder: 'Выбрать значение',
       multiple: true,
-      // loading: rubricsPending,
-      onInput: onSearchRubrics,
       tooltip: {
         text: 'Классификатор повышающий удобство использования. Позволяет обойти многочисленные варианты написания ВРИ и ошибок в них. Приводит всё к небольшому но функциональному перечню вариантов использованию земельного участка - для жилья, предпринимательства и т.д. Сведения согласно анализу <i>ВРИ</i> из <u>документации Процедуры torgi.gov</u>',
         icon: '20/info',
@@ -978,7 +964,6 @@ export const useFiltersStore = defineStore('filters', () => {
       items: filtersDataCategoriesNspd,
       placeholder: 'Выбрать значение',
       multiple: true,
-      // loading: categoriesNspdPending,
       onInput: onSearchCategoriesNspd,
       tooltip: {
         text: '<i>Категория земельного участка</i> - это характеристика, определяющая целевое назначение земли и правовой режим ее использования. Категория устанавливается для каждого участка и указывает, как его можно использовать в соответствии с Законодательством. <u>Сведения согласно Кадастровому номеру</u>',
@@ -1043,12 +1028,10 @@ export const useFiltersStore = defineStore('filters', () => {
       hideNoData: true,
       model: rubricsNspdModel,
       onChange: updateFilters,
-      type: 'autocomplete',
+      type: 'treeselect',
       items: filtersDataRubricsNspd,
       placeholder: 'Выбрать значение',
       multiple: true,
-      // loading: rubricsNspdPending,
-      onInput: onSearchRubricsNspd,
       tooltip: {
         text: '<i>Классификатор повышающий удобство использования. Позволяет обойти многочисленные варианты написания ВРИ</i> и ошибок в них. Приводит всё к небольшому но функциональному перечню вариантов использованию земельного участка - для жилья, предпринимательства и т.д. Сведения согласно анализу ВРИ из <u>Кадастрового номера</u>',
         icon: '20/info',
@@ -1338,17 +1321,51 @@ export const useFiltersStore = defineStore('filters', () => {
     }
 
     if (name === 'rubrics') {
-      filtersDataRubrics.value = (data.payload || []).map((item) => ({
-        text: item.rubric,
-        value: item.id,
-      }));
+      filtersDataRubrics.value = Object.values(
+        (data?.payload || []).reduce((acc, { id, rubric, rubric_partition }) => {
+          const rubricId = rubric_partition.id;
+          const rubricName = rubric_partition.name;
+
+          if (!acc[rubricId]) {
+            acc[rubricId] = {
+              name: rubricName,
+              id: rubricId,
+              items: [],
+            };
+          }
+
+          acc[rubricId].items.push({
+            text: rubric,
+            value: id,
+          });
+
+          return acc;
+        }, {})
+      );
     }
 
     if (name === 'rubricsNspd') {
-      filtersDataRubricsNspd.value = (data.payload || []).map((item) => ({
-        text: item.rubric,
-        value: item.id,
-      }));
+      filtersDataRubricsNspd.value = Object.values(
+        (data?.payload || []).reduce((acc, { id, rubric, rubric_partition }) => {
+          const rubricId = rubric_partition.id;
+          const rubricName = rubric_partition.name;
+
+          if (!acc[rubricId]) {
+            acc[rubricId] = {
+              name: rubricName,
+              id: rubricId,
+              items: [],
+            };
+          }
+
+          acc[rubricId].items.push({
+            text: rubric,
+            value: id,
+          });
+
+          return acc;
+        }, {})
+      );
     }
 
     if (name === 'categories') {
