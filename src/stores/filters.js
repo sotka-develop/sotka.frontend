@@ -20,14 +20,10 @@ export const useFiltersStore = defineStore('filters', () => {
   // 4) Вид торгов
   const filtersDataBiddTypes = ref([]);
   const biddTypesModel = ref([]);
-  const biddTypesPeinding = ref(false);
 
   // 5) Вид сделки
-  // const transactionTypes = ref(['Аренда', 'Безвозмездное пользование', 'Иное', 'Продажа', 'Доверительное управление']);
-  // const transactionTypesModel = ref([]);
-
   const transactionTypes = ref([]);
-  const transactionTypesModel = ref(null);
+  const transactionTypesModel = ref([]);
 
   // 6) Окнч.пдч.заяв. от
   const biddEndTimeFromModel = ref(null);
@@ -38,7 +34,6 @@ export const useFiltersStore = defineStore('filters', () => {
   // 8) Форма проведения
   const filtersDataBiddForms = ref([]);
   const biddFormsModel = ref([]);
-  const biddFormsPending = ref(false);
 
   // 9) ЭТП
   const etpCodes = ref([]);
@@ -56,10 +51,7 @@ export const useFiltersStore = defineStore('filters', () => {
 
   // 13) Составность
   const compositions = ref([]);
-  const compositionsModel = ref(null);
-
-  // const compositions = ref(['Кад. номер', 'Кад. квартал', 'Кад. район', 'Коорд. не определены']);
-  // const compositionsModel = ref(['Кад. квартал', 'Кад. район', 'Кад. номер']);
+  const compositionsModel = ref([]);
 
   // 14) % НЦ /КС (более)
   const priceRatioFromModel = ref(null);
@@ -94,7 +86,6 @@ export const useFiltersStore = defineStore('filters', () => {
   // 24) Категория
   const filtersDataCategories = ref([]);
   const categoriesModel = ref([]);
-  const categoriesPending = ref(false);
 
   // 25) Площадь, м2 (более)
   const areaFromModel = ref(null);
@@ -110,12 +101,10 @@ export const useFiltersStore = defineStore('filters', () => {
   // 28) Рубрика
   const filtersDataRubrics = ref([]);
   const rubricsModel = ref([]);
-  const rubricsPending = ref(false);
 
   // 29) Категория НСПД
   const filtersDataCategoriesNspd = ref([]);
   const categoriesNspdModel = ref([]);
-  const categoriesNspdPending = ref(false);
 
   // 30) Площадь, м2 (более) НСПД
   const areaFromNspdModel = ref(null);
@@ -131,7 +120,6 @@ export const useFiltersStore = defineStore('filters', () => {
   // 33) Рубрика
   const filtersDataRubricsNspd = ref([]);
   const rubricsNspdModel = ref([]);
-  const rubricsNspdPending = ref(false);
 
   const isLoading = ref(false);
   const filtersReadyLoading = ref(false);
@@ -141,7 +129,7 @@ export const useFiltersStore = defineStore('filters', () => {
   const isDirty = ref(false);
 
   // Дефолтные значения для сравнения
-  const defaultValues = {
+  const defaultValues = ref({
     // 1) Регион
     regionsModel: null,
 
@@ -241,7 +229,7 @@ export const useFiltersStore = defineStore('filters', () => {
 
     // 33) Рубрика
     rubricsNspdModel: [],
-  };
+  });
 
   // Список моделей для отслеживания
   const models = [
@@ -364,9 +352,9 @@ export const useFiltersStore = defineStore('filters', () => {
     models,
     () => {
       isDirty.value = models.some((model, index) => {
-        const key = Object.keys(defaultValues)[index];
+        const key = Object.keys(defaultValues.value)[index];
 
-        return !isEqual(model.value, defaultValues[key]);
+        return !isEqual(model.value, defaultValues.value[key]);
       });
     },
     { deep: true }
@@ -375,103 +363,103 @@ export const useFiltersStore = defineStore('filters', () => {
   // Сброс фильтров до дефолтных значений
   async function resetFilters() {
     // 1) Регион
-    regionsModel.value = defaultValues.regionsModel;
+    regionsModel.value = defaultValues.value.regionsModel;
 
     // 2) Начало пдч.заяв. от
-    biddStartTimeFromModel.value = defaultValues.biddStartTimeFromModel;
+    biddStartTimeFromModel.value = defaultValues.value.biddStartTimeFromModel;
 
     // 3) Начало пдч.заяв. до
-    biddStartTimeToModel.value = defaultValues.biddStartTimeToModel;
+    biddStartTimeToModel.value = defaultValues.value.biddStartTimeToModel;
 
     // 4) Вид торгов
-    biddTypesModel.value = defaultValues.biddTypesModel;
+    biddTypesModel.value = defaultValues.value.biddTypesModel;
 
     // 5) Вид сделки
-    transactionTypesModel.value = defaultValues.transactionTypesModel;
+    transactionTypesModel.value = defaultValues.value.transactionTypesModel;
 
     // 6) Окнч.пдч.заяв. от
-    biddEndTimeFromModel.value = defaultValues.biddEndTimeFromModel;
+    biddEndTimeFromModel.value = defaultValues.value.biddEndTimeFromModel;
 
     // 7) Окнч.пдч.заяв. до
-    biddEndTimeToModel.value = defaultValues.biddEndTimeToModel;
+    biddEndTimeToModel.value = defaultValues.value.biddEndTimeToModel;
 
     // 8) Форма проведения
-    biddFormsModel.value = defaultValues.biddFormsModel;
+    biddFormsModel.value = defaultValues.value.biddFormsModel;
 
     // 9) ЭТП
-    etpCodesModel.value = defaultValues.etpCodesModel;
+    etpCodesModel.value = defaultValues.value.etpCodesModel;
 
     // 10) Извещение, лот
-    lotModel.value = defaultValues.lotModel;
+    lotModel.value = defaultValues.value.lotModel;
 
     // 11) Кадастр. номер
-    cadasterNumberModel.value = defaultValues.cadasterNumberModel;
+    cadasterNumberModel.value = defaultValues.value.cadasterNumberModel;
 
     // 12) Сравн. S (TG и КН)
-    tgToKnModel.value = defaultValues.tgToKnModel;
+    tgToKnModel.value = defaultValues.value.tgToKnModel;
 
     // 13) Составность
-    compositionsModel.value = defaultValues.compositionsModel;
+    compositionsModel.value = defaultValues.value.compositionsModel;
 
     // 14) % НЦ /КС (более)
-    priceRatioFromModel.value = defaultValues.priceRatioFromModel;
+    priceRatioFromModel.value = defaultValues.value.priceRatioFromModel;
 
     // 15) % НЦ /КС (менее)
-    priceRatioToModel.value = defaultValues.priceRatioToModel;
+    priceRatioToModel.value = defaultValues.value.priceRatioToModel;
 
     // 16) Нач. цена, р (более)
-    priceMinFromModel.value = defaultValues.priceMinFromModel;
+    priceMinFromModel.value = defaultValues.value.priceMinFromModel;
 
     // 17) Нач. цена, р (менее)
-    priceMinToModel.value = defaultValues.priceMinToModel;
+    priceMinToModel.value = defaultValues.value.priceMinToModel;
 
     // 18) К. стоим-ть (более)
-    cadastralCostFromModel.value = defaultValues.cadastralCostFromModel;
+    cadastralCostFromModel.value = defaultValues.value.cadastralCostFromModel;
 
     // 19) К. стоим-ть (менее)
-    cadastralCostToModel.value = defaultValues.cadastralCostToModel;
+    cadastralCostToModel.value = defaultValues.value.cadastralCostToModel;
 
     // 20) Задаток, р (более)
-    depositFromModel.value = defaultValues.depositFromModel;
+    depositFromModel.value = defaultValues.value.depositFromModel;
 
     // 21) Задаток, р (менее)
-    depositToModel.value = defaultValues.depositToModel;
+    depositToModel.value = defaultValues.value.depositToModel;
 
     // 22) Задаток, % (более)
-    depositPercentFromModel.value = defaultValues.depositPercentFromModel;
+    depositPercentFromModel.value = defaultValues.value.depositPercentFromModel;
 
     // 23) Задаток, % (менее)
-    depositPercentToModel.value = defaultValues.depositPercentToModel;
+    depositPercentToModel.value = defaultValues.value.depositPercentToModel;
 
     // 24) Категория
-    categoriesModel.value = defaultValues.categoriesModel;
+    categoriesModel.value = defaultValues.value.categoriesModel;
 
     // 25) Площадь, м2 (более)
-    areaFromModel.value = defaultValues.areaFromModel;
+    areaFromModel.value = defaultValues.value.areaFromModel;
 
     // 26) Площадь, м2 (менее)
-    areaToModel.value = defaultValues.areaToModel;
+    areaToModel.value = defaultValues.value.areaToModel;
 
     // 27) ВРИ
-    permittedUsesModel.value = defaultValues.permittedUsesModel;
+    permittedUsesModel.value = defaultValues.value.permittedUsesModel;
 
     // 28) Рубрика
-    rubricsModel.value = defaultValues.rubricsModel;
+    rubricsModel.value = defaultValues.value.rubricsModel;
 
     // 29) Категория НСПД
-    categoriesNspdModel.value = defaultValues.categoriesNspdModel;
+    categoriesNspdModel.value = defaultValues.value.categoriesNspdModel;
 
     // 30) Площадь, м2 (более) НСПД
-    areaFromNspdModel.value = defaultValues.areaFromNspdModel;
+    areaFromNspdModel.value = defaultValues.value.areaFromNspdModel;
 
     // 31) Площадь, м2 (менее) НСПД
-    areaToNspdModel.value = defaultValues.areaFromNspdModel;
+    areaToNspdModel.value = defaultValues.value.areaFromNspdModel;
 
     // 32) ВРИ НСПД
-    permittedUsesNspdModel.value = defaultValues.permittedUsesNspdModel;
+    permittedUsesNspdModel.value = defaultValues.value.permittedUsesNspdModel;
 
     // 33) Рубрика НСПД
-    rubricsNspdModel.value = defaultValues.rubricsNspdModel;
+    rubricsNspdModel.value = defaultValues.value.rubricsNspdModel;
 
     await loadAdditionalFilters();
 
@@ -1172,10 +1160,11 @@ export const useFiltersStore = defineStore('filters', () => {
         if (name && defaultValue) {
           if (name === 'bidd_end_time_from') {
             biddEndTimeFromModel.value = defaultValue;
-            defaultValues.biddEndTimeFromModel = defaultValue;
+            defaultValues.value.biddEndTimeFromModel = defaultValue;
           }
           if (name === 'bidd_end_time_to') {
             biddEndTimeToModel.value = defaultValue;
+            defaultValues.value.biddEndTimeToModel = defaultValue;
           }
           if (name === 'bidd_start_time_from') {
             biddStartTimeFromModel.value = defaultValue;
@@ -1201,14 +1190,16 @@ export const useFiltersStore = defineStore('filters', () => {
           if (name === 'rubric_nspd_ids') {
             rubricsNspdModel.value = defaultValue;
           }
-          if (name === 'transaction_types') {
+          if (name === 'transaction_type_ids') {
             transactionTypesModel.value = defaultValue;
+            defaultValues.value.transactionTypesModel = defaultValue;
           }
           if (name === 'compositions') {
             compositionsModel.value = defaultValue;
           }
           if (name === 'bidd_form_ids') {
             biddFormsModel.value = defaultValue;
+            defaultValues.value.biddFormsModel = defaultValue;
           }
         }
       });
@@ -1491,6 +1482,7 @@ export const useFiltersStore = defineStore('filters', () => {
     getFormattedFilters,
     resetFilters,
     isDirty,
+    defaultValues,
     filtersReadyLoading,
   };
 });
