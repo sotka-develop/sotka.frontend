@@ -92,7 +92,7 @@ export const useAuthStore = defineStore('auth', () => {
             contentProps: {
               title: 'Одновременный вход с разных устройств запрещён',
             },
-            autoClose: 5000,
+            autoClose: false,
             closeOnClick: false,
             draggable: true,
             position: toast.POSITION.BOTTOM_RIGHT,
@@ -101,7 +101,6 @@ export const useAuthStore = defineStore('auth', () => {
         }, 500);
       }
     } catch (e) {
-      // console.error('Ошибка проверки сессии', e);
       await logout();
 
       router.replace({ name: 'login' });
@@ -114,7 +113,7 @@ export const useAuthStore = defineStore('auth', () => {
           contentProps: {
             title: 'Сервер недоступен',
           },
-          autoClose: 5000,
+          autoClose: false,
           closeOnClick: false,
           draggable: true,
           position: toast.POSITION.BOTTOM_RIGHT,
@@ -172,7 +171,7 @@ export const useAuthStore = defineStore('auth', () => {
         contentProps: {
           title: message,
         },
-        autoClose: 5000,
+        autoClose: false,
         closeOnClick: false,
         draggable: true,
         position: toast.POSITION.BOTTOM_RIGHT,
@@ -200,7 +199,7 @@ export const useAuthStore = defineStore('auth', () => {
           contentProps: {
             title: message,
           },
-          autoClose: 5000,
+          autoClose: false,
           closeOnClick: false,
           draggable: true,
           position: toast.POSITION.BOTTOM_RIGHT,
@@ -233,7 +232,7 @@ export const useAuthStore = defineStore('auth', () => {
         contentProps: {
           title: message,
         },
-        autoClose: 5000,
+        autoClose: false,
         closeOnClick: false,
         draggable: true,
         position: toast.POSITION.BOTTOM_RIGHT,
